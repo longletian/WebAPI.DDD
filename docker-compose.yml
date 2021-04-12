@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  identity.api:
+    image: ${DOCKER_REGISTRY-}identityapi
+    build:
+      context: .
+      dockerfile: Src/Services/Identity/Identity.Api/Dockerfile
