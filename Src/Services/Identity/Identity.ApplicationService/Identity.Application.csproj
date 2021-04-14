@@ -9,4 +9,11 @@
     <ProjectReference Include="..\Identity.Infrastructure\Identity.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="ViewModels\Dtos\" />
+    <Folder Include="ViewModels\InputModels\" />
+    <Folder Include="ViewModels\ResponseModels\" />
+  </ItemGroup>
+
 </Project>

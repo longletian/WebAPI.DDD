@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DomainBase
+namespace InfrastructureBase
 {
-    public interface IRepository
+   public interface ITransientDependency
     {
     }
 }
