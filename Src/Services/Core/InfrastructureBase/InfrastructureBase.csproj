@@ -8,4 +8,8 @@
     <Folder Include="AuthBase\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DomainCore\DomainBase.csproj" />
+  </ItemGroup>
+
 </Project>

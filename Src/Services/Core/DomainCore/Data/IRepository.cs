@@ -9,7 +9,7 @@ namespace DomainBase
     /// 写仓储
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRepository<T> where T : IEntity
+    public interface IRepository<T> where T : Entity
     {
         /// <summary>
         /// 新增对象

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using DomainBase;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace InfrastructureBase
 {
-    class QueryRepository
+    public class QueryRepository<DomainModel> : IQueryRepository<DomainModel> where DomainModel : IAggregateRoot
     {
+
     }
 }
