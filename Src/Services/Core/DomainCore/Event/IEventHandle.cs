@@ -9,5 +9,6 @@ namespace DomainBase.Event
     /// </summary>
     public interface IEventHandle
     {
+
     }
 }
