@@ -16,5 +16,6 @@ namespace DomainBase.Event
     public interface IEventHandle<in TIntegrationEvent> : IEventHandle where TIntegrationEvent : Event
     {
         Task Handle(TIntegrationEvent @event);
+
     }
 }

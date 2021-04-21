@@ -57,12 +57,12 @@ namespace DomainBase
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        IAsyncEnumerable<T> GetManyAsync(Guid[] key);
+        Task<List<T>> GetManyAsync(Guid[] key);
         /// <summary>
         /// 根据条件获取对象
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        IAsyncEnumerable<T> GetManyAsync(Expression<Func<T, bool>> condition);
+        Task<List<T>> GetManyAsync(Expression<Func<T, bool>> condition);
     }
 }

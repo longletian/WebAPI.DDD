@@ -5,7 +5,10 @@ using System.Text;
 
 namespace InfrastructureBase
 {
-    public class UnitofWorkManager : IUnitOfWork
+    /// <summary>
+    /// 定义工作单元模式（freesql内部有自定义的工作单元事务）
+    /// </summary>
+    public class UnitOfWorkManager : IUnitOfWork
     {
         public bool Commit()
         {

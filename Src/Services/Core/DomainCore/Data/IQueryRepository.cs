@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -10,6 +11,11 @@ namespace DomainBase
     /// </summary>
     public interface IQueryRepository<TEntity> where TEntity: Entity
     {
+
+        IDbConnection GetOpenConnection();
+
+        IDbConnection CreateNewConnection();
+
         /// <summary>
         /// 查找一个实体根据主键
         /// </summary>

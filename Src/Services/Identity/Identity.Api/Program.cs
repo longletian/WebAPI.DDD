@@ -1,11 +1,10 @@
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Identity.Api
 {
@@ -13,14 +12,44 @@ namespace Identity.Api
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                Log.Logger = new LoggerConfiguration()
+                    .ReadFrom.Configuration(Configuration)
+                    .CreateLogger();
+
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host builder error");
+            }
+            finally
+            {
+                // 需要释放
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
-                });
+                    webBuilder.UseStartup<Startup>()
+                    .UseSerilog()
+                    .ConfigureKestrel((context, options) =>
+                    {
+                        options.Limits.MaxRequestBodySize = 52428800;
+                    });
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+        #region 配置读取
+        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+            .SetBasePath(Path.Combine( Directory.GetCurrentDirectory(), "JsonConfig"))
+            .AddJsonFile("appsettings_log.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .Build();
+        #endregion
     }
 }

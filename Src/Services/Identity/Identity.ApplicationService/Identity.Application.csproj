@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="ViewModels\Dtos\" />
+    <Folder Include="Services\Command\" />
+    <Folder Include="Services\Query\" />
     <Folder Include="ViewModels\InputModels\" />
     <Folder Include="ViewModels\ResponseModels\" />
   </ItemGroup>

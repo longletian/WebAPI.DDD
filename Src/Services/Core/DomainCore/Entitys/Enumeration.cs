@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DomainBase
 {
-    public class Enumeration
+    public enum Enumeration
     {
     }
 }

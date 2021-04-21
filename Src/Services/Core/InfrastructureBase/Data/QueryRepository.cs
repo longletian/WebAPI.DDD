@@ -12,41 +12,42 @@ using System.Text;
 
 namespace InfrastructureBase
 {
+    /// <summary>
+    /// 目前只支持mysql数据库
+    /// </summary>
+    /// <typeparam name="DomainModel"></typeparam>
     public class QueryRepository<DomainModel> : IQueryRepository<DomainModel> where DomainModel : Entity
     {
-        private readonly bool _disposed = false;
-
-        private readonly IDbConnection dbConnection;
+        private bool _disposed = false;
+        private readonly string _connectionString;
+        private IDbConnection dbConnection;
 
         public QueryRepository(IConfiguration configuration)
         {
-            try
-            {
-                dbConnection = new MySqlConnection(configuration.GetConnectionString(""));
-                if (dbConnection.State == ConnectionState.Closed)
-                {
-                    dbConnection.Open();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("数据库连接异常", ex.Message);
-                this.Dispose();
-            }
+            _connectionString = configuration.GetConnectionString("");
         }
 
-        public bool IsConnected
+        public IDbConnection GetOpenConnection()
         {
-            get
+            if (this.dbConnection == null || this.dbConnection.State != ConnectionState.Open)
             {
-                return this.dbConnection != null && this.dbConnection.State == ConnectionState.Open;
+                dbConnection = new MySqlConnection(_connectionString);
+                dbConnection.Open();
             }
+            return this.dbConnection;
         }
 
+        public IDbConnection CreateNewConnection()
+        {
+            var connection = new MySqlConnection(_connectionString);
+            connection.Open();
+            return connection;
+        }
 
         public DomainModel FindEntity(object KeyValue)
         {
-            return dbConnection.Query();
+            //return dbConnection.QueryFirst<DomainModel>();
+            throw new NotImplementedException();
         }
 
         public DomainModel FindEntity(Expression<Func<DomainModel, bool>> condition)
@@ -112,7 +113,7 @@ namespace InfrastructureBase
             {
                 if (disposing)
                 {
-                    _dbContext.Dispose();
+                    dbConnection.Dispose();
                 }
             }
             _disposed = true;

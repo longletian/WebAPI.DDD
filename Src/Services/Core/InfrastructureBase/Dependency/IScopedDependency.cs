@@ -4,6 +4,9 @@ using System.Text;
 
 namespace InfrastructureBase
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IScopedDependency
     {
     }

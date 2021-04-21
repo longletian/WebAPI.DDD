@@ -1,6 +1,7 @@
 ﻿using DomainBase;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,14 +46,15 @@ namespace InfrastructureBase
             return await freesql.Select<DomainModel>(key).FirstAsync();
         }
 
-        public virtual IAsyncEnumerable<DomainModel> GetManyAsync(Guid[] key)
+        public virtual async Task<List<DomainModel>> GetManyAsync(Guid[] key)
         {
-            throw new NotImplementedException();
+            var keys = key.ToList();
+            return await freesql.Select<DomainModel>().Where((item) => keys.Contains(item.Id)).ToListAsync();
         }
 
-        public virtual IAsyncEnumerable<DomainModel> GetManyAsync(Expression<Func<DomainModel, bool>> condition)
+        public virtual async Task<List<DomainModel>> GetManyAsync(Expression<Func<DomainModel, bool>> condition)
         {
-            throw new NotImplementedException();
+            return await freesql.Select<DomainModel>().Where(condition).ToListAsync();
         }
 
         public virtual  void Update(DomainModel t)

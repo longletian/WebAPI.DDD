@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Event\IEvent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="FreeSql" Version="2.3.200" />
     <PackageReference Include="MediatR" Version="9.0.0" />
