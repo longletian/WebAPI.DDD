@@ -22,7 +22,7 @@ namespace InfrastructureBase
 
         public virtual async Task<bool> AnyAsync(object key = null)
         {
-            return await freesql.Select<object>().AnyAsync(x => (x as Entity).Id == (long)key);
+            return await freesql.Select<object>().AnyAsync(x => (x as Entity).Id == (Guid)key);
         }
 
         public virtual async Task<bool> AnyAsync(Expression<Func<DomainModel, bool>> condition)
@@ -40,9 +40,9 @@ namespace InfrastructureBase
             freesql.Delete<DomainModel>().Where(condition);
         }
 
-        public  async Task<DomainModel> GetAsync(object key = null)
+        public  virtual async Task<DomainModel> GetAsync(object key = null)
         {
-            return await freesql.Select<DomainModel>().FirstAsync();
+            return await freesql.Select<DomainModel>(key).FirstAsync();
         }
 
         public virtual IAsyncEnumerable<DomainModel> GetManyAsync(Guid[] key)
@@ -55,9 +55,9 @@ namespace InfrastructureBase
             throw new NotImplementedException();
         }
 
-        public virtual void Update(DomainModel t)
+        public virtual  void Update(DomainModel t)
         {
-            throw new NotImplementedException();
+            freesql.Update<DomainModel>(t);
         }
     }
 }
