@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace InfrastructureBase.EventBus
 {
-    public class EventBus : IEventBus
+    public class DaprEventBus : IEventBus
     {
         private const string PubSubName = "pubsub";
         private readonly DaprClient daprClient;
-        private readonly ILogger<EventBus> logger;
+        private readonly ILogger<DaprEventBus> logger;
 
-        public EventBus(DaprClient daprClient, ILogger<EventBus> logger)
+        public DaprEventBus(DaprClient daprClient, ILogger<DaprEventBus> logger)
         {
             this.daprClient = daprClient ?? throw new ArgumentNullException(nameof(DaprClient));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

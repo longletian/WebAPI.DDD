@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <Folder Include="AggregatesModel\" />
-    <Folder Include="Events\" />
+    <Folder Include="Events\EventHandle\" />
     <Folder Include="IRepositorys\" />
   </ItemGroup>
 

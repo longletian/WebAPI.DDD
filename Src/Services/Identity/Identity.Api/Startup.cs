@@ -9,13 +9,16 @@ namespace Identity.Api
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews().AddDapr();
+            services.AddControllService();
+            services.AddFreeSqlService();
+            services.AddCorsService();
+            services.AddSwaggUIService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRouting();
-
+            app.UseSwaggUIConfigure();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
