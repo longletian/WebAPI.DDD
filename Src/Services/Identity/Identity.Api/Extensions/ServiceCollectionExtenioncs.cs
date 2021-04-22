@@ -6,11 +6,11 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
-
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using InfrastructureBase;
 
 namespace Identity.Api
 {
@@ -30,6 +30,7 @@ namespace Identity.Api
                //自动同步实体结构到数据库
                .UseAutoSyncStructure(false) 
                .Build(); //请务必定义成 Singleton 单例模式
+              
             services.AddSingleton(freeSql);
         }
 
@@ -65,7 +66,7 @@ namespace Identity.Api
                     //是否同时支持两种验证方式
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                     //自定义IValidator验证空接口
-                    fv.RegisterValidatorsFromAssemblyContaining<Models.IValidator>();
+                    fv.RegisterValidatorsFromAssemblyContaining<IValidator>();
                 });
 
             services.Configure<ApiBehaviorOptions>(options =>

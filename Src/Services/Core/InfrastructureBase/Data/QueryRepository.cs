@@ -44,48 +44,28 @@ namespace InfrastructureBase
             return connection;
         }
 
-        public DomainModel FindEntity(object KeyValue)
+        public DomainModel FindEntity(string sql, object KeyValue)
         {
-            //return dbConnection.QueryFirst<DomainModel>();
-            throw new NotImplementedException();
-        }
-
-        public DomainModel FindEntity(Expression<Func<DomainModel, bool>> condition)
-        {
-            throw new NotImplementedException();
+            return dbConnection.QueryFirst<DomainModel>(sql, KeyValue);
         }
 
         public DomainModel FindEntity(string strSql, Dictionary<string, string> dbParameter = null)
         {
-            throw new NotImplementedException();
+            return dbConnection.QueryFirst<DomainModel>(strSql, dbParameter);
         }
 
-        public IEnumerable<DomainModel> FindList()
+        public IEnumerable<DomainModel> FindList(string  sql)
         {
-            throw new NotImplementedException();
+            return dbConnection.Query<DomainModel>(sql);
         }
 
-        public IEnumerable<DomainModel> FindList(Expression<Func<DomainModel, bool>> condition)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<DomainModel> FindList(string strSql)
-        {
-            throw new NotImplementedException();
-        }
 
         public IEnumerable<DomainModel> FindList(string strSql, object dbParameter)
         {
-            throw new NotImplementedException();
+            return dbConnection.Query<DomainModel>(strSql, dbParameter);
         }
 
         public IEnumerable<DomainModel> FindList(string orderField, int pageSize, int pageIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<DomainModel> FindList(Expression<Func<DomainModel, bool>> condition, string orderField, int pageSize, int pageIndex, out long total)
         {
             throw new NotImplementedException();
         }

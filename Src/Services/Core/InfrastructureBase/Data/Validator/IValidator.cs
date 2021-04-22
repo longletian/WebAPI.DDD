@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DomainBase
+namespace InfrastructureBase
 {
     /// <summary>
     /// 实体验证
