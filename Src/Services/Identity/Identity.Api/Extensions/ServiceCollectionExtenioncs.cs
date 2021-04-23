@@ -16,6 +16,10 @@ namespace Identity.Api
 {
     public static class ServiceCollectionExtenioncs
     {
+        /// <summary>
+        /// 添加ifreesql读库
+        /// </summary>
+        /// <param name="services"></param>
         public static void AddFreeSqlService(this IServiceCollection services)
         {
             IFreeSql freeSql = new FreeSqlBuilder()

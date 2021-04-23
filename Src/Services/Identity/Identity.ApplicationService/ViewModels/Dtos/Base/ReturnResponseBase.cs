@@ -11,7 +11,7 @@ namespace Identity.Application
     {
         public ReturnResponseBase()
         {
-            MsgCode = 0;
+            MsgCode = 1;
             Message = "访问异常";
 
         }
