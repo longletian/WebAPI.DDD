@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
@@ -26,6 +27,23 @@ namespace DomainBase
 
 
         /// <summary>
+        /// 执行条数
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        int ExecuteNonQuery(string sql, DynamicParameters parameters = null);
+
+
+        /// <summary>
+        /// 查询结果集中的第一行第一列
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        object ExecuteScalar(string sql, DynamicParameters parameters = null);
+
+        /// <summary>
         /// 查找一个实体（根据sql）
         /// </summary>
         /// <typeparam name="T">类型</typeparam>
@@ -34,13 +52,22 @@ namespace DomainBase
         /// <returns></returns>
         TEntity FindEntity(string strSql, Dictionary<string, string> dbParameter = null);
 
+
+        /// <summary>
+        /// 查询动态参数
+        /// </summary>
+        /// <param name="strSql"></param>
+        /// <param name="parameters">支持实体，参数</param>
+        /// <returns></returns>
+        TEntity FindEntity(string strSql, DynamicParameters parameters = null);
+
         /// <summary>
         /// 查询列表根据sql语句
         /// </summary>
         /// <typeparam name="T">类型</typeparam>
         /// <param name="strSql">sql语句</param>
         /// <returns></returns>
-        IEnumerable<TEntity> FindList(string strSql);
+        IEnumerable<TEntity> FindList(string strSql, DynamicParameters parameters = null);
 
         /// <summary>
         /// 查询列表根据sql语句(带参数)

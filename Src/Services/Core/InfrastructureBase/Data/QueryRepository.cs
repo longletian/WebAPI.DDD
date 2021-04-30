@@ -27,6 +27,10 @@ namespace InfrastructureBase
             _connectionString = configuration.GetConnectionString("");
         }
 
+        /// <summary>
+        /// 获取请求连接
+        /// </summary>
+        /// <returns></returns>
         public IDbConnection GetOpenConnection()
         {
             if (this.dbConnection == null || this.dbConnection.State != ConnectionState.Open)
@@ -37,6 +41,10 @@ namespace InfrastructureBase
             return this.dbConnection;
         }
 
+        /// <summary>
+        /// 连接自定义（支持mysql,动态配置处理）
+        /// </summary>
+        /// <returns></returns>
         public IDbConnection CreateNewConnection()
         {
             var connection = new MySqlConnection(_connectionString);
@@ -44,21 +52,60 @@ namespace InfrastructureBase
             return connection;
         }
 
+        /// <summary>
+        /// 执行条数
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public int ExecuteNonQuery(string sql, DynamicParameters parameters = null)
+        {
+            return this.dbConnection.Execute(sql, parameters);
+        }
+
+        /// <summary>
+        /// 查询结果集中的第一行第一列
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public object ExecuteScalar(string sql, DynamicParameters parameters = null)
+        {
+            return this.dbConnection.ExecuteScalar(sql, parameters);
+        }
+
+
         public DomainModel FindEntity(string sql, object KeyValue)
         {
-            return dbConnection.QueryFirst<DomainModel>(sql, KeyValue);
+            return dbConnection.QueryFirstOrDefault<DomainModel>(sql, KeyValue);
         }
 
         public DomainModel FindEntity(string strSql, Dictionary<string, string> dbParameter = null)
         {
-            return dbConnection.QueryFirst<DomainModel>(strSql, dbParameter);
+            return dbConnection.QueryFirstOrDefault<DomainModel>(strSql, dbParameter);
         }
 
-        public IEnumerable<DomainModel> FindList(string  sql)
+        /// <summary>
+        /// 查询动态参数
+        /// </summary>
+        /// <param name="strSql"></param>
+        /// <param name="parameters">支持实体，参数</param>
+        /// <returns></returns>
+        public DomainModel FindEntity(string strSql, DynamicParameters parameters = null)
         {
-            return dbConnection.Query<DomainModel>(sql);
+            return dbConnection.QueryFirstOrDefault<DomainModel>(strSql, parameters);
         }
 
+        /// <summary>
+        /// 查询列表根据sql语句
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="strSql">sql语句</param>
+        /// <returns></returns>
+        public IEnumerable<DomainModel> FindList(string strSql, DynamicParameters parameters = null)
+        {
+            return dbConnection.Query<DomainModel>(strSql, parameters);
+        }
 
         public IEnumerable<DomainModel> FindList(string strSql, object dbParameter)
         {

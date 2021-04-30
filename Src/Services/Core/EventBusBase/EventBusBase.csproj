@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Dapr.Actors.AspNetCore" Version="1.1.0" />
+	  <PackageReference Include="Dapr.AspNetCore" Version="1.1.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.14" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.14">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.14" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.14">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+	  <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.5" />
+    <ProjectReference Include="..\DomainCore\DomainBase.csproj" />
+  </ItemGroup>
+
+</Project>
