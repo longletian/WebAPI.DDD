@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Command\" />
     <Folder Include="Services\Query\" />
     <Folder Include="ViewModels\InputModels\" />
     <Folder Include="ViewModels\ResponseModels\" />
