@@ -1,24 +1,24 @@
 ﻿using DomainBase;
+using FreeSql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InfrastructureBase
 {
-    public abstract class RepositoryBase<Freesql, DomainModel> : IRepository<DomainModel> where Freesql : IFreeSql where DomainModel : Entity
+    public abstract class RepositoryBase<DomainModel>:BaseRepository<DomainModel> ,IRepository<DomainModel> where DomainModel : Entity
     {
-        private readonly Freesql freesql;
-        public RepositoryBase(Freesql freesql)
+        private readonly IFreeSql freesql;
+        protected RepositoryBase(IFreeSql freesql) : base(freesql, null,null)
         {
             this.freesql = freesql;
         }
 
         public virtual void Add(DomainModel t)
         {
-            freesql.Insert(t);
+            this.freesql.Insert(t);
         }
 
         public virtual async Task<bool> AnyAsync(object key = null)

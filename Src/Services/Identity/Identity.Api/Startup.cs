@@ -1,3 +1,4 @@
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,16 @@ namespace Identity.Api
             services.AddFreeSqlService();
             services.AddCorsService();
             services.AddSwaggUIService();
+        }
+
+        /// <summary>
+        /// ×¢Èëautofac
+        /// </summary>
+        /// <param name="builder"></param>
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new AutoFacModule());
+            builder.RegisterModule(new DependencyModule());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

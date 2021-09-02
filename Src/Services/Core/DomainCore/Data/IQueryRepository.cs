@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
@@ -50,6 +51,10 @@ namespace DomainBase
         /// <param name="dbParameter">参数</param>
         /// <returns></returns>
         IEnumerable<TEntity> FindList(string strSql, object dbParameter);
+
+        IEnumerable<TEntity> FindList(string strSql, params string[] dbParameter);
+
+        IEnumerable<TEntity> FindList(string strSql, DynamicParameters dbParameter);
 
         /// <summary>
         /// 查询列表(分页)

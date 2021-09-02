@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InfrastructureBase
+﻿namespace InfrastructureBase
 {
+
+    /// <summary>
+    /// 单例
+    /// </summary>
     public interface ISingletonDependency
     {
+
     }
 }

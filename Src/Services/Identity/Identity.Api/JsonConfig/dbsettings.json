@@ -1,0 +1,9 @@
+{
+  "ConnectionStrings": {
+    "MysqlCon": "",
+    "RedisCon": ""
+  },
+  "RabbitmqCon": {
+
+  }
+}

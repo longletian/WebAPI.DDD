@@ -5,15 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModels\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <None Remove="ViewModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Ordering.Domain\Ordering.Domain.csproj" />
     <ProjectReference Include="..\Ordering.Infrastructure\Ordering.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Dtos\InputModels\" />
+    <Folder Include="Dtos\OutputModels\" />
+    <Folder Include="Dtos\SearchModels\" />
     <Folder Include="Services\" />
-    <Folder Include="ViewModels\InputModels\" />
-    <Folder Include="ViewModels\ResponseModels\" />
-    <Folder Include="ViewModels\Dtos\" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DomainBase.Event
+namespace DomainBase
 {
     public abstract class Event 
     {
@@ -11,9 +8,7 @@ namespace DomainBase.Event
             Id = Guid.NewGuid();
             CreateDateTime = DateTime.UtcNow;
         }
-
         public Guid Id { get; private set; }
-
         public DateTime CreateDateTime { get; }
     }
 }

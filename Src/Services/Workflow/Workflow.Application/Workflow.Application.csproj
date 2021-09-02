@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Workflow.Domain\Workflow.Domain.csproj" />
+    <ProjectReference Include="..\Workflow.Infrastructure\Workflow.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

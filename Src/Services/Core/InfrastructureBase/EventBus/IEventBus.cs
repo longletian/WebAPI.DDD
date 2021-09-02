@@ -1,7 +1,4 @@
-﻿using DomainBase.Event;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DomainBase;
 using System.Threading.Tasks;
 
 namespace InfrastructureBase

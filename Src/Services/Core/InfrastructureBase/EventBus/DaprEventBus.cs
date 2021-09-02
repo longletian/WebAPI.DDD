@@ -1,10 +1,7 @@
 ﻿using Dapr.Client;
-using DomainBase.Event;
+using DomainBase;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InfrastructureBase.EventBus

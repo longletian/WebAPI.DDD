@@ -6,8 +6,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq.Expressions;
 using System.Text;
 
 namespace InfrastructureBase
@@ -22,9 +20,9 @@ namespace InfrastructureBase
         private readonly string _connectionString;
         private IDbConnection dbConnection;
 
-        public QueryRepository(IConfiguration configuration)
+        public QueryRepository()
         {
-            _connectionString = configuration.GetConnectionString("");
+            _connectionString = AppSettingConfig.GetConnStrings("");
         }
 
         public IDbConnection GetOpenConnection()
@@ -46,12 +44,12 @@ namespace InfrastructureBase
 
         public DomainModel FindEntity(string sql, object KeyValue)
         {
-            return dbConnection.QueryFirst<DomainModel>(sql, KeyValue);
+            return dbConnection.QueryFirstOrDefault<DomainModel>(sql, KeyValue);
         }
 
         public DomainModel FindEntity(string strSql, Dictionary<string, string> dbParameter = null)
         {
-            return dbConnection.QueryFirst<DomainModel>(strSql, dbParameter);
+            return dbConnection.QueryFirstOrDefault<DomainModel>(strSql, dbParameter);
         }
 
         public IEnumerable<DomainModel> FindList(string  sql)
@@ -72,19 +70,26 @@ namespace InfrastructureBase
 
         public IEnumerable<DomainModel> FindList(string strSql, string orderField, int pageSize, int pageIndex, out long total)
         {
-            throw new NotImplementedException();
+            StringBuilder stringBuilder = new StringBuilder();
+            if (pageIndex == 0)
+            {
+                pageIndex = 1;
+            }
+            int num = (pageIndex - 1) * pageSize;
+            string OrderBy = "";
+            if (!string.IsNullOrEmpty(orderField))
+            {
+                OrderBy = " Order By " + orderField;
+            }
+            stringBuilder.Append(strSql + OrderBy);
+            stringBuilder.Append(" limit " + num + "," + pageSize + "");
+            total = Convert.ToInt32(dbConnection.ExecuteScalar(strSql));
+            return this.dbConnection.Query<DomainModel>(strSql);
         }
 
         public IEnumerable<DomainModel> FindList(string strSql, string orderField, int pageSize, int pageIndex, out int total, Dictionary<string, string> dict = null)
         {
             throw new NotImplementedException();
-        }
-
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -97,6 +102,28 @@ namespace InfrastructureBase
                 }
             }
             _disposed = true;
+        }
+
+        /// <summary>
+        /// 查询集合
+        /// </summary>
+        /// <param name="strSql"></param>
+        /// <param name="dbParameter"></param>
+        /// <returns></returns>
+        public IEnumerable<DomainModel> FindList(string strSql, params string[] dbParameter)
+        {
+            return dbConnection.Query<DomainModel>(strSql, dbParameter);
+        }
+
+        public IEnumerable<DomainModel> FindList(string strSql, DynamicParameters dbParameter)
+        {
+            return dbConnection.Query<DomainModel>(strSql, dbParameter);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

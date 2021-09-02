@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DomainBase.Event
+﻿using System.Threading.Tasks;
+namespace DomainBase
 {
     /// <summary>
     /// 事件处理
@@ -16,6 +12,5 @@ namespace DomainBase.Event
     public interface IEventHandle<in TIntegrationEvent> : IEventHandle where TIntegrationEvent : Event
     {
         Task Handle(TIntegrationEvent @event);
-
     }
 }

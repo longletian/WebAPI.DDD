@@ -1,14 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="AggregatesModel\" />
-    <Folder Include="Events\EventHandle\" />
-    <Folder Include="IRepositorys\" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\DomainCore\DomainBase.csproj" />

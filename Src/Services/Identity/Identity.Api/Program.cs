@@ -26,7 +26,6 @@ namespace Identity.Api
             }
             finally
             {
-                // 需要释放
                 Log.CloseAndFlush();
             }
         }
@@ -45,10 +44,14 @@ namespace Identity.Api
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
         #region 配置读取
+        /// <summary>
+        /// 自定义配置文件读取
+        /// </summary>
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Path.Combine( Directory.GetCurrentDirectory(), "JsonConfig"))
             .AddJsonFile("appsettings_log.json", optional: true, reloadOnChange: true)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("dbsettings.json",optional:true, reloadOnChange:true)
             .Build();
         #endregion
     }

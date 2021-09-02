@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InfrastructureBase
+﻿namespace InfrastructureBase
 {
-   public interface ITransientDependency
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface ITransientDependency
     {
+
     }
 }

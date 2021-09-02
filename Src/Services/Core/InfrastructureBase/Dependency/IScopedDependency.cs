@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace InfrastructureBase
+﻿namespace InfrastructureBase
 {
     /// <summary>
-    /// 
+    /// 局部作用域
     /// </summary>
     public interface IScopedDependency
     {
+
     }
 }

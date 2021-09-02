@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,8 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.78" />
-    <PackageReference Include="FreeSql" Version="2.3.200" />
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="FreeSql.Extensions.LazyLoading" Version="2.5.200" />
+    <PackageReference Include="FreeSql.Extensions.Linq" Version="2.5.200" />
+    <PackageReference Include="FreeSql.Provider.MySqlConnector" Version="2.5.201" />
+    <PackageReference Include="FreeSql.Repository" Version="2.5.200" />
+    <PackageReference Include="FreeSql" Version="2.5.200" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
   </ItemGroup>

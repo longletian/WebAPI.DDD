@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using FluentValidation;
 using InfrastructureBase;
 
 namespace Identity.Api
@@ -55,8 +56,6 @@ namespace Identity.Api
             }));
         }
 
-
-
         /// <summary>
         /// 添加控制器数据验证
         /// </summary>
@@ -68,11 +67,12 @@ namespace Identity.Api
                 .AddFluentValidation(fv =>
                 {
                     //是否同时支持两种验证方式
-                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                    //fv.RunDefaultMvcValidationAfterFluentValidationExecutes = true;
                     //自定义IValidator验证空接口
-                    fv.RegisterValidatorsFromAssemblyContaining<IValidator>();
+                    fv.RegisterValidatorsFromAssemblyContaining<InfrastructureBase.IValidator>();
                 });
 
+            //验证统一处理
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = (context) =>
@@ -83,17 +83,16 @@ namespace Identity.Api
                             .Select(p => p.ErrorMessage))
                         .ToList();
 
-                    var result = new
+                    var result = new ResponseData
                     {
-                        Code = "405",
+                        MsgCode = -1,
                         Message = "Validation errors",
-                        Errors = errors
+                        Data = errors
                     };
                     return new BadRequestObjectResult(result);
                 };
             });
         }
-
 
         /// <summary>
         /// 注入swaggerui
@@ -123,6 +122,5 @@ namespace Identity.Api
                 c.AddFluentValidationRules();
             });
         }
-
     }
 }

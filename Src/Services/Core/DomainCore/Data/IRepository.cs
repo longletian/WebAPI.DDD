@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeSql;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace DomainBase
     /// 写仓储
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRepository<T> where T : Entity
+    public interface IRepository<T> : IBaseRepository<T> where T : class
     {
         /// <summary>
         /// 新增对象
