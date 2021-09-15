@@ -8,13 +8,11 @@ namespace EventBusBase
     /// </summary>
     public interface IEventBus
     {
-        /// <summary>
-        /// 发布事件
-        /// </summary>
-        /// <typeparam name="TIntegrationEvent"></typeparam>
-        /// <param name="event"></param>
-        /// <returns></returns>
-        Task PublishAsync<TIntegrationEvent>(TIntegrationEvent @event)
-           where TIntegrationEvent : Event;
+        Task Publish<T>(T @event)
+            where T : Event;
+
+        void Subscribe<T>(IEventHandler<T> handler)
+            where T : Event;
+
     }
 }

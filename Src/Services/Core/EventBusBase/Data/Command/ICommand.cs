@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DomainBase.Data
+namespace EventBusBase.Data
 {
-
     /// <summary>
     ///  为了实现cqrs IRequest 单播
     /// </summary>

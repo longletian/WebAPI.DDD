@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DomainBase.Entitys;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DomainBase.Event
 {
-    public abstract class Event 
+    public abstract class Event : IEvent
     {
         public Event()
         {
