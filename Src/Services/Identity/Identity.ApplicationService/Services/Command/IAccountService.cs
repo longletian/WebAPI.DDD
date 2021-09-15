@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Identity.Application.Services.Command
 {
-   public interface IAccountService
+    public interface IAccountService
     {
     }
 }
