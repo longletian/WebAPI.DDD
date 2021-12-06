@@ -1,8 +1,6 @@
 ﻿using Dapper;
 using DomainBase;
-using Microsoft.Extensions.Configuration;
 using MySqlConnector;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data;

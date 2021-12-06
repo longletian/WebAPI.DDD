@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InfrastructureBase;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace Identity.Application
     /// VO代表展示层需要显示的数据。
     /// PO
     /// </summary>
-    public class UserSearchDto
+    public class UserQo: PageQueryQo
     {
 
     }

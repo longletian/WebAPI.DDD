@@ -10,7 +10,7 @@ namespace Identity.Application
         /// </summary>
         /// <param name="pageQueryInput"></param>
         /// <returns></returns>
-        Task<ResponseData> GetUserList(PageQueryInput pageQueryInput);
+        Task<ResponseData> GetUserList(PageQueryQo pageQueryInput);
 
         /// <summary>
         /// 获取用户详情

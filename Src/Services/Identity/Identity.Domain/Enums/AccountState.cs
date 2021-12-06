@@ -8,5 +8,6 @@ namespace Identity.Domain.Enums
 {
     public enum AccountState
     {
+        Online = 0, Offline = 1
     }
 }

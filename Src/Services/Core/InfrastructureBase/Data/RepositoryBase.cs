@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace InfrastructureBase
 {
-    public abstract class RepositoryBase<DomainModel>:BaseRepository<DomainModel> ,IRepository<DomainModel> where DomainModel : Entity
+    public abstract class RepositoryBase<DomainModel, PersistenceObject> :BaseRepository<DomainModel> ,IRepository<DomainModel> where DomainModel : Entity where PersistenceObject : class
     {
         private readonly IFreeSql freesql;
         protected RepositoryBase(IFreeSql freesql) : base(freesql, null,null)

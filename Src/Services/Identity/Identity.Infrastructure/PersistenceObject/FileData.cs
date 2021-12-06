@@ -1,17 +1,13 @@
-﻿using DomainBase;
+﻿using Identity.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Identity.Domain
+namespace Identity.Infrastructure.PersistenceObject
 {
-    /// <summary>
-    /// 部门
-    /// </summary>
-    public class Unit : Entity
+    public class FileData: FileDataEntity
     {
-
     }
 }

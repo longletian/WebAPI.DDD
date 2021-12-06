@@ -2,7 +2,7 @@
 
 namespace Identity.Domain
 {
-    public interface IRoleRepository:IRepository<Role>
+    public interface IRoleRepository:IRepository<RoleEntity>
     {
     }
 }

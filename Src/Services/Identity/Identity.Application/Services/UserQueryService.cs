@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace Identity.Application
 {
-    public class UserQueryService : IUserQueryService, ITransientDependency
+    public class UserQueryService : IUserQueryService
     {
         public Task<ResponseData> GetUserInfoAsync(int Id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ResponseData> GetUserList(PageQueryInput pageQueryInput)
+        public Task<ResponseData> GetUserList(PageQueryQo pageQueryInput)
         {
             throw new System.NotImplementedException();
         }

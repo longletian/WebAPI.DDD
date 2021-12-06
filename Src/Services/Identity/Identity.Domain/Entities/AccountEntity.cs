@@ -1,13 +1,12 @@
 ﻿using DomainBase;
 using Identity.Domain.Enums;
-using System;
 
 namespace Identity.Domain
 {
     /// <summary>
     /// 账号
     /// </summary>
-    public class Account : Entity, IAggregateRoot
+    public class AccountEntity : Entity, IAggregateRoot
     {
         /// <summary>
         /// 账号
@@ -24,6 +23,8 @@ namespace Identity.Domain
         /// <summary>
         /// 账户状态
         /// </summary>
-        public int? State { get; set; }
+        public AccountState State { get; set; }
+
+
     }
 }

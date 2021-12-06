@@ -1,4 +1,5 @@
 ﻿using DomainBase;
+using Identity.Domain.Enums;
 using System;
 
 namespace Identity.Domain
@@ -6,19 +7,19 @@ namespace Identity.Domain
     /// <summary>
     /// 用户
     /// </summary>
-    public class User : Entity
+    public class UserEntity : Entity
     {
         /// 用户姓名
         /// </summary>
-        public string UserName { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 用户头像
         /// </summary>
-        public string UserImage { get; set; }
+        public string ImagePath { get; set; }
         /// <summary>
         /// 用户性别
         /// </summary>
-        public int? Gender { get; set; }
+        public UserGender? Gender { get; set; }
         /// <summary>
         /// 出生年月
         /// </summary>

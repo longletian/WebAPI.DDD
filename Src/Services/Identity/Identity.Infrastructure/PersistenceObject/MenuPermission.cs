@@ -1,4 +1,6 @@
 ﻿using DomainBase;
+using System;
+
 namespace Identity.Infrastructure.PersistenceObject
 {
     /// <summary>
@@ -6,6 +8,8 @@ namespace Identity.Infrastructure.PersistenceObject
     /// </summary>
     public class MenuPermission : PersistenceObjectBase
     {
+        public Guid MenuId { get; set; }
 
+        public Guid PermissionId { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using InfrastructureBase;
 
 namespace Identity.Infrastructure
 {
-    public class RoleRepository: RepositoryBase<Role>, IRoleRepository
+    public class RoleRepository: RepositoryBase<RoleEntity>, IRoleRepository
     {
         public RoleRepository(IFreeSql freeSql) :base(freeSql)
         { 

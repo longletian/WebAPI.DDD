@@ -7,6 +7,8 @@ namespace Identity.Infrastructure
 {
     public class RolePermission : PersistenceObjectBase
     {
+        public Guid RoleId { get; set; }
 
+        public Guid PermissionId { get; set; }
     }
 }
