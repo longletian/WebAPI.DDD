@@ -35,7 +35,7 @@ namespace Identity.Api
             //      .EnableInterfaceInterceptors().InterceptedBy(typeof(ValidatorAop));
             #endregion
 
-            builder.RegisterAssemblyTypes(GetAssemblyByName(""))
+            builder.RegisterAssemblyTypes(GetAssemblyByName("Identity.Api"))
                 .Where(a => a.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
@@ -46,7 +46,7 @@ namespace Identity.Api
                 //cacheType.Add(typeof(LogAop));
 
             // AOP 开关，如果想要打开指定的功能，只需要在 appsettigns.json 对应对应 true 就行。
-            builder.RegisterAssemblyTypes(GetAssemblyByName(""))
+            builder.RegisterAssemblyTypes(GetAssemblyByName("Identity.Api"))
                 .Where(a => a.Name.EndsWith("Service"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency()

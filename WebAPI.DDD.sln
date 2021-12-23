@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dapr", "Dapr", "{4046BCC0-9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{4740C750-9B87-11EB-9244-9B5965D5158C}"
 	ProjectSection(SolutionItems) = preProject
-		configsecret.yaml = configsecret.yaml
 		Dapr\components\pubsub.yaml = Dapr\components\pubsub.yaml
 		Dapr\components\statestore.yaml = Dapr\components\statestore.yaml
 	EndProjectSection

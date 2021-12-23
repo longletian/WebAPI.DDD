@@ -20,7 +20,7 @@ namespace InfrastructureBase
 
         public QueryRepository()
         {
-            _connectionString = AppSettingConfig.GetConnStrings("");
+            _connectionString = AppSettingConfig.GetConnStrings("MysqlCon");
         }
 
         public IDbConnection GetOpenConnection()

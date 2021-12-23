@@ -1,9 +1,6 @@
 ﻿using Identity.Domain;
 using Identity.Infrastructure.PersistenceObject;
 using InfrastructureBase;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Identity.Infrastructure
 {

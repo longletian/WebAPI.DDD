@@ -1,13 +1,15 @@
 ﻿using Identity.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Identity.Infrastructure.PersistenceObject;
+using InfrastructureBase;
 
-namespace Identity.Infrastructure.Repository
+namespace Identity.Infrastructure
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : RepositoryBase<UserEntity,User>, IUserRepository
     {
+        public UserRepository(IFreeSql freeSql) : base(freeSql)
+        {
+       
+
+        }
     }
 }

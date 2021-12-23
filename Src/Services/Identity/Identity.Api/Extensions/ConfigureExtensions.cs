@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IGeekFan.AspNetCore.Knife4jUI;
 
 namespace Identity.Api
 {
@@ -15,10 +16,10 @@ namespace Identity.Api
         public static void UseSwaggUIConfigure(this IApplicationBuilder app)
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseKnife4UI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.RoutePrefix = string.Empty;
+                c.RoutePrefix = ""; // serve the UI at root
+                c.SwaggerEndpoint("/v1/api-docs", "V1 Docs");
             });
         }
     }

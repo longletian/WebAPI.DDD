@@ -12,20 +12,21 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
 using InfrastructureBase;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace Identity.Api
 {
     public static class ServiceCollectionExtenioncs
     {
         /// <summary>
-        /// 添加ifreesql读库
+        /// 添加iFreesql读库
         /// </summary>
         /// <param name="services"></param>
         public static void AddFreeSqlService(this IServiceCollection services)
         {
             IFreeSql freeSql = new FreeSqlBuilder()
                .UseGenerateCommandParameterWithLambda(true)
-               .UseConnectionString(DataType.MySql,"")
+               .UseConnectionString(DataType.MySql,AppSettingConfig.GetConnStrings("MysqlCon"))
                //定义名称格式
                .UseNameConvert(NameConvertType.PascalCaseToUnderscoreWithLower)
                .UseMonitorCommand(cmd =>
@@ -107,17 +108,13 @@ namespace Identity.Api
                     Version = "v1",
                     Title = "ToDo API",
                     Description = "A simple example ASP.NET Core Web API",
-                    TermsOfService = new Uri("https://example.com/terms"),
-                    Contact = new OpenApiContact
-                    {
-                        Name = "xx",
-                        Email = string.Empty,
-                        Url = new Uri("https://twitter.com/spboyer"),
-                    }
                 });
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                c.CustomOperationIds(apiDesc =>
+                {
+                    var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
+                    return  controllerAction.ControllerName+"-"+controllerAction.ActionName;
+                });
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Identity.Api.xml"),true);
                 // 引入Swashbuckle和FluentValidation
                 c.AddFluentValidationRules();
             });
