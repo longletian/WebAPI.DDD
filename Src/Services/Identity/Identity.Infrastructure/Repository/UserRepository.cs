@@ -8,8 +8,7 @@ namespace Identity.Infrastructure
     {
         public UserRepository(IFreeSql freeSql) : base(freeSql)
         {
-       
-
+            
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DomainBase;
 using System;
+using FreeSql.DataAnnotations;
 
 namespace Identity.Domain
 {
@@ -25,7 +26,7 @@ namespace Identity.Domain
         /// <summary>
         /// 排序
         /// </summary>
-        public long SortNum { get; set; }
+        public int? SortNum { get; set; }
 
     }
 }

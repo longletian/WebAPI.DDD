@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Identity.Application
 {
-    public class UserQueryService : IUserQueryService
+    public class UserQueryService : IAccountQueryService
     {
         public Task<ResponseData> GetUserInfoAsync(int Id)
         {

@@ -5,61 +5,64 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Mapster;
 
 namespace InfrastructureBase
 {
-    public abstract class RepositoryBase<DomainModel, PersistenceObject> :BaseRepository<DomainModel> ,IRepository<DomainModel> where DomainModel : Entity where PersistenceObject : class
+    public abstract class RepositoryBase<DomainModel, PersistenceObject> : BaseRepository<DomainModel>,
+        IRepository<DomainModel> where DomainModel : Entity where PersistenceObject : class
     {
-        private readonly IFreeSql freesql;
-        protected RepositoryBase(IFreeSql freesql) : base(freesql, null,null)
+        private readonly IFreeSql freeSql;
+
+        protected RepositoryBase(IFreeSql freeSql) : base(freeSql, null, null)
         {
-            this.freesql = freesql;
+            this.freeSql = freeSql;
         }
 
         public virtual void Add(DomainModel t)
         {
-            this.freesql.Insert(t);
+            this.freeSql.Insert<PersistenceObject>(t.MapTo<PersistenceObject>());
         }
 
         public virtual async Task<bool> AnyAsync(object key = null)
         {
-            return await freesql.Select<object>().AnyAsync(x => (x as Entity).Id == (Guid)key);
+            return await freeSql.Select<PersistenceObject>().AnyAsync(x => (x as Entity).Id == (Guid) key);
         }
 
         public virtual async Task<bool> AnyAsync(Expression<Func<DomainModel, bool>> condition)
         {
-            return await freesql.Select<DomainModel>().AnyAsync(condition);
+            return await freeSql.Select<DomainModel>().AnyAsync(condition);
         }
 
         public virtual void Delete(DomainModel t)
         {
-            freesql.Delete<DomainModel>(t);
+            freeSql.Delete<PersistenceObject>(t.Adapt<PersistenceObject>());
         }
 
         public virtual void Delete(Expression<Func<DomainModel, bool>> condition)
         {
-            freesql.Delete<DomainModel>().Where(condition);
+            freeSql.Delete<DomainModel>().Where(condition);
         }
 
-        public  virtual async Task<DomainModel> GetAsync(object key = null)
+        public virtual async Task<DomainModel> GetAsync(object key = null)
         {
-            return await freesql.Select<DomainModel>(key).FirstAsync();
+            return await freeSql.Select<DomainModel>(key).FirstAsync();
         }
 
         public virtual async Task<List<DomainModel>> GetManyAsync(Guid[] key)
         {
             var keys = key.ToList();
-            return await freesql.Select<DomainModel>().Where((item) => keys.Contains(item.Id)).ToListAsync();
+            return await freeSql.Select<DomainModel>().Where((item) => keys.Contains(item.Id)).ToListAsync();
         }
 
         public virtual async Task<List<DomainModel>> GetManyAsync(Expression<Func<DomainModel, bool>> condition)
         {
-            return await freesql.Select<DomainModel>().Where(condition).ToListAsync();
+            return await freeSql.Select<DomainModel>().Where(condition).ToListAsync();
         }
 
-        public virtual  void Update(DomainModel t)
+        public virtual void Update(DomainModel t)
         {
-            freesql.Update<DomainModel>(t);
+            freeSql.Update<DomainModel>(t);
         }
     }
 }

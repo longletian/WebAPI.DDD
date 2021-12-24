@@ -8,7 +8,7 @@ namespace Identity.Infrastructure
     {
         public RoleRepository(IFreeSql freeSql) :base(freeSql)
         { 
-        
         }
+        
     }
 }

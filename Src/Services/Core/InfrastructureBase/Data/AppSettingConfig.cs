@@ -56,15 +56,16 @@ namespace InfrastructureBase
         /// </summary>
         /// <param name="sectionConstr"></param>
         /// <returns></returns>
-        public static void BindSection<T>(string sectionConstr, T entity)
+        public static T BindSection<T>(string sectionConstr)
         {
             if (!string.IsNullOrEmpty(sectionConstr))
             {
                 if (Configuration.GetSection(sectionConstr).Exists())
                 {
-                    Configuration.GetSection(sectionConstr).Bind(entity);
+                    return Configuration.GetSection(sectionConstr).Get<T>();
                 }
             }
+            return default(T);
         }
 
         /// <summary>

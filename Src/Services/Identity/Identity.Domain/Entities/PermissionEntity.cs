@@ -24,7 +24,7 @@ namespace Identity.Domain
         /// <summary>
         /// 权限排序
         /// </summary>
-        public int SortNum { get; set; }
+        public int? SortNum { get; set; }
 
     }
 }

@@ -19,8 +19,7 @@ namespace Identity.Api
                     .ReadFrom.Configuration(Configuration)
                     .CreateLogger();
 
-                CreateHostBuilder(args)
-                    .Build().Run();
+                CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
             {
@@ -33,7 +32,7 @@ namespace Identity.Api
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args) 
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
@@ -54,11 +53,9 @@ namespace Identity.Api
             .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "JsonConfig"))
             .AddJsonFile("appsettings_log.json", optional: true, reloadOnChange: true)
             .AddJsonFile("dbsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile(
-                $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-                optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables().Build();
-
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
         #endregion
     }
 }

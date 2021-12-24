@@ -25,12 +25,16 @@ namespace Identity.Domain
         /// </summary>
         public DateTime? BirthDay { get; set; }
         /// <summary>
-        /// 收货地址
-        /// </summary>
-        public string Address { get; set; }
-        /// <summary>
         /// 联系电话
         /// </summary>
         public string Tel { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int? SortNum { get; set; }
+        /// <summary>
+        /// 户籍地址
+        /// </summary>
+        public AddressEntity Address { get; set; }
     }
 }
