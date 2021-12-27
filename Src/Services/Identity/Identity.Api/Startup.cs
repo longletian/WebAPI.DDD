@@ -25,6 +25,7 @@ namespace Identity.Api
             services.AddControllService();
             services.AddFreeSqlService();
             services.AddCorsService();
+            services.AddDaprClient();
             services.AddSwaggUIService();
         }
 

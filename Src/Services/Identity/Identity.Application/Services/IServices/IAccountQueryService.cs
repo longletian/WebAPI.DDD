@@ -1,5 +1,6 @@
 ﻿using InfrastructureBase;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Application
 {
@@ -10,6 +11,7 @@ namespace Identity.Application
         /// </summary>
         /// <param name="pageQueryInput"></param>
         /// <returns></returns>
+       [HttpGet,Route("")]
         Task<ResponseData> GetUserList(PageQueryQo pageQueryInput);
 
         /// <summary>

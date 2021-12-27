@@ -62,7 +62,7 @@ namespace InfrastructureBase
 
         public virtual void Update(DomainModel t)
         {
-            freeSql.Update<DomainModel>(t);
+            freeSql.Update<PersistenceObject>(t.MapTo<PersistenceObject>());
         }
     }
 }
