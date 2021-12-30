@@ -11,7 +11,6 @@ namespace Identity.Application
         /// </summary>
         /// <param name="pageQueryInput"></param>
         /// <returns></returns>
-       [HttpGet,Route("")]
         Task<ResponseData> GetUserList(PageQueryQo pageQueryInput);
 
         /// <summary>

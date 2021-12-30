@@ -1,13 +1,25 @@
 ﻿using InfrastructureBase;
 using System.Threading.Tasks;
+using Dapr.Client;
+using Identity.Domain;
+using Identity.Infrastructure.PersistenceObject;
 
 namespace Identity.Application
 {
-    public class UserQueryService : IAccountQueryService
+    public class AccountQueryService : IAccountQueryService
     {
-        public Task<ResponseData> GetUserInfoAsync(int Id)
+        private readonly IUserRepository userRepository;
+        private readonly DaprClient daprClient;
+        public AccountQueryService(IUserRepository _userRepository,DaprClient _daprClient)
         {
-            throw new System.NotImplementedException();
+            daprClient = _daprClient;
+            userRepository = _userRepository;
+        }
+        
+        public async Task<ResponseData> GetUserInfoAsync(int Id)
+        {
+            UserEntity user = await userRepository.GetAsync(Id);
+            return new ResponseData { MsgCode = 0, Message = "请求成功"};
         }
 
         public Task<ResponseData> GetUserList(PageQueryQo pageQueryInput)

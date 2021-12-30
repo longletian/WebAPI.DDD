@@ -12,22 +12,22 @@ namespace Identity.Domain
         /// <summary>
         /// 省份
         /// </summary>
-        private string Province { get; }
+        public string Province { get; }
 
         /// <summary>
         /// 城市
         /// </summary>
-        private string City { get; }
+        public string City { get; }
 
         /// <summary>
         /// 区县
         /// </summary>
-        private string County { get; }
+        public string County { get; }
 
         /// <summary>
         /// 街道
         /// </summary>
-        private string Street { get; }
+        public string Street { get; }
         
         
         public AddressEntity(string province, string city,
