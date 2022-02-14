@@ -25,6 +25,9 @@ namespace Identity.Domain
         /// </summary>
         public AccountState State { get; set; }
 
-
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int? SortNum { get; set; }
     }
 }

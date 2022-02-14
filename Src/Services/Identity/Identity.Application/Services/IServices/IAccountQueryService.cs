@@ -1,9 +1,10 @@
 ﻿using InfrastructureBase;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Application
 {
-    public interface IUserQueryService
+    public interface IAccountQueryService
     {
         /// <summary>
         /// 获取用户列表

@@ -4,11 +4,20 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\net5.0\Identity.Api.xml</DocumentationFile>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
+    <PackageReference Include="IGeekFan.AspNetCore.Knife4jUI" Version="0.0.11" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.3.1-preview" />
 	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+	<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.2.3" />
+	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.3" />
 	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.1.4" />
   </ItemGroup>
 
@@ -21,6 +30,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="JsonConfig\appsettings_log.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="JsonConfig\dbsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="JsonConfig\appsettings.Development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

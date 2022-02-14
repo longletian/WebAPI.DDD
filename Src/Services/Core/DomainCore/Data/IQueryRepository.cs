@@ -57,15 +57,14 @@ namespace DomainBase
         IEnumerable<TEntity> FindList(string strSql, DynamicParameters dbParameter);
 
         /// <summary>
-        /// 查询列表(分页)
+        /// 数据分页处理
         /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <param name="orderField">排序字段</param>
-        /// <param name="pageSize">每页数据条数</param>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="total">总共数据条数</param>
+        /// <param name="entities"></param>
+        /// <param name="orderField"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="pageIndex"></param>
         /// <returns></returns>
-        IEnumerable<TEntity> FindList(string orderField, int pageSize, int pageIndex);
+        IEnumerable<TEntity> FindList(IEnumerable<TEntity> entities, string orderField, int pageSize, int pageIndex);
 
         /// <summary>
         /// 查询列表(分页)根据sql语句

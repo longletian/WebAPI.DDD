@@ -10,7 +10,7 @@ namespace InfrastructureBase
     /// <summary>
     /// 配置文件
     /// </summary>
-    public class AppSettingConfig:ISingletonDependency
+    public class AppSettingConfig
     {
         static IConfiguration Configuration { get; set; }
         static IHostEnvironment Env { get; set; }
@@ -19,27 +19,17 @@ namespace InfrastructureBase
             Configuration = configuration;
             Env = env;
         }
-
-        public AppSettingConfig()
-        {
-            Configuration = new ConfigurationBuilder()
-               .SetBasePath(Env.ContentRootPath)
-               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-               .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true, reloadOnChange: true)
-               .AddEnvironmentVariables()
-               .Build();
-        }
-
+        
         /// <summary>
         /// Connectionstrings下面的数据 
         /// </summary>
-        /// <param name="constr"></param>
+        /// <param name="conStr"></param>
         /// <returns></returns>
-        public static string GetConnStrings(string constr)
+        public static string GetConnStrings(string conStr)
         {
-            if (!string.IsNullOrEmpty(constr))
+            if (!string.IsNullOrEmpty(conStr))
             {
-                return Configuration.GetConnectionString(constr);
+                return Configuration.GetConnectionString(conStr);
             }
             return "";
         }
@@ -66,15 +56,16 @@ namespace InfrastructureBase
         /// </summary>
         /// <param name="sectionConstr"></param>
         /// <returns></returns>
-        public static void BindSection<T>(string sectionConstr, T entity)
+        public static T BindSection<T>(string sectionConstr)
         {
             if (!string.IsNullOrEmpty(sectionConstr))
             {
                 if (Configuration.GetSection(sectionConstr).Exists())
                 {
-                    Configuration.GetSection(sectionConstr).Bind(entity);
+                    return Configuration.GetSection(sectionConstr).Get<T>();
                 }
             }
+            return default(T);
         }
 
         /// <summary>

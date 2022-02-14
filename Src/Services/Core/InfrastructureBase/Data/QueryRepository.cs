@@ -20,7 +20,7 @@ namespace InfrastructureBase
 
         public QueryRepository()
         {
-            _connectionString = AppSettingConfig.GetConnStrings("");
+            _connectionString = AppSettingConfig.GetConnStrings("MysqlCon");
         }
 
         public IDbConnection GetOpenConnection()
@@ -54,16 +54,16 @@ namespace InfrastructureBase
         {
             return dbConnection.Query<DomainModel>(sql);
         }
-
-
+        
         public IEnumerable<DomainModel> FindList(string strSql, object dbParameter)
         {
             return dbConnection.Query<DomainModel>(strSql, dbParameter);
         }
 
-        public IEnumerable<DomainModel> FindList(string orderField, int pageSize, int pageIndex)
+        public IEnumerable<DomainModel> FindList(IEnumerable<DomainModel> entities,string orderField, int pageSize, int pageIndex)
         {
-            throw new NotImplementedException();
+            IEnumerable<DomainModel> domainModels = new List<DomainModel>();
+            return domainModels;
         }
 
         public IEnumerable<DomainModel> FindList(string strSql, string orderField, int pageSize, int pageIndex, out long total)
@@ -87,7 +87,21 @@ namespace InfrastructureBase
 
         public IEnumerable<DomainModel> FindList(string strSql, string orderField, int pageSize, int pageIndex, out int total, Dictionary<string, string> dict = null)
         {
-            throw new NotImplementedException();
+            StringBuilder stringBuilder = new StringBuilder();
+            if (pageIndex == 0)
+            {
+                pageIndex = 1;
+            }
+            int num = (pageIndex - 1) * pageSize;
+            string OrderBy = "";
+            if (!string.IsNullOrEmpty(orderField))
+            {
+                OrderBy = " Order By " + orderField;
+            }
+            stringBuilder.Append(strSql + OrderBy);
+            stringBuilder.Append(" limit " + num + "," + pageSize + "");
+            total = Convert.ToInt32(dbConnection.ExecuteScalar(strSql,dict));
+            return this.dbConnection.Query<DomainModel>(strSql,dict);
         }
 
         protected virtual void Dispose(bool disposing)
