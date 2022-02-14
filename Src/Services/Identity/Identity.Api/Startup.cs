@@ -2,7 +2,7 @@ using Autofac;
 using InfrastructureBase;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Serilog;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +26,8 @@ namespace Identity.Api
             services.AddFreeSqlService();
             services.AddCorsService();
             services.AddDaprClient();
+            services.AddAuthorizationService();
+            services.AddAuthenticationService();
             services.AddSwaggUIService();
         }
 
@@ -41,7 +43,11 @@ namespace Identity.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseSerilogRequestLogging();
             app.UseRouting();
+            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseSwaggUIConfigure();
             app.UseEndpoints(endpoints =>
             {
