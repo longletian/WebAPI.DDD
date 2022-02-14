@@ -14,6 +14,7 @@ namespace Identity.Api
         /// <param name="app"></param>
         public static void UseSwaggUIConfigure(this IApplicationBuilder app)
         {
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
