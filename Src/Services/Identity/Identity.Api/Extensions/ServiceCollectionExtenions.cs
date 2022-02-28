@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using Swashbuckle.AspNetCore.Filters;
+using InfrastructureBase.Data;
 
 namespace Identity.Api
 {
@@ -42,6 +45,17 @@ namespace Identity.Api
 
             services.AddSingleton(freeSql);
             services.AddFreeRepository();
+
+            try
+            {
+                using var objPool = freeSql.Ado.MasterPool.Get();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e + e.StackTrace + e.Message + e.InnerException);
+                return;
+            }
+
             //在运行时直接生成表结构
             try
             {
@@ -131,7 +145,31 @@ namespace Identity.Api
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Identity.Api.xml"), true);
                 // 引入Swashbuckle和FluentValidation
                 c.AddFluentValidationRules();
+
+                // 开启加权小锁
+                c.OperationFilter<AddResponseHeadersFilter>();
+                c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+                // 在header中添加token，传递到后台
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                // Jwt Bearer 认证，必须是 oauth2
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）\"",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.ApiKey
+                });
             });
+        }
+
+        /// <summary>
+        /// 公共服务配置
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddCommonService(this IServiceCollection services)
+        {
+            services.Configure<JwtConfig>(AppSettingConfig.GetSection("JwtConfig"));
         }
 
 
@@ -151,6 +189,15 @@ namespace Identity.Api
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy => policy.RequireRole("Admin").Build());
+
+                //配置授权
+                options.AddPolicy("ApiScope", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+
+                    policy.RequireClaim("scope", "api1");
+                });
+
             });
 
             // 3、自定义复杂的策略授权
@@ -159,8 +206,6 @@ namespace Identity.Api
 
 
         }
-
-
 
         /// <summary>
         /// 添加授权配置
@@ -176,32 +221,78 @@ namespace Identity.Api
             })
             .AddJwtBearer((x) =>
             {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+                var parameters = new TokenValidationParameters
                 {
-                    ValidateLifetime = true,
                     SaveSigninToken = true,
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(30),
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    RequireExpirationTime = true,
-                    ValidIssuer = "",
-                    ValidAudience = "",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingConfig.GetSection("").ToString())),
-                    ClockSkew = TimeSpan.FromSeconds(30),
+                    ValidIssuer = AppSettingConfig.GetSection("JwtConfig:Issuer").Value.ToString(),//发行人
+                    ValidAudience = AppSettingConfig.GetSection("JwtConfig:Audience").Value.ToString(),//订阅人
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingConfig.GetSection("JwtConfig:IssuerSigningKey").Value.ToString())),
                 };
+
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = parameters;
                 x.Events = new JwtBearerEvents
                 {
-                    OnChallenge = context =>
+                    OnMessageReceived = context =>
                     {
-                        context.Response.Headers.Add("Token-Error", context.ErrorDescription);
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/hubs/messagehub")))
+                        {
+                            context.Token = accessToken;
+                        }
                         return Task.CompletedTask;
                     },
+
+                    //在Token验证通过后调用
                     OnAuthenticationFailed = context =>
                     {
+                        var jwtHandler = new JwtSecurityTokenHandler();
+                        var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                        if (!string.IsNullOrEmpty(token) && jwtHandler.CanReadToken(token))
+                        {
+                            var jwtToken = jwtHandler.ReadJwtToken(token);
 
+                            if (jwtToken.Issuer != parameters.ValidIssuer)
+                            {
+                                context.Response.Headers.Add("Token-Error-Iss", "issuer is wrong!");
+                            }
+
+                            if (jwtToken.Audiences.FirstOrDefault() != parameters.ValidAudience)
+                            {
+                                context.Response.Headers.Add("Token-Error-Aud", "Audience is wrong!");
+                            }
+                        }
+
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
+                        }
+                        return Task.CompletedTask;
                     },
+
+                    //未授权时调用失败
+                    OnChallenge = context =>
+                    {
+                        if (context.Error != null)
+                        {
+                            string message = context.ErrorDescription;
+                        }
+
+                        context.Response.Headers.Add("Token-Error-Iss", "请授权");
+                        return Task.CompletedTask;
+                    },
+                    //在Token验证通过后调用
+                    //OnTokenValidated = context => { 
+                    //}
                 };
             });
         }

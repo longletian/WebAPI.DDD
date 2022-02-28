@@ -6,3 +6,28 @@ services:
     build:
       context: .
       dockerfile: Src/Services/Identity/Identity.Api/Dockerfile
+    ports:
+      - "51000:50001"
+
+  identity.api-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "Identity.Api", "-app-port", "80" ]
+    depends_on:
+      - identity.api
+    network_mode: "service:identity.api"
+
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: Src/Services/Ordering/Ordering.Api/Dockerfile
+    ports:
+      - "52000:50001"
+
+  ordering.api-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "Ordering.Api", "-app-port", "80" ]
+    depends_on:
+      - ordering.api
+    network_mode: "service:ordering.api"
+

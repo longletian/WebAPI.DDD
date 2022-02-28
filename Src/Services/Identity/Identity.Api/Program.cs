@@ -14,11 +14,15 @@ namespace Identity.Api
         {
             try
             {
+                Log.Information("system init start");
+
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(Configuration)
                     .CreateLogger();
 
                 CreateHostBuilder(args).Build().Run();
+
+                Log.Information("system init end");
             }
             catch (Exception ex)
             {
@@ -37,6 +41,7 @@ namespace Identity.Api
                     webBuilder.UseStartup<Startup>()
                     .UseSerilog()
                     .UseConfiguration(Configuration)
+                    .UseUrls("http://*:6868;https://*:6888")
                     .ConfigureKestrel((context, options) =>
                     {
                         options.Limits.MaxRequestBodySize = 52428800;
@@ -52,6 +57,7 @@ namespace Identity.Api
             .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "JsonConfig"))
             .AddJsonFile("appsettings_log.json", optional: true, reloadOnChange: true)
             .AddJsonFile("dbsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.json",optional:true,reloadOnChange:true)
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();

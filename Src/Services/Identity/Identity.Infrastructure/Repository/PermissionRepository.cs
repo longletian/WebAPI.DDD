@@ -8,6 +8,7 @@ namespace Identity.Infrastructure
     {
         public PermissionRepository(IFreeSql freeSql) : base(freeSql)
         {
+
         }
     }
 }

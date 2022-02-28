@@ -59,7 +59,7 @@ namespace InfrastructureBase
             {
                 if (Configuration.GetSection(sectionConstr).Exists())
                 {
-                    return Configuration.GetSection(sectionConstr).Get<T>();
+                    return Configuration.GetValue<T>(sectionConstr);
                 }
             }
             return default(T);

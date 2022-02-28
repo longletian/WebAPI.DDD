@@ -12,6 +12,7 @@ namespace InfrastructureBase
     public abstract class RepositoryBase<DomainModel, PersistenceObject> : BaseRepository<DomainModel>,
         IRepository<DomainModel> where DomainModel : Entity where PersistenceObject : class
     {
+        
         private readonly IFreeSql freeSql;
 
         protected RepositoryBase(IFreeSql freeSql) : base(freeSql, null, null)

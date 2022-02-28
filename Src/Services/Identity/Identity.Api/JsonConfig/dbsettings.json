@@ -6,10 +6,13 @@
       "PostGreSQL": 2
     },
     "BoolOpenSalve": false,
-    "MysqlCon": "Data Source=localhost;Port=3306;User ID=root;Password=root;Initial Catalog=postgisystem;Charset=utf8mb4;SslMode=none;Max pool size=2;Connection LifeTime=20;AllowPublicKeyRetrieval=True",
-    "RedisCon": "localhost:6379,password=,defaultDatabase=0"
+    "MysqlCon": "Data Source=localhost;Port=33060;User ID=root;Password=root;Initial Catalog=postgisystem;Charset=utf8mb4;SslMode=none;Max pool size=2;Connection LifeTime=20;AllowPublicKeyRetrieval=True",
+
   },
   "RabbitmqCon": {
 
+  },
+  "RedisConfig": {
+    "RedisCon": "localhost:63790,password=,defaultDatabase=0"
   }
 }

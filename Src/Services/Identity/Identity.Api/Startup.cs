@@ -23,6 +23,7 @@ namespace Identity.Api
         {
             services.AddSingleton(new AppSettingConfig(Configuration,Env));
             services.AddControllService();
+            services.AddCommonService();
             services.AddFreeSqlService();
             services.AddCorsService();
             services.AddDaprClient();
@@ -43,7 +44,6 @@ namespace Identity.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseAuthorization();

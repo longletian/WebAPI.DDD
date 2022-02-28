@@ -2,8 +2,7 @@
 
 namespace InfrastructureBase
 {
-
-    public class PageQueryOutput<T>
+    public class PageQueryOutput<T> where T:class
     {
         public PageQueryOutput(List<T> data,int total)
         {
