@@ -49,9 +49,11 @@ namespace Identity.Api
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseSwaggUIConfigure();
+            app.UseCloudEvents();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapSubscribeHandler();
                 endpoints.MapSwagger("{documentName}/api-docs");
             });
         }

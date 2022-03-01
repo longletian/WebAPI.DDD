@@ -10,4 +10,9 @@
 		<Folder Include="IRepositorys\" />
 	</ItemGroup>
 
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Core\DomainCore\DomainBase.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -23,7 +23,8 @@ namespace Ordering.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddDapr();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

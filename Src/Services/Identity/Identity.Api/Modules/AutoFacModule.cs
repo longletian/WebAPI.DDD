@@ -3,6 +3,7 @@ using System.Reflection;
 using Autofac.Extras.DynamicProxy;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Identity.Api
 {
@@ -40,14 +41,21 @@ namespace Identity.Api
             //builder.RegisterType<LogAop>();
             //cacheType.Add(typeof(LogAop));
 
-            builder.RegisterAssemblyTypes(GetAssemblyByName("Identity.Api"))
-                .Where(a => a.Name.EndsWith("Repository")|| a.Name.EndsWith("Service"))
+            var lists = builder.RegisterAssemblyTypes(GetAssemblyByName("Identity.")).Where(a => a.Name.EndsWith("Repository"));
+
+            builder.RegisterAssemblyTypes(GetAssemblyByName("Identity."))
+                .Where(a => a.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency()
                 //引用Autofac.Extras.DynamicProxy;
                 .EnableClassInterceptors()
                 //允许将拦截器服务的列表分配给注册。
                 .InterceptedBy(cacheType.ToArray());
+
+            builder.RegisterAssemblyTypes(GetAssemblyByName("Identity."))
+             .Where(a => a.Name.EndsWith("Service"))
+             .AsImplementedInterfaces()
+             .InstancePerDependency();
 
         }
 
@@ -56,9 +64,11 @@ namespace Identity.Api
         /// </summary>
         /// <param name="AssemblyName"></param>
         /// <returns></returns>
-        public Assembly GetAssemblyByName(string AssemblyName)
+        public Assembly[] GetAssemblyByName(string AssemblyName)
         {
-            return Assembly.Load(AssemblyName);
+            var assemblys = AppDomain.CurrentDomain.GetAssemblies().Where(r => r.FullName.StartsWith($"{AssemblyName}")).ToArray();
+
+            return AppDomain.CurrentDomain.GetAssemblies().Where(r => r.FullName.StartsWith($"{AssemblyName}")).ToArray();
         }
     }
 }

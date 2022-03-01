@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using Swashbuckle.AspNetCore.Filters;
 using InfrastructureBase.Data;
+using Identity.Application;
 
 namespace Identity.Api
 {
@@ -100,7 +101,8 @@ namespace Identity.Api
                     //fv.RunDefaultMvcValidationAfterFluentValidationExecutes = true;
                     //自定义IValidator验证空接口
                     fv.RegisterValidatorsFromAssemblyContaining<InfrastructureBase.IValidator>();
-                });
+                })
+                .AddDapr();
 
             //验证统一处理
             services.Configure<ApiBehaviorOptions>(options =>
@@ -170,6 +172,8 @@ namespace Identity.Api
         public static void AddCommonService(this IServiceCollection services)
         {
             services.Configure<JwtConfig>(AppSettingConfig.GetSection("JwtConfig"));
+
+            services.AddTransient<IAuthService, AuthService>();
         }
 
 

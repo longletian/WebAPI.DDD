@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapr;
+using Dapr.Client;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Ordering.Api.Controllers
 {
@@ -22,5 +21,13 @@ namespace Ordering.Api.Controllers
         {
             _logger = logger;
         }
+
+        [Topic("pubsub", "weather")]
+        [HttpGet("list")]
+        public string GetListData([FromServices] DaprClient daprClient)
+        {
+            return Summaries[0];
+        }
+
     }
 }
