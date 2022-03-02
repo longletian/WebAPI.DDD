@@ -4,6 +4,7 @@ using Autofac.Extras.DynamicProxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace Identity.Api
 {
@@ -36,39 +37,41 @@ namespace Identity.Api
             //      .EnableInterfaceInterceptors().InterceptedBy(typeof(ValidatorAop));
             #endregion
 
+            #region 注入
+            var basePath = AppContext.BaseDirectory;
 
             var cacheType = new List<Type>();
             //builder.RegisterType<LogAop>();
             //cacheType.Add(typeof(LogAop));
 
-            var lists = builder.RegisterAssemblyTypes(GetAssemblyByName("Identity.")).Where(a => a.Name.EndsWith("Repository"));
-
-            builder.RegisterAssemblyTypes(GetAssemblyByName("Identity."))
+            builder.RegisterAssemblyTypes(GetAssemblies("Identity."))
                 .Where(a => a.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency()
+                //
+                .PropertiesAutowired()
                 //引用Autofac.Extras.DynamicProxy;
                 .EnableClassInterceptors()
                 //允许将拦截器服务的列表分配给注册。
                 .InterceptedBy(cacheType.ToArray());
 
-            builder.RegisterAssemblyTypes(GetAssemblyByName("Identity."))
-             .Where(a => a.Name.EndsWith("Service"))
+            var servicesDllFile = Path.Combine(basePath, "Identity.Application.dll");
+            var servicesDllFiles = Assembly.LoadFrom(servicesDllFile);
+
+            builder.RegisterAssemblyTypes(servicesDllFiles)
+             .Where(a => a.Name.Contains("Service"))
              .AsImplementedInterfaces()
+             .PropertiesAutowired()
              .InstancePerDependency();
+            #endregion
 
         }
 
-        /// <summary>
-        /// 根据程序集名称获取程序集
-        /// </summary>
-        /// <param name="AssemblyName"></param>
-        /// <returns></returns>
-        public Assembly[] GetAssemblyByName(string AssemblyName)
+        public Assembly[] GetAssemblies(string assemblyName)
         {
-            var assemblys = AppDomain.CurrentDomain.GetAssemblies().Where(r => r.FullName.StartsWith($"{AssemblyName}")).ToArray();
-
-            return AppDomain.CurrentDomain.GetAssemblies().Where(r => r.FullName.StartsWith($"{AssemblyName}")).ToArray();
+            //无法找到Identity.Application的程序集
+            //var assemblyTypes = AppDomain.CurrentDomain.GetAssemblies().Where((c) => c.FullName.StartsWith($"{assemblyName}")).ToArray();
+            return AppDomain.CurrentDomain.GetAssemblies().Where((c) => c.FullName.StartsWith($"{assemblyName}")).ToArray();
         }
     }
 }

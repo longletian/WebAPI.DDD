@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace InfrastructureBase.Data
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -16,6 +15,7 @@ namespace InfrastructureBase.Data
     public class DaprRepository : IDaprRepository, ISingletonDependency
     {
         private const string StateName = "statestore";
+        private const string PubSubName = "pubsub";
         private readonly DaprClient daprClient;
         private readonly ILogger<DaprRepository> logger;
 
@@ -37,15 +37,17 @@ namespace InfrastructureBase.Data
 
         public async Task SetStateAsync<T>(string Key, T t)
         {
-            try
-            {
-                await daprClient.SaveStateAsync(StateName, Key, t);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-          
+            await daprClient.SaveStateAsync(StateName, Key, t);
+        }
+
+        public async Task DelStateAsync(string Key)
+        {
+            await daprClient.DeleteStateAsync(StateName, Key);
+        }
+
+        public async Task<bool> TryDeleteStateAsync(string Key,string ETag)
+        {
+            return await daprClient.TryDeleteStateAsync(StateName, Key, ETag);
         }
 
         public async Task SetStateAsync<T>(string Key, List<T> t)

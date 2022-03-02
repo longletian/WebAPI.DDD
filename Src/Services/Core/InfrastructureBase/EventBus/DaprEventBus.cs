@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InfrastructureBase.EventBus
 {
-    public class DaprEventBus : IEventBus
+    public class DaprEventBus : IEventBus,ITransientDependency
     {
         private const string PubSubName = "pubsub";
         private readonly DaprClient daprClient;

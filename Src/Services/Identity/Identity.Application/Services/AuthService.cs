@@ -6,6 +6,8 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Identity.Application
 {
@@ -14,13 +16,13 @@ namespace Identity.Application
         public readonly IDaprRepository daprRepository;
         private readonly JwtConfig jwtConfig;
 
-        public AuthService(IDaprRepository _daprRepository, IOptionsMonitor<JwtConfig> _jwtConfig)
+        public AuthService(IDaprRepository _daprRepository, IOptionsSnapshot<JwtConfig> _jwtConfig)
         {
             daprRepository = _daprRepository;
-            jwtConfig = _jwtConfig.CurrentValue;
+            jwtConfig = _jwtConfig.Value;
         }
 
-        public ResponseData<string> GetToken()
+        public async Task<ResponseData<string>> GetToken()
         {
             var now = DateTime.Now;
             var expires = now.Add(TimeSpan.FromMinutes(30));
@@ -39,11 +41,15 @@ namespace Identity.Application
 
             string token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
-            daprRepository.SetStateAsync<string>("Key_Token", token);
+            await daprRepository.SetStateAsync<string>("Key_Token", token);
+            await daprRepository.SetStateAsync<string>("Now_Time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            await daprRepository.SetStateAsync<string>("Key_Token", token);
+
+            string token1 = await daprRepository.InvokeMethodAsync<string, string>(method: HttpMethod.Get, "IdentityApi", "/api/Auth/test", token);
 
             string tokenLast = daprRepository.GetStateAsync<string>("Key_Token").Result;
 
-            return new ResponseData<string> { MsgCode = 0, Message = "", Data = token };
+            return new ResponseData<string> { MsgCode = 0, Message = "", Data = token+ $"{token1}" };
         }
 
         public ResponseData<string> RefershToken(string token)
@@ -51,9 +57,9 @@ namespace Identity.Application
             throw new System.NotImplementedException();
         }
 
-        public ResponseData<string> TestData()
+        public ResponseData<string> TestData(string token)
         {
-            throw new System.NotImplementedException();
+            return new ResponseData<string> { MsgCode = 0, Message = "", Data = "hello" };
         }
     }
 }

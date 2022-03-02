@@ -5,12 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\Command\**" />
-    <EmbeddedResource Remove="Services\Command\**" />
-    <None Remove="Services\Command\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Identity.Domain\Identity.Domain.csproj" />
     <ProjectReference Include="..\Identity.Infrastructure\Identity.Infrastructure.csproj" />
   </ItemGroup>

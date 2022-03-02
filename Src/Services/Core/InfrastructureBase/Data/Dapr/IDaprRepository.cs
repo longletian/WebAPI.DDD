@@ -15,6 +15,10 @@ namespace InfrastructureBase.Data
 
         Task SetStateAsync<T>(string Key, List<T> t);
 
+        Task DelStateAsync(string Key);
+
+        Task<bool> TryDeleteStateAsync(string Key, string ETag);
+
         Task<bool> TrySaveStateAsync<T>(string Key, T t, string ETag);
 
         Task<bool> TrySaveStateAsync<T>(string Key, List<T> t, string ETag);

@@ -1,14 +1,15 @@
 ﻿using InfrastructureBase;
+using System.Threading.Tasks;
 
 namespace Identity.Application
 {
     public interface IAuthService
     {
-        ResponseData<string> GetToken();
+        Task<ResponseData<string>> GetToken();
 
         ResponseData<string> RefershToken(string token);
 
-        ResponseData<string> TestData();
+        ResponseData<string> TestData(string token);
 
     }
 }

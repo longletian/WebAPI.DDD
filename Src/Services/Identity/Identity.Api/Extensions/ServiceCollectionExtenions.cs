@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using Swashbuckle.AspNetCore.Filters;
 using InfrastructureBase.Data;
-using Identity.Application;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Identity.Api
 {
@@ -172,10 +172,7 @@ namespace Identity.Api
         public static void AddCommonService(this IServiceCollection services)
         {
             services.Configure<JwtConfig>(AppSettingConfig.GetSection("JwtConfig"));
-
-            services.AddTransient<IAuthService, AuthService>();
         }
-
 
         /// <summary>
         /// 添加授权服务配置
@@ -299,6 +296,17 @@ namespace Identity.Api
                     //}
                 };
             });
+        }
+
+        /// <summary>
+        /// 健康服务检查
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddHealthCheckService(this IServiceCollection services)
+        {
+            services.AddHealthChecks()
+              .AddMySql(AppSettingConfig.GetConnStrings("MysqlCon").ToString(),"mysql-Check");
+
         }
     }
 }

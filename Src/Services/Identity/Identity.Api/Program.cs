@@ -41,7 +41,7 @@ namespace Identity.Api
                     webBuilder.UseStartup<Startup>()
                     .UseSerilog()
                     .UseConfiguration(Configuration)
-                    .UseUrls("http://*:6868;https://*:6888")
+                    .UseUrls("http://*:6868")
                     .ConfigureKestrel((context, options) =>
                     {
                         options.Limits.MaxRequestBodySize = 52428800;

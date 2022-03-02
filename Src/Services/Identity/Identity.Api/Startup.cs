@@ -6,6 +6,7 @@ using Serilog;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Dapr.Client;
 
 namespace Identity.Api
 {
@@ -26,10 +27,10 @@ namespace Identity.Api
             services.AddCommonService();
             services.AddFreeSqlService();
             services.AddCorsService();
-            services.AddDaprClient();
             services.AddAuthorizationService();
             services.AddAuthenticationService();
             services.AddSwaggUIService();
+            services.AddHealthCheckService();
         }
 
         /// <summary>
@@ -52,6 +53,7 @@ namespace Identity.Api
             app.UseCloudEvents();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
                 endpoints.MapSubscribeHandler();
                 endpoints.MapSwagger("{documentName}/api-docs");
