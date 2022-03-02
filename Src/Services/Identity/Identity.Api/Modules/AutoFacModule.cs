@@ -48,7 +48,7 @@ namespace Identity.Api
                 .Where(a => a.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency()
-                //
+                //属性注入
                 .PropertiesAutowired()
                 //引用Autofac.Extras.DynamicProxy;
                 .EnableClassInterceptors()
