@@ -36,10 +36,23 @@ namespace Identity.Api.Controllers
         [HttpGet, Route("pubsub")]
         public ResponseData<string> Test([FromServices] DaprClient daprClient)
         {
-            daprClient.PublishEventAsync(PubSubName, "test_topic");
-            return new ResponseData<string> { Message = "", MsgCode = 0 };
+            try
+            {
+                daprClient.PublishEventAsync(PubSubName, "test_topic");
+                return new ResponseData<string> { Message = "", MsgCode = 0 };
+            }
+            catch (System.Exception ex)
+            {
+                Log.Information(ex.Message);
+                throw;
+            }
+            
+            
         }
 
+        /// <summary>
+        /// 注意配置文件是否对应名称
+        /// </summary>
         [Topic(PubSubName, "test_topic")]
         [HttpPost("sub")]
         public void TestPub()
