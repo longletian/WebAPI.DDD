@@ -20,6 +20,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Swashbuckle.AspNetCore.Filters;
 using InfrastructureBase.Data;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace Identity.Api
 {
@@ -144,24 +146,46 @@ namespace Identity.Api
                     var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
                     return controllerAction.ControllerName + "-" + controllerAction.ActionName;
                 });
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Identity.Api.xml"), true);
+
+                //以下是设置SwaggerUI中所有Web Api 的参数注释、返回值等信息从哪里获取。
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                c.IncludeXmlComments(xmlPath, true);
                 // 引入Swashbuckle和FluentValidation
                 c.AddFluentValidationRules();
 
-                // 开启加权小锁
-                c.OperationFilter<AddResponseHeadersFilter>();
-                c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
-                // 在header中添加token，传递到后台
-                c.OperationFilter<SecurityRequirementsOperationFilter>();
 
                 // Jwt Bearer 认证，必须是 oauth2
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                //c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                //{
+                //    Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）\"",
+                //    Name = "Authorization",//jwt默认的参数名称
+                //    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                //    Type = SecuritySchemeType.ApiKey
+                //});
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）\"",
-                    Name = "Authorization",//jwt默认的参数名称
-                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
-                    Type = SecuritySchemeType.ApiKey
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Scheme = "bearer",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT"
                 });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                        },
+                        new List<string>()
+                    }
+                });
+
             });
         }
 
@@ -306,6 +330,16 @@ namespace Identity.Api
         {
             services.AddHealthChecks()
               .AddMySql(AppSettingConfig.GetConnStrings("MysqlCon").ToString(),"mysql-Check");
+        }
+
+
+        /// <summary>
+        /// IDServe4授权方式
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddIdServeAuthenticationService(this IServiceCollection services)
+        { 
+        
 
         }
     }

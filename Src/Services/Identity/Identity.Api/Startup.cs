@@ -27,8 +27,8 @@ namespace Identity.Api
             services.AddCommonService();
             services.AddFreeSqlService();
             services.AddCorsService();
-            services.AddAuthorizationService();
             services.AddAuthenticationService();
+            services.AddAuthorizationService();
             services.AddSwaggUIService();
             services.AddHealthCheckService();
         }

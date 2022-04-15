@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 namespace DomainBase
 {
     /// <summary>
@@ -11,6 +12,6 @@ namespace DomainBase
 
     public interface IEventHandle<in TIntegrationEvent> : IEventHandle where TIntegrationEvent : Event
     {
-        Task Handle(TIntegrationEvent @event);
+        Task Handle(TIntegrationEvent @event,CancellationToken cancellationToken);
     }
 }
