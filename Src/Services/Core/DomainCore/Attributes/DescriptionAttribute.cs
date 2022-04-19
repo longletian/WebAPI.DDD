@@ -13,7 +13,6 @@ namespace DomainBase.Attributes
         {
             this.Description = description;
         }
-
         public string Description { get; private set; }
     }
 }

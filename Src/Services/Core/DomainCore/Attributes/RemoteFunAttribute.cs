@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Net.Http;
 
-namespace InfrastructureBase.Data
+namespace DomainBase.Attributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Interface)]
     public class RemoteFunAttribute: Attribute
     {
-        private string ServiceName;
-
+        public RemoteFunAttribute()
+        {
+            
+        }
     }
 }

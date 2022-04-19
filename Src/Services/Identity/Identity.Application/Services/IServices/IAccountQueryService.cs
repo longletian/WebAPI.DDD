@@ -1,6 +1,9 @@
-﻿using InfrastructureBase;
+﻿using System.Collections.Generic;
+using InfrastructureBase;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using DomainBase.Attributes;
+using System.Net.Http;
 
 namespace Identity.Application
 {
@@ -17,6 +20,7 @@ namespace Identity.Application
         /// 获取用户详情
         /// </summary>
         /// <returns></returns>
+        [RemoteFun()]
         Task<ResponseData> GetUserInfoAsync(int Id);
     }
 }
