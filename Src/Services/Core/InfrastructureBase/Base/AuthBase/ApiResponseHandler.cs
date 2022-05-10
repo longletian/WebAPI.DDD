@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace InfrastructureBase.Base
 {
+
+    /// <summary>
+    /// 自定义授权处理
+    /// </summary>
     public class ApiResponseHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public ApiResponseHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)

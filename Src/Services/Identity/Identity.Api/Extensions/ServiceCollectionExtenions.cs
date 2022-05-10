@@ -22,6 +22,7 @@ using InfrastructureBase.Data;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Identity.Api
 {
@@ -95,7 +96,12 @@ namespace Identity.Api
         /// <param name="services"></param>
         public static void AddControllService(this IServiceCollection services)
         {
-            services.AddControllers()
+            services
+                .AddHttpContextAccessor()
+                .AddCustomDaprClient()
+                .AddControllers((c) => {
+                //c.Filters.Add();
+                 })
                 .AddJsonOptions(option => option.JsonSerializerOptions.PropertyNamingPolicy = null)
                 .AddFluentValidation(fv =>
                 {
@@ -185,7 +191,6 @@ namespace Identity.Api
                         new List<string>()
                     }
                 });
-
             });
         }
 
@@ -228,8 +233,6 @@ namespace Identity.Api
             // 3、自定义复杂的策略授权
 
             // 4.
-
-
         }
 
         /// <summary>
@@ -332,7 +335,6 @@ namespace Identity.Api
               .AddMySql(AppSettingConfig.GetConnStrings("MysqlCon").ToString(),"mysql-Check");
         }
 
-
         /// <summary>
         /// IDServe4授权方式
         /// </summary>
@@ -341,6 +343,28 @@ namespace Identity.Api
         { 
         
 
+        }
+
+        /// <summary>
+        /// 添加dapr配置服务
+        /// </summary>
+        /// <param name="services"></param>
+        public static IServiceCollection AddCustomDaprClient(this IServiceCollection services)
+        {
+            var options = new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNameCaseInsensitive = true,
+            };
+
+            services.AddSingleton(options);
+
+            services.AddDaprClient(client =>
+            {
+                client.UseJsonSerializationOptions(options);
+            });
+
+            return services;
         }
     }
 }
