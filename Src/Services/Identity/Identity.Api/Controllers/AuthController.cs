@@ -72,8 +72,8 @@ namespace Identity.Api.Controllers
         {
             for (int i = 0; i < 10; i++)
             {
-                UserEvent userEvent = new UserEvent(Guid.NewGuid(), $"username{i}", i);
-                eventBus.PublishAsync<UserEvent>(userEvent,nameof(UserEvent));
+                UserEvent userEvent = new UserEvent($"username{i}", i);
+                eventBus.PublishAsync(userEvent, nameof(UserEvent));
             }
         }
     }

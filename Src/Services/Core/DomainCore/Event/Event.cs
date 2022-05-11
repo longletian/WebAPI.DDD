@@ -1,14 +1,15 @@
 ﻿using System;
 namespace DomainBase
 {
-    public abstract class Event 
+    public record  Event 
     {
+        public Guid Id { get; private set; }
+        public DateTime CreateDateTime { get; }
+
         public Event()
         {
             Id = Guid.NewGuid();
             CreateDateTime = DateTime.UtcNow;
         }
-        public Guid Id { get; private set; }
-        public DateTime CreateDateTime { get; }
     }
 }

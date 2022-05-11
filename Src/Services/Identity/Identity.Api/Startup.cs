@@ -60,8 +60,8 @@ namespace Identity.Api
                 endpoints.MapSwagger("{documentName}/api-docs");
             });
 
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<UserEventHandle, UserEvent>(nameof(UserEvent), env.ApplicationName);
+            //var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            //eventBus.Subscribe<UserEventHandle, UserEvent>(nameof(UserEvent), env.ApplicationName);
         }
     }
 }

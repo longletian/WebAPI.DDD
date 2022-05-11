@@ -12,11 +12,7 @@
 
 
 	<ItemGroup>
-		<Folder Include="Entities\" />
 		<Folder Include="Enums\" />
-		<Folder Include="IntegrationEvents\EventHandle\" />
-		<Folder Include="IntegrationEvents\Event\" />
-		<Folder Include="IRepositorys\" />
 	</ItemGroup>
 
 

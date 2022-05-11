@@ -34,22 +34,21 @@ namespace InfrastructureBase.EventBus
             rabbitmqConnection = _rabbitmqConnection ?? throw new ArgumentNullException(nameof(_rabbitmqConnection));
         }
 
-        public void PublishAsync<TIntegrationEvent>(TIntegrationEvent @event, string exchangeName) where TIntegrationEvent : Event
+        public void PublishAsync<TIntegrationEvent>(TIntegrationEvent @event, string exchangeName,string exchangeType= ExchangeType.Fanout,string routingName="") where TIntegrationEvent : Event
         {
             if (!rabbitmqConnection.IsConnected)
             {
                 rabbitmqConnection.TryConnect();
             }
-            CreateExchangeIfExists(exchangeName, ExchangeType.Fanout);
+            CreateExchangeIfExists(exchangeName, exchangeType);
 
-            var eventName = @event.GetType().Name;
             var properties = channel.CreateBasicProperties();
             //发送消息的时候将消息的 deliveryMode 设置为 2 消息持久化
             properties.DeliveryMode = 2; // persistent
             var message = JsonConvert.SerializeObject(@event);
             var body = Encoding.UTF8.GetBytes(message);
             channel.BasicPublish(exchange: exchangeName,
-                                routingKey: string.Empty,
+                                routingKey: routingName,
                                 mandatory: true,
                                 basicProperties: properties,
                                 body: body);

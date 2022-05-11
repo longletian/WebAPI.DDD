@@ -24,6 +24,7 @@ using InfrastructureBase.EventBus;
 using RabbitMQ.Client;
 using Microsoft.Extensions.Options;
 using DomainBase;
+using Ordering.Domain.IntegrationEvents;
 
 namespace Ordering.Api
 {
@@ -391,7 +392,7 @@ namespace Ordering.Api
             });
             services.AddSingleton<IEventBus, RabbitmqEventBus>();
 
-            //services.AddTransient<IEventHandle<UserEvent>, UserEventHandle>();
+            services.AddScoped<IEventHandle<OrderEvent>, OrderEventHandle>();
 
             #region 一个接口多个实现
             //services.AddSingleton(serviceProvider =>

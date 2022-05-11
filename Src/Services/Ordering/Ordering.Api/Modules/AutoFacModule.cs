@@ -44,7 +44,7 @@ namespace Ordering.Api
             //builder.RegisterType<LogAop>();
             //cacheType.Add(typeof(LogAop));
 
-            builder.RegisterAssemblyTypes(GetAssemblies("Identity."))
+            builder.RegisterAssemblyTypes(GetAssemblies("Ordering."))
                 .Where(a => a.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency()
@@ -55,7 +55,7 @@ namespace Ordering.Api
                 //允许将拦截器服务的列表分配给注册。
                 .InterceptedBy(cacheType.ToArray());
 
-            var servicesDllFile = Path.Combine(basePath, "Identity.Application.dll");
+            var servicesDllFile = Path.Combine(basePath, "Ordering.Application.dll");
             var servicesDllFiles = Assembly.LoadFrom(servicesDllFile);
 
             builder.RegisterAssemblyTypes(servicesDllFiles)

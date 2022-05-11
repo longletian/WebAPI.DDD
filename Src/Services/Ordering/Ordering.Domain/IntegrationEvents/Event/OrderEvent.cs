@@ -5,8 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Identity.Domain.IntegrationEvents
+namespace Ordering.Domain.IntegrationEvents
 {
-    public record UserEvent(string UserName,int Age) : Event;
-  
+    public record OrderEvent(int OrderNumber, DateTime OrderDate, string OrderStatus) : Event;
 }

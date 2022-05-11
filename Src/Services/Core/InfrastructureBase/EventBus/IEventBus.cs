@@ -1,11 +1,12 @@
 ﻿using DomainBase;
+using RabbitMQ.Client;
 using System.Threading.Tasks;
 
 namespace InfrastructureBase
 {
     public interface IEventBus
     {
-        void PublishAsync<TIntegrationEvent>(TIntegrationEvent @event, string exchangeName)
+        void PublishAsync<TIntegrationEvent>(TIntegrationEvent @event, string exchangeName, string exchangeType = ExchangeType.Fanout, string routingName = "")
            where TIntegrationEvent : Event;
 
         void Subscribe<TH, T>(string exchangeName, string subscriberName)
