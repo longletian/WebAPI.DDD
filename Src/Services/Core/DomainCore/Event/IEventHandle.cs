@@ -12,6 +12,6 @@ namespace DomainBase
 
     public interface IEventHandle<in TIntegrationEvent> : IEventHandle where TIntegrationEvent : Event
     {
-        Task Handle(TIntegrationEvent @event,CancellationToken cancellationToken);
+        Task HandleAsync(TIntegrationEvent @event);
     }
 }

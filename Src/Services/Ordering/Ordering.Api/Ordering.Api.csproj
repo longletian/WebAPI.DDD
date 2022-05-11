@@ -25,6 +25,18 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Ordering.Application\Ordering.Application.csproj" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Content Update="JsonConfig\appsettings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="JsonConfig\appsettings_log.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="JsonConfig\dbsettings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace Identity.Api
+namespace Ordering.Api
 {
     public static class MiddlewareExtensions
     {

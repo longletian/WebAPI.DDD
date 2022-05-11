@@ -9,7 +9,6 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Identity.Infrastructure;
 using InfrastructureBase;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,9 +24,8 @@ using InfrastructureBase.EventBus;
 using RabbitMQ.Client;
 using Microsoft.Extensions.Options;
 using DomainBase;
-using Identity.Domain.IntegrationEvents;
 
-namespace Identity.Api
+namespace Ordering.Api
 {
     public static class ServiceCollectionExtenions
     {
@@ -66,9 +64,9 @@ namespace Identity.Api
             //在运行时直接生成表结构
             try
             {
-                freeSql.CodeFirst
-                    .SeedData()
-                    .SyncStructure(FreeSqlExtension.GetTypesByNameSpace());
+                //freeSql.CodeFirst
+                //    .SeedData()
+                //    .SyncStructure(FreeSqlExtension.GetTypesByNameSpace());
             }
             catch (Exception e)
             {
@@ -334,8 +332,8 @@ namespace Identity.Api
         /// <param name="services"></param>
         public static void AddHealthCheckService(this IServiceCollection services)
         {
-            services.AddHealthChecks()
-              .AddMySql(AppSettingConfig.GetConnStrings("MysqlCon").ToString(), "mysql-Check");
+            //services.AddHealthChecks()
+            //  .AddMySql(AppSettingConfig.GetConnStrings("MysqlCon").ToString(), "mysql-Check");
         }
 
         /// <summary>
@@ -393,7 +391,7 @@ namespace Identity.Api
             });
             services.AddSingleton<IEventBus, RabbitmqEventBus>();
 
-            services.AddTransient<IEventHandle<UserEvent>, UserEventHandle>();
+            //services.AddTransient<IEventHandle<UserEvent>, UserEventHandle>();
 
             #region 一个接口多个实现
             //services.AddSingleton(serviceProvider =>

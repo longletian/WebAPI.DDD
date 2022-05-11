@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InfrastructureBase.EventBus
 {
-    public class DaprEventBus : IEventBus,ITransientDependency
+    public class DaprEventBus : IEventBus
     {
         private const string PubSubName = "pubsub";
         private readonly DaprClient daprClient;
@@ -18,10 +18,24 @@ namespace InfrastructureBase.EventBus
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task PublishAsync<TIntegrationEvent>(TIntegrationEvent @event) where TIntegrationEvent : Event
+        public  void PublishAsync<TIntegrationEvent>(TIntegrationEvent @event, string exchangeName) where TIntegrationEvent : Event
         {
             var topicName = @event.GetType().Name;
-            await daprClient.PublishEventAsync<object>(PubSubName, topicName, @event);
+            daprClient.PublishEventAsync<object>(PubSubName, topicName, @event);
+        }
+
+        public void Subscribe<TH, T>(string exchangeName, string subscriberName)
+            where TH : IEventHandle<T>
+            where T : Event
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Unsubscribe<T, TH>()
+            where T : Event
+            where TH : IEventHandle<T>
+        {
+            throw new NotImplementedException();
         }
     }
 }

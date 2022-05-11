@@ -1,9 +1,14 @@
 ﻿using Dapr;
 using Dapr.Client;
 using Identity.Application;
+using Identity.Domain.IntegrationEvents;
 using InfrastructureBase;
+using InfrastructureBase.EventBus;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Identity.Api.Controllers
@@ -14,10 +19,11 @@ namespace Identity.Api.Controllers
     {
         private const string PubSubName = "pubsub";
         private readonly IAuthService authService;
-
-        public AuthController(IAuthService _authService)
+        private readonly IEventBus eventBus;
+        public AuthController(IEnumerable<IEventBus> eventBuses,IAuthService _authService)
         {
             authService = _authService;
+            eventBus = eventBuses.FirstOrDefault(h => h.GetType() == typeof(RabbitmqEventBus));
         }
 
         [HttpGet, Route("token")]
@@ -58,6 +64,17 @@ namespace Identity.Api.Controllers
         public void TestPub()
         {
             Log.Information("进入pub方法");
+        }
+
+
+        [HttpGet,Route("")]
+        public  void RabbitmqTest()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                UserEvent userEvent = new UserEvent(Guid.NewGuid(), $"username{i}", i);
+                eventBus.PublishAsync<UserEvent>(userEvent,nameof(UserEvent));
+            }
         }
     }
 }

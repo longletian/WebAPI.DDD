@@ -13,7 +13,7 @@
 		<Folder Include="Dtos\Input\" />
 		<Folder Include="Dtos\Output\" />
 		<Folder Include="Dtos\Qo\" />
-		<Folder Include="Services\" />
+		<Folder Include="Services\IServices\" />
 	</ItemGroup>
 
 </Project>

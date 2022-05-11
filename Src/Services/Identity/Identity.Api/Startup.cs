@@ -6,7 +6,7 @@ using Serilog;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Dapr.Client;
+using Identity.Domain.IntegrationEvents;
 
 namespace Identity.Api
 {
@@ -31,6 +31,7 @@ namespace Identity.Api
             services.AddAuthorizationService();
             services.AddSwaggUIService();
             services.AddHealthCheckService();
+            services.AddRabbitmqService();
         }
 
         /// <summary>
@@ -55,9 +56,12 @@ namespace Identity.Api
             {
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
-                endpoints.MapSubscribeHandler();
+                //endpoints.MapSubscribeHandler();
                 endpoints.MapSwagger("{documentName}/api-docs");
             });
+
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<UserEventHandle, UserEvent>(nameof(UserEvent), env.ApplicationName);
         }
     }
 }
