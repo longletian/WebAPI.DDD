@@ -11,9 +11,9 @@ namespace Identity.Domain.IntegrationEvents
     public class UserEventHandle : IEventHandle<UserEvent>
     {
         private readonly ILogger logger;
-        public  UserEventHandle(ILogger _logger)
+        public  UserEventHandle(ILoggerFactory loggerFactory )
         {
-            logger = _logger;
+          
         }
 
         public Task HandleAsync(UserEvent @event)

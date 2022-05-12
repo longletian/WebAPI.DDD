@@ -204,6 +204,7 @@ namespace Identity.Api
         public static void AddCommonService(this IServiceCollection services)
         {
             services.Configure<JwtConfig>(AppSettingConfig.GetSection("JwtConfig"));
+            services.AddSingleton<IEventBus, DaprEventBus>();
         }
 
         /// <summary>
@@ -396,23 +397,19 @@ namespace Identity.Api
             services.AddTransient<IEventHandle<UserEvent>, UserEventHandle>();
 
             #region 一个接口多个实现
-            //services.AddSingleton(serviceProvider =>
-            //{
-            //    Func<Type, IEventBus> func = key =>
-            //    {
-            //        if (key == typeof(DaprEventBus))
-            //        {
-            //            return serviceProvider.GetService<DaprEventBus>();
-            //        }
-            //        else if (key == typeof(RabbitmqEventBus))
-            //        {
-            //            return serviceProvider.GetService<RabbitmqEventBus>();
-            //        }
-            //        else
-            //            throw new ArgumentException("");
-            //    };
-            //    return func;
-            //});
+            services.AddSingleton(serviceProvider =>
+            {
+                Func<Type, IEventBus> func = key =>
+                {
+                    if (key!=null)
+                    {
+                        return serviceProvider.GetServices<IEventBus>().FirstOrDefault((c) => c.GetType() == key);
+                    }
+                    else
+                        throw new ArgumentException("");
+                };
+                return func;
+            });
             #endregion
 
         }

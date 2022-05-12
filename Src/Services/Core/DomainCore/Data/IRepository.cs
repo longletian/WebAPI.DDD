@@ -10,36 +10,36 @@ namespace DomainBase
     /// 写仓储
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRepository<T> : IBaseRepository<T> where T : class
+    public interface IRepository<TEntity> where TEntity : Entity
     {
         /// <summary>
         /// 新增对象
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        void Add(T t);
+        void Add(TEntity t);
         /// <summary>
         /// 更新对象
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        void Update(T t);
+        void Update(TEntity t);
         /// <summary>
         /// 删除对象
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        void Delete(T t);
+        void Delete(TEntity t);
         /// <summary>
         /// 根据条件删除对象
         /// </summary>
         /// <param name="t"></param>
-        void Delete(Expression<Func<T, bool>> condition);
+        void Delete(Expression<Func<TEntity, bool>> condition);
         /// <summary>
         /// 根据主键获取对象
         /// </summary>
         /// <returns></returns>
-        Task<T> GetAsync(object key = null);
+        Task<TEntity> GetAsync(object key = null);
         /// <summary>
         /// 判断对象是否存在
         /// </summary>
@@ -51,19 +51,19 @@ namespace DomainBase
         /// </summary>
         /// <param name="condition"></param>
         /// <returns></returns>
-        Task<bool> AnyAsync(Expression<Func<T, bool>> condition);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> condition);
         /// <summary>
         /// 根据主键获取对象
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<List<T>> GetManyAsync(Guid[] key);
+        Task<List<TEntity>> GetManyAsync(Guid[] key);
         /// <summary>
         /// 根据条件获取对象
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<List<T>> GetManyAsync(Expression<Func<T, bool>> condition);
+        Task<List<TEntity>> GetManyAsync(Expression<Func<TEntity, bool>> condition);
     }
 }

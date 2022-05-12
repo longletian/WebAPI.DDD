@@ -19,12 +19,23 @@ namespace Identity.Api.Controllers
     {
         private const string PubSubName = "pubsub";
         private readonly IAuthService authService;
+
+        #region 注入方式
+        //private readonly IEventBus eventBus;
+        //public AuthController(IEnumerable<IEventBus> eventBuses, IAuthService _authService)
+        //{
+        //    authService = _authService;
+        //    eventBus = eventBuses.FirstOrDefault(h => h.GetType() == typeof(RabbitmqEventBus));
+        //}
+        #endregion
+
         private readonly IEventBus eventBus;
-        public AuthController(IEnumerable<IEventBus> eventBuses,IAuthService _authService)
+        public AuthController(Func<Type, IEventBus> _eventBus, IAuthService _authService)
         {
             authService = _authService;
-            eventBus = eventBuses.FirstOrDefault(h => h.GetType() == typeof(RabbitmqEventBus));
+            eventBus = _eventBus(typeof(RabbitmqEventBus));
         }
+
 
         [HttpGet, Route("token")]
         public async Task<ResponseData<string>> GetToken()
@@ -52,8 +63,6 @@ namespace Identity.Api.Controllers
                 Log.Information(ex.Message);
                 throw;
             }
-            
-            
         }
 
         /// <summary>

@@ -59,6 +59,9 @@ namespace Ordering.Api
             app.UseSwaggUIConfigure();
             app.UseCloudEvents();
 
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<OrderEventHandle, OrderEvent>(nameof(OrderEvent), env.ApplicationName);
+
             app.UseEndpoints(endpoints =>
             {
                 //endpoints.MapHealthChecks("/health");
@@ -67,8 +70,7 @@ namespace Ordering.Api
                 endpoints.MapSwagger("{documentName}/api-docs");
             });
 
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<OrderEventHandle, OrderEvent>(nameof(OrderEvent), env.ApplicationName);
+        
         }
 
     }

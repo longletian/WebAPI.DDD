@@ -12,12 +12,17 @@ using System.Threading.Tasks;
 
 namespace InfrastructureBase.EventBus
 {
+
+
+    /// <summary>
+    /// AMQP的核心：将生产者和消费者隔离,生产者从不将消息直接发送给消息队列
+    /// </summary>
     public class RabbitmqEventBus : IEventBus, IDisposable
     {
         private readonly IRabbitmqConnection rabbitmqConnection;
         private readonly IServiceProvider serviceProvider;
         private IModel _channel;
-
+        private bool _disposed;
         public IModel channel
         {
             get
@@ -36,10 +41,6 @@ namespace InfrastructureBase.EventBus
 
         public void PublishAsync<TIntegrationEvent>(TIntegrationEvent @event, string exchangeName,string exchangeType= ExchangeType.Fanout,string routingName="") where TIntegrationEvent : Event
         {
-            if (!rabbitmqConnection.IsConnected)
-            {
-                rabbitmqConnection.TryConnect();
-            }
             CreateExchangeIfExists(exchangeName, exchangeType);
 
             var properties = channel.CreateBasicProperties();
@@ -82,7 +83,7 @@ namespace InfrastructureBase.EventBus
                 }
             };
             //启动消费者
-            channel.BasicConsume(string.Empty, false, consumer);
+            channel.BasicConsume(subscriberName, false, consumer);
 
         }
 
@@ -95,10 +96,20 @@ namespace InfrastructureBase.EventBus
 
         public void Dispose()
         {
+            if (_disposed)
+                return;
+            this.rabbitmqConnection.Dispose();
+            this.channel.Dispose();
+            _disposed = true;
         }
 
         private void CreateExchangeIfExists(string exchangeName, string exchangeType = ExchangeType.Fanout)
         {
+            if (!rabbitmqConnection.IsConnected)
+            {
+                rabbitmqConnection.TryConnect();
+            }
+
             //type：可选项为，fanout，direct，topic，headers。区别如下：
             //fanout：发送到所有与当前Exchange绑定的Queue中
             //direct：发送到与消息的routeKey相同的Queue中
@@ -122,7 +133,7 @@ namespace InfrastructureBase.EventBus
             //channel.QueueBind(Queue_KEY, EXCHANGE_KEY, eventName);
             channel.QueueDeclare(subscriberName, true, false, false, headerKeys);
 
-            channel.QueueBind(subscriberName, exchangeName, string.Empty);
+            channel.QueueBind(subscriberName, exchangeName, routerName);
         }
     }
 }

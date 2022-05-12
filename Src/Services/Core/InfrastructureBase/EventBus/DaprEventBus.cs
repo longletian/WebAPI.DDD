@@ -1,6 +1,7 @@
 ﻿using Dapr.Client;
 using DomainBase;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 using System;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace InfrastructureBase.EventBus
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public  void PublishAsync<TIntegrationEvent>(TIntegrationEvent @event, string exchangeName) where TIntegrationEvent : Event
+        public  void PublishAsync<TIntegrationEvent>(TIntegrationEvent @event, string exchangeName, string exchangeType = ExchangeType.Fanout, string routingName = "") where TIntegrationEvent : Event
         {
             var topicName = @event.GetType().Name;
             daprClient.PublishEventAsync<object>(PubSubName, topicName, @event);
