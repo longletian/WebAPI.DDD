@@ -59,7 +59,6 @@ namespace Identity.Api
                 //endpoints.MapSubscribeHandler();
                 endpoints.MapSwagger("{documentName}/api-docs");
             });
-
             //var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             //eventBus.Subscribe<UserEventHandle, UserEvent>(nameof(UserEvent), env.ApplicationName);
         }

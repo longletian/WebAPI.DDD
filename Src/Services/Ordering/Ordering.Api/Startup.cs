@@ -31,7 +31,7 @@ namespace Ordering.Api
             services.AddSingleton(new AppSettingConfig(Configuration, Env));
             services.AddControllService();
             services.AddCommonService();
-            //services.AddFreeSqlService();
+            services.AddFreeSqlService();
             services.AddCorsService();
             services.AddAuthenticationService();
             services.AddAuthorizationService();

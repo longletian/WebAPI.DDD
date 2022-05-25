@@ -11,11 +11,12 @@
   <ItemGroup>
     <PackageReference Include="Castle.Core" Version="4.4.1" />
     <PackageReference Include="Dapper" Version="2.0.90" />
-    <PackageReference Include="FreeSql.Extensions.LazyLoading" Version="2.5.200" />
-    <PackageReference Include="FreeSql.Extensions.Linq" Version="2.5.200" />
-    <PackageReference Include="FreeSql.Provider.MySqlConnector" Version="2.5.201" />
-    <PackageReference Include="FreeSql.Repository" Version="2.5.200" />
-    <PackageReference Include="FreeSql" Version="2.5.200" />
+    <PackageReference Include="FreeSql.Extensions.LazyLoading" Version="3.2.640" />
+    <PackageReference Include="FreeSql.Extensions.Linq" Version="3.2.640" />
+    <PackageReference Include="FreeSql.Provider.MySqlConnector" Version="3.2.640" />
+    <PackageReference Include="FreeSql.Provider.Odbc" Version="3.2.640" />
+    <PackageReference Include="FreeSql.Repository" Version="3.2.640" />
+    <PackageReference Include="FreeSql" Version="3.2.640" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

@@ -50,8 +50,8 @@ namespace Ordering.Api
                .Build(); //请务必定义成 Singleton 单例模式
 
             services.AddSingleton(freeSql);
-            services.AddFreeRepository();
-
+            services.AddFreeRepository(null, typeof(Startup).Assembly);
+            services.AddScoped<FreeSql.UnitOfWorkManager>();
             try
             {
                 using var objPool = freeSql.Ado.MasterPool.Get();

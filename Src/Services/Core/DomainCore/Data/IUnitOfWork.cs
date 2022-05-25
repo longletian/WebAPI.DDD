@@ -1,11 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DomainBase
 {
     public interface IUnitOfWork:IDisposable
     {
-        bool Commit();
+        /// <summary>
+        /// 开启事务
+        /// </summary>
+        void BeginTran();
+
+        /// <summary>
+        /// 提交事务
+        /// </summary>
+        void CommitTran();
+
+        /// <summary>
+        /// 回滚事务
+        /// </summary>
+        void RollbackTran();
     }
 }

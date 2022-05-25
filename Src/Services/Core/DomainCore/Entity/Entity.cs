@@ -7,7 +7,7 @@ using System.Text;
 namespace DomainBase
 {
     /// <summary>
-    /// 实体
+    /// 实体（存在唯一标识）
     /// </summary>
     public class Entity 
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DomainBase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Ordering.Domain
 {
-    public class Order
+    public class Order: Entity,IAggregateRoot
     {
-        public Guid Id { get; private set; }
         public int OrderNumber { get; private set; }
         public DateTime OrderDate { get; private set; }
         public string OrderStatus { get; set; }

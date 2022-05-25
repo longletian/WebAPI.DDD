@@ -10,12 +10,22 @@ namespace InfrastructureBase
     /// </summary>
     public class UnitOfWorkManager : IUnitOfWork
     {
-        public bool Commit()
+        public void BeginTran()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CommitTran()
         {
             throw new NotImplementedException();
         }
 
         public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RollbackTran()
         {
             throw new NotImplementedException();
         }

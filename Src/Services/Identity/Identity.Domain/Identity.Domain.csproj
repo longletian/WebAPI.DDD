@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FreeSql.Provider.MySqlConnector" Version="3.2.640" />
+    <PackageReference Include="FreeSql.Provider.Odbc" Version="3.2.640" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Core\DomainCore\DomainBase.csproj" />
   </ItemGroup>
 

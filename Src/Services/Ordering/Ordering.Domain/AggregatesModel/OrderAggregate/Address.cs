@@ -12,8 +12,6 @@ namespace Ordering.Domain
         public string City { get; private set; }
         public string State { get; private set; }
         public string Country { get; private set; }
-        //public double Longitude { get; set; }
-        //public double Latitude { get; set; }
 
         public Address() : this(string.Empty, string.Empty, string.Empty, string.Empty)
         {

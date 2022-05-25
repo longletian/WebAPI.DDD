@@ -39,7 +39,7 @@ namespace Identity.Api
         {
             IFreeSql freeSql = new FreeSqlBuilder()
                .UseGenerateCommandParameterWithLambda(true)
-               .UseConnectionString(DataType.MySql, AppSettingConfig.GetConnStrings("MysqlCon"))
+               .UseConnectionString(DataType.MySql, AppSettingConfig.GetConnStrings("OcebaseCon"))
                //定义名称格式
                .UseNameConvert(NameConvertType.PascalCaseToUnderscoreWithLower)
                .UseMonitorCommand(cmd =>

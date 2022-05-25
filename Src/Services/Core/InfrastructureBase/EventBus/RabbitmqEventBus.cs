@@ -84,7 +84,6 @@ namespace InfrastructureBase.EventBus
             };
             //启动消费者
             channel.BasicConsume(subscriberName, false, consumer);
-
         }
 
         public void Unsubscribe<T, TH>()
