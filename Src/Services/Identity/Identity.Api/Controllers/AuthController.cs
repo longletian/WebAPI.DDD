@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Identity.Api.Controllers
@@ -84,6 +87,23 @@ namespace Identity.Api.Controllers
                 UserEvent userEvent = new UserEvent($"username{i}", i);
                 eventBus.PublishAsync(userEvent, nameof(UserEvent));
             }
+        }
+
+        [HttpGet,Route("test-sign")]
+        public string TestSign(string str)
+        {
+            string strSign = $"appId=1Jkdialkngadiufjskay&nonce=ijwetojfndasosdgusafqdf&timestamp=1629620288&v=v1{str}";
+            return SignStr("aaaaaaaaaaaaaaaaaa", strSign);
+        }
+
+        private string SignStr(string AUTH_TOKEN,string str)
+        {
+            byte[] key = Encoding.ASCII.GetBytes(AUTH_TOKEN);
+            HMACSHA256 myhmacsha256 = new HMACSHA256(key);
+            byte[] byteArray = Encoding.ASCII.GetBytes(str);
+            MemoryStream stream = new MemoryStream(byteArray);
+            string result = myhmacsha256.ComputeHash(stream).Aggregate("", (s, e) => s + String.Format("{0:x2}", e), s => s);
+            return result;
         }
     }
 }

@@ -59,10 +59,11 @@ namespace Identity.Api
             var servicesDllFiles = Assembly.LoadFrom(servicesDllFile);
 
             builder.RegisterAssemblyTypes(servicesDllFiles)
-             .Where(a => a.Name.Contains("Service"))
-             .AsImplementedInterfaces()
-             .PropertiesAutowired()
-             .InstancePerDependency();
+                 .Where(a => a.Name.Contains("Service"))
+                 .AsImplementedInterfaces()
+                 .PropertiesAutowired()
+                 .InstancePerDependency();
+
             #endregion
 
         }

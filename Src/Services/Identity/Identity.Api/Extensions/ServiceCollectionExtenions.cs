@@ -26,6 +26,7 @@ using RabbitMQ.Client;
 using Microsoft.Extensions.Options;
 using DomainBase;
 using Identity.Domain.IntegrationEvents;
+using InfrastructureBase.Base.AuthBase.CustomAuth;
 
 namespace Identity.Api
 {
@@ -326,6 +327,9 @@ namespace Identity.Api
                     //OnTokenValidated = context => { 
                     //}
                 };
+            })
+            .AddCustomAuthentication((option) => { 
+
             });
         }
 
