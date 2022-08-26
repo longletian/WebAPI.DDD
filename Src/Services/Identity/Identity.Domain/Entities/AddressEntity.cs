@@ -29,7 +29,6 @@ namespace Identity.Domain
         /// </summary>
         public string Street { get; }
         
-        
         public AddressEntity(string province, string city,
             string county, string street)
         {

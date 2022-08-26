@@ -26,6 +26,11 @@ namespace Identity.Domain
         public AccountState State { get; set; }
 
         /// <summary>
+        /// 是否启用
+        /// </summary>
+        public bool? IsEnable { get; set; }
+
+        /// <summary>
         /// 排序
         /// </summary>
         public int? SortNum { get; set; }

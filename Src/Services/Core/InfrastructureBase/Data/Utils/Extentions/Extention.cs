@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace InfrastructureBase.Base
+namespace InfrastructureBase.Data
 {
     public static class Extention
     {

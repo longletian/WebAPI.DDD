@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="WorkflowCore" Version="3.6.5" />
+    <PackageReference Include="WorkflowCore.DSL" Version="3.6.5" />
+    <PackageReference Include="WorkflowCore.Persistence.MySQL" Version="3.6.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Core\InfrastructureBase\InfrastructureBase.csproj" />
     <ProjectReference Include="..\Workflow.Domain\Workflow.Domain.csproj" />
   </ItemGroup>

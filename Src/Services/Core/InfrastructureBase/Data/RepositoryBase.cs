@@ -35,16 +35,6 @@ namespace InfrastructureBase
             return await freeSql.Select<DomainModel>().AnyAsync(condition);
         }
 
-        public virtual void Delete(DomainModel t)
-        {
-            freeSql.Delete<PersistenceObject>(t.Adapt<PersistenceObject>());
-        }
-
-        public virtual void Delete(Expression<Func<DomainModel, bool>> condition)
-        {
-            freeSql.Delete<DomainModel>().Where(condition);
-        }
-
         public virtual async Task<DomainModel> GetAsync(object key = null)
         {
             return await freeSql.Select<DomainModel>(key).FirstAsync();
@@ -61,9 +51,5 @@ namespace InfrastructureBase
             return await freeSql.Select<DomainModel>().Where(condition).ToListAsync();
         }
 
-        public virtual void Update(DomainModel t)
-        {
-            freeSql.Update<PersistenceObject>(t.MapTo<PersistenceObject>());
-        }
     }
 }

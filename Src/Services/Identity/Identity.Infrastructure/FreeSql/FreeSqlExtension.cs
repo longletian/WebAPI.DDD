@@ -189,8 +189,8 @@ namespace Identity.Infrastructure
             {
                 e.HasData(new List<RoleEntity>
                 {
-                    new RoleEntity {SortNum = 1, ParentId = null, RoleName = "管理员", Remark = ""},
-                    new RoleEntity {SortNum = 2, ParentId = null, RoleName = "城管", Remark = ""}
+                    new RoleEntity {SortNum = 1, ParentId = null, RoleName = "管理员", Description = ""},
+                    new RoleEntity {SortNum = 2, ParentId = null, RoleName = "城管", Description = ""}
                 });
             });
 

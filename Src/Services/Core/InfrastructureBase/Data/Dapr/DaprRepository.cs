@@ -8,10 +8,6 @@ using System.Threading.Tasks;
 
 namespace InfrastructureBase.Data
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class DaprRepository : IDaprRepository, ISingletonDependency
     {
         private const string StateName = "statestore";

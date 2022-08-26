@@ -32,6 +32,7 @@ namespace Identity.Domain
         /// 排序
         /// </summary>
         public int? SortNum { get; set; }
+
         /// <summary>
         /// 户籍地址
         /// </summary>

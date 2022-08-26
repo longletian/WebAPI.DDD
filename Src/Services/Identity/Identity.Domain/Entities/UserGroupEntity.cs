@@ -1,13 +1,16 @@
 ﻿using DomainBase;
 using System;
-using FreeSql.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Identity.Domain
 {
     /// <summary>
-    /// 角色
+    /// 用户组
     /// </summary>
-    public class RoleEntity : Entity, IAggregateRoot
+    public class UserGroupEntity : Entity
     {
         /// <summary>
         /// 父级角色标识
@@ -19,9 +22,9 @@ namespace Identity.Domain
         public string Code { get; set; }
 
         /// <summary>
-        /// 角色名称
+        /// 用户组名称
         /// </summary>
-        public string RoleName { get; set; }
+        public string UserGroupName { get; set; }
 
         /// <summary>
         /// 角色备注
@@ -32,6 +35,5 @@ namespace Identity.Domain
         /// 排序
         /// </summary>
         public int? SortNum { get; set; }
-
     }
 }
