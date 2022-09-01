@@ -14,6 +14,7 @@ namespace Identity.Domain
         /// </summary>
         public int? FileType { get; set; }
 
+
         /// <summary>
         /// 文件大小
         /// </summary>

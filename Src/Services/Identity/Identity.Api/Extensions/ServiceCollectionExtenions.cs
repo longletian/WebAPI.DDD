@@ -27,6 +27,7 @@ using Microsoft.Extensions.Options;
 using DomainBase;
 using Identity.Domain.IntegrationEvents;
 using InfrastructureBase.Base.AuthBase.CustomAuth;
+using System.Threading;
 
 namespace Identity.Api
 {
@@ -40,7 +41,7 @@ namespace Identity.Api
         {
             IFreeSql freeSql = new FreeSqlBuilder()
                .UseGenerateCommandParameterWithLambda(true)
-               .UseConnectionString(DataType.MySql, AppSettingConfig.GetConnStrings("OcebaseCon"))
+               .UseConnectionString(DataType.MySql, AppSettingConfig.GetConnStrings("MysqlCon"))
                //定义名称格式
                .UseNameConvert(NameConvertType.PascalCaseToUnderscoreWithLower)
                .UseMonitorCommand(cmd =>
@@ -57,6 +58,15 @@ namespace Identity.Api
             try
             {
                 using var objPool = freeSql.Ado.MasterPool.Get();
+                freeSql.Aop.CurdAfter += (s, e) =>
+                {
+                    Console.WriteLine($"ManagedThreadId:{Thread.CurrentThread.ManagedThreadId};" +
+                    $" FullName:{e.EntityType.FullName} ElapsedMilliseconds:{e.ElapsedMilliseconds}ms, {e.Sql}");
+                    if (e.ElapsedMilliseconds > 200)
+                    {
+                        Log.Warning(e.Sql + ";");
+                    }
+                };
             }
             catch (Exception e)
             {

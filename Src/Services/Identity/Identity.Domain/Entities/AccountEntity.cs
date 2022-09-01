@@ -1,5 +1,6 @@
 ﻿using DomainBase;
 using Identity.Domain.Enums;
+using System;
 
 namespace Identity.Domain
 {
@@ -34,5 +35,7 @@ namespace Identity.Domain
         /// 排序
         /// </summary>
         public int? SortNum { get; set; }
+
+        public DateTime? LoginTime { get; set; }
     }
 }

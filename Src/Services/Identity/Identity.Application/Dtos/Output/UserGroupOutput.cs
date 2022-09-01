@@ -1,18 +1,14 @@
-﻿using DomainBase;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Identity.Domain
+namespace Identity.Application.Dtos
 {
-    /// <summary>
-    /// 用户组
-    /// </summary>
-    public class UserGroupEntity : Entity
+    public class UserGroupOutput
     {
-
+        public Guid Id { get; set; }
         /// <summary>
         /// 用户组名称
         /// </summary>
@@ -21,6 +17,7 @@ namespace Identity.Domain
         /// 父级角色标识
         /// </summary>
         public Guid? ParentId { get; set; }
+
 
         public string UserGroupPath { get; set; }
 
@@ -33,5 +30,7 @@ namespace Identity.Domain
         /// 排序
         /// </summary>
         public int? SortNum { get; set; }
+
+        public List<UserGroupOutput> ChildNodes { get; set; }
     }
 }

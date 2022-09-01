@@ -10,18 +10,15 @@ namespace Identity.Domain
     public class RoleEntity : Entity, IAggregateRoot
     {
         /// <summary>
+        /// 角色名称
+        /// </summary>
+        public string RoleName { get; set; }
+        /// <summary>
         /// 父级角色标识
         /// </summary>
         public Guid? ParentId { get; set; }
 
-        public string Path { get; set; }
-
-        public string Code { get; set; }
-
-        /// <summary>
-        /// 角色名称
-        /// </summary>
-        public string RoleName { get; set; }
+        public string RolePath { get; set; }
 
         /// <summary>
         /// 角色备注

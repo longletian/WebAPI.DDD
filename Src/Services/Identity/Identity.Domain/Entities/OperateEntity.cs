@@ -18,6 +18,8 @@ namespace Identity.Domain
         /// </summary>
         public Guid? ParentId { get; set; }
 
+        public string  OperatePath { get; set; }
+
         /// <summary>
         /// 排序
         /// </summary>
@@ -26,7 +28,7 @@ namespace Identity.Domain
         /// <summary>
         /// 备注
         /// </summary>
-        public string Remark { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// 是否允许

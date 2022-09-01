@@ -1,18 +1,13 @@
-﻿using DomainBase;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Identity.Domain
+namespace Identity.Application.Dtos
 {
-    /// <summary>
-    /// 用户组
-    /// </summary>
-    public class UserGroupEntity : Entity
+    public class UserGroupInput
     {
-
         /// <summary>
         /// 用户组名称
         /// </summary>
@@ -33,5 +28,25 @@ namespace Identity.Domain
         /// 排序
         /// </summary>
         public int? SortNum { get; set; }
+
+    }
+
+    public class UserGroupEditInput: UserGroupInput
+    {
+        public Guid Id { get; set; }
+
+    }
+
+    public class UserGroupAddUserInput
+    {
+        public Guid UserGroupId { get; set; }
+        public List<UserGroupAddUserDto>  UserGroupAddUserDtos { get; set; }
+    }
+
+    public class UserGroupAddUserDto
+    {
+        public Guid UserId { get; set; }
+
+        public string UserName { get; set; }
     }
 }

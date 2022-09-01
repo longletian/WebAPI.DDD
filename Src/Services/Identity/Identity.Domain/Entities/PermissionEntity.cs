@@ -17,10 +17,12 @@ namespace Identity.Domain
         /// </summary>
         public Guid? ParentId { get; set; }
 
+        public string PermissionPath { get; set; }
+
         /// <summary>
         /// 权限备注
         /// </summary>
-        public string Remark { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// 权限排序
         /// </summary>

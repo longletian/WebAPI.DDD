@@ -1,16 +1,12 @@
-﻿using DomainBase;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Identity.Domain
+namespace Identity.Application.Dtos
 {
-    /// <summary>
-    /// 部门
-    /// </summary>
-    public class UnitEntity : Entity
+    public class UnitInput
     {
         /// <summary>
         /// 部门名称
@@ -37,6 +33,23 @@ namespace Identity.Domain
         /// </summary>
         public int? SortNum { get; set; }
 
+    }
+    public class UnitEditInput : UnitInput
+    {
+        public Guid Id { get; set; }
 
+    }
+
+    public class UnitAddUserInput
+    {
+        public Guid UnitId { get; set; }
+        public List<UnitAddUserDto> UnitAddUserDtos { get; set; }
+    }
+
+    public class UnitAddUserDto
+    {
+        public Guid UserId { get; set; }
+
+        public string UserName { get; set; }
     }
 }

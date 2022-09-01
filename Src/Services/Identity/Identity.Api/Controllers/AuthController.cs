@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace Identity.Api.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

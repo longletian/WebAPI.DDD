@@ -22,13 +22,30 @@ namespace Identity.Domain.Entities
         public string MenuPath { get; set; }
 
         /// <summary>
+        /// 菜单编码
+        /// </summary
+        public string Path { get; set; }
+
+        /// <summary>
         /// 菜单跳转url
         /// </summary>
         public string MenuUrl { get; set; }
+
         /// <summary>
         /// 菜单备注
         /// </summary>
-        public string Remark { get; set; }
+        public string Description { get; set; }
+
+        /// <summary>
+        /// 类型：0导航菜单；1操作按钮。
+        /// </summary>
+
+        public int? Type { get; set; }
+
+        /// <summary>
+        /// 菜单图标
+        /// </summary>
+        public string Icon { get; set; }
 
         /// <summary>
         /// 排序
