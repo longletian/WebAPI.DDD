@@ -50,5 +50,12 @@ namespace Identity.Application
         /// <param name="userGroupEditInput"></param>
         /// <returns></returns>
         Task<ResponseData> EditUserGroupDataAsync(UserGroupEditInput userGroupEditInput);
+
+        /// <summary>
+        /// 获取用户组用户列表
+        /// </summary>
+        /// <param name="unitUserQo"></param>
+        /// <returns></returns>
+        Task<ResponseData> GetPagingUserGroupUserListDataAsync(UserGroupUserQo userGroupUserQo);
     }
 }

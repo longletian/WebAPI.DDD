@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Workflow.Domain\Workflow.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repository\" />
+  </ItemGroup>
+
 </Project>

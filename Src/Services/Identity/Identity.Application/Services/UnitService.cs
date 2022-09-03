@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Identity.Application
 {
-    public class UnitService: IUnitService
+    public class UnitService : IUnitService
     {
         private readonly IFreeSql freeSql;
         public UnitService(IFreeSql _freeSql)
@@ -67,7 +67,7 @@ namespace Identity.Application
 
             List<UnitUser> unitUsers = new List<UnitUser>();
             this.freeSql.Delete<UnitUser>().Where((c) => c.UnitId == UnitAddUserInput.UnitId);
-            if (UnitAddUserInput.UnitAddUserDtos!= null && UnitAddUserInput.UnitAddUserDtos.Count() > 0)
+            if (UnitAddUserInput.UnitAddUserDtos != null && UnitAddUserInput.UnitAddUserDtos.Count() > 0)
             {
                 UnitAddUserInput.UnitAddUserDtos?.ForEach((c) =>
                 {
@@ -112,7 +112,30 @@ namespace Identity.Application
             unit.UnitPath = await CreateNewGuid(unit);
             this.freeSql.Update<Unit>(unit);
             return await Task.FromResult(new ResponseData { MsgCode = 0, Message = "请求成功" });
+        }
 
+        /// <summary>
+        /// 获取部门用户列表
+        /// </summary>
+        /// <param name="unitId"></param>
+        /// <returns></returns>
+        public async Task<ResponseData> GetPagingUnitUserListDataAsync(UnitUserQo unitUserQo)
+        {
+            var select = this.freeSql.Select<User, UnitUser, Unit>()
+                .LeftJoin((a, b, c) => a.Id == b.UserId)
+                .LeftJoin((a, b, c) => b.UnitId == c.Id)
+                .WhereIf(unitUserQo.UnitId.HasValue,(a,b,c)=>c.Id== unitUserQo.UnitId.Value)
+                .WhereIf(!string.IsNullOrWhiteSpace(unitUserQo.KeyWord), (a, b, c) =>
+                    a.Name.Contains(unitUserQo.KeyWord)
+                );
+            var total = await select.CountAsync();
+            var list = await select.Page(unitUserQo.Page, unitUserQo.PageSize).ToListAsync();
+            return new ResponseData
+            {
+                MsgCode = 0,
+                Message = "请求成功",
+                Data = new PageQueryOutput<User>(list, total)
+            };
         }
 
 

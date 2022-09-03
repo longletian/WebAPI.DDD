@@ -28,6 +28,11 @@ namespace Identity.Domain
         /// </summary>
         public int? SortNum { get; set; }
 
+        /// <summary>
+        /// 是否禁用
+        /// </summary>
+        public bool? IsEnable { get; set; }
+
     }
 }
     

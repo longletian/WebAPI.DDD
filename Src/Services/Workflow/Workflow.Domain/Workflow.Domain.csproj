@@ -8,4 +8,10 @@
     <ProjectReference Include="..\..\Core\DomainCore\DomainBase.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\" />
+    <Folder Include="Repository\" />
+    <Folder Include="IntegrationEvents\" />
+  </ItemGroup>
+
 </Project>

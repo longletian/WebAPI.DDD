@@ -101,6 +101,29 @@ namespace Identity.Application
             return await Task.FromResult(new ResponseData { MsgCode = 0, Message = "请求成功" });
         }
 
+        /// <summary>
+        /// 获取用户组用户列表
+        /// </summary>
+        /// <param name="userGroupUserQo"></param>
+        /// <returns></returns>
+        public async Task<ResponseData> GetPagingUserGroupUserListDataAsync(UserGroupUserQo userGroupUserQo)
+        {
+            var select = this.freeSql.Select<User, UserGroupUser, UserGroup>()
+                  .LeftJoin((a, b, c) => a.Id == b.UserId)
+                  .LeftJoin((a, b, c) => b.UserGroupId == c.Id)
+                  .WhereIf(userGroupUserQo.UserGroupId.HasValue,(a,b,c)=>c.Id== userGroupUserQo.UserGroupId.Value)
+                  .WhereIf(!string.IsNullOrWhiteSpace(userGroupUserQo.KeyWord), (a, b, c) =>
+                      a.Name.Contains(userGroupUserQo.KeyWord)
+                  );
+            var total = await select.CountAsync();
+            var list = await select.Page(userGroupUserQo.Page, userGroupUserQo.PageSize).ToListAsync();
+            return new ResponseData
+            {
+                MsgCode = 0,
+                Message = "请求成功",
+                Data = new PageQueryOutput<User>(list, total)
+            };
+        }
 
         /// <summary>
         /// 创建Pids格式

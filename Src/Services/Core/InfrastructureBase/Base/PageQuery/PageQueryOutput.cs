@@ -4,7 +4,7 @@ namespace InfrastructureBase
 {
     public class PageQueryOutput<T> where T:class
     {
-        public PageQueryOutput(List<T> data,int total)
+        public PageQueryOutput(List<T> data, long total)
         {
             this.Data = data;
             this.PageTotal = total;
@@ -18,6 +18,6 @@ namespace InfrastructureBase
         /// <summary>
         /// 总数据条数
         /// </summary>
-        public int PageTotal { get; set; }
+        public long PageTotal { get; set; }
     }
 }

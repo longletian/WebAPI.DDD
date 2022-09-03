@@ -17,10 +17,7 @@ namespace Identity.Domain
         /// 密码
         /// </summary>
         public string Password { get; set; }
-        /// <summary>
-        /// 昵称
-        /// </summary>
-        public string NickName { get; set; }
+
         /// <summary>
         /// 账户状态
         /// </summary>
@@ -36,6 +33,9 @@ namespace Identity.Domain
         /// </summary>
         public int? SortNum { get; set; }
 
-        public DateTime? LoginTime { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? GmtCreate { get; set; }
     }
 }

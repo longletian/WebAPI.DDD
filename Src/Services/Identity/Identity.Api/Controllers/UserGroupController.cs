@@ -86,5 +86,15 @@ namespace Identity.Api.Controllers
             return this.userGroupService.EditUserGroupDataAsync(userGroupEditInput);
         }
 
+        /// <summary>
+        /// 获取用户组用户列表
+        /// </summary>
+        /// <param name="userGroupUserQo"></param>
+        /// <returns></returns>
+        [HttpGet,Route("ry")]
+        public Task<ResponseData> GetPagingUserGroupUserListDataAsync([FromQuery]UserGroupUserQo userGroupUserQo)
+        {
+            return this.userGroupService.GetPagingUserGroupUserListDataAsync(userGroupUserQo);
+        }
     }
 }

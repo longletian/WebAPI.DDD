@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Workflow.Domain
+namespace Workflow.Application.Services
 {
     public class Class1
     {

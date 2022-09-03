@@ -3,6 +3,8 @@ using System.Reflection;
 using Autofac.Extras.DynamicProxy;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
 
 namespace Workflow.Api
 {
@@ -35,35 +37,42 @@ namespace Workflow.Api
             //      .EnableInterfaceInterceptors().InterceptedBy(typeof(ValidatorAop));
             #endregion
 
-            builder.RegisterAssemblyTypes(GetAssemblyByName(""))
-                .Where(a => a.Name.EndsWith("Repository"))
-                .AsImplementedInterfaces()
-                .InstancePerDependency();
-
+            #region 注入
+            var basePath = AppContext.BaseDirectory;
 
             var cacheType = new List<Type>();
-                //builder.RegisterType<LogAop>();
-                //cacheType.Add(typeof(LogAop));
+            //builder.RegisterType<LogAop>();
+            //cacheType.Add(typeof(LogAop));
 
-            // AOP 开关，如果想要打开指定的功能，只需要在 appsettigns.json 对应对应 true 就行。
-            builder.RegisterAssemblyTypes(GetAssemblyByName(""))
-                .Where(a => a.Name.EndsWith("Service"))
+            builder.RegisterAssemblyTypes(GetAssemblies("Workflow."))
+                .Where(a => a.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency()
+                //属性注入
+                .PropertiesAutowired()
                 //引用Autofac.Extras.DynamicProxy;
                 .EnableClassInterceptors()
                 //允许将拦截器服务的列表分配给注册。
                 .InterceptedBy(cacheType.ToArray());
+
+            var servicesDllFile = Path.Combine(basePath, "Workflow.Application.dll");
+            var servicesDllFiles = Assembly.LoadFrom(servicesDllFile);
+
+            builder.RegisterAssemblyTypes(servicesDllFiles)
+                 .Where(a => a.Name.Contains("Service"))
+                 .AsImplementedInterfaces()
+                 .PropertiesAutowired()
+                 .InstancePerDependency();
+
+            #endregion
+
         }
 
-        /// <summary>
-        /// 根据程序集名称获取程序集
-        /// </summary>
-        /// <param name="AssemblyName"></param>
-        /// <returns></returns>
-        public Assembly GetAssemblyByName(string AssemblyName)
+        public Assembly[] GetAssemblies(string assemblyName)
         {
-            return Assembly.Load(AssemblyName);
+            //无法找到Identity.Application的程序集
+            //var assemblyTypes = AppDomain.CurrentDomain.GetAssemblies().Where((c) => c.FullName.StartsWith($"{assemblyName}")).ToArray();
+            return AppDomain.CurrentDomain.GetAssemblies().Where((c) => c.FullName.StartsWith($"{assemblyName}")).ToArray();
         }
     }
 }

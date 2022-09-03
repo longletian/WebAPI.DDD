@@ -1,28 +1,31 @@
-﻿using DomainBase;
-using Identity.Domain.Enums;
+﻿using Identity.Domain;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Identity.Domain
+namespace Identity.Application.Dtos
 {
-    /// <summary>
-    /// 用户
-    /// </summary>
-    public class UserEntity : Entity
+    public class RegisterAccountInput
     {
 
+        /// <summary>
+        /// 账号
+        /// </summary>
+        public string AccountName { get; set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Password { get; set; }
+        ///<summary>
         /// 用户姓名
         /// </summary>
         public string Name { get; set; }
-
         /// <summary>
         /// 昵称
         /// </summary>
         public string NickName { get; set; }
-
-        /// <summary>
-        /// 用户头像
-        /// </summary>
-        public string ImagePath { get; set; }
         /// <summary>
         /// 用户性别
         /// </summary>
@@ -35,11 +38,6 @@ namespace Identity.Domain
         /// 联系电话
         /// </summary>
         public string Tel { get; set; }
-        /// <summary>
-        /// 排序
-        /// </summary>
-        public int? SortNum { get; set; }
-
         /// <summary>
         /// 户籍地址
         /// </summary>

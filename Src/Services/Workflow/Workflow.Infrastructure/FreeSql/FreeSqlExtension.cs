@@ -1,18 +1,19 @@
+﻿using DomainBase;
+using FreeSql;
+using FreeSql.DataAnnotations;
+using InfrastructureBase;
+using Microsoft.Extensions.Configuration;
+using MySqlConnector;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DomainBase;
-using FreeSql;
-using FreeSql.DataAnnotations;
-using Identity.Domain;
-using InfrastructureBase;
-using Microsoft.Extensions.Configuration;
-using MySqlConnector;
-using Serilog;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Identity.Infrastructure
+namespace Workflow.Infrastructure
 {
     public static class FreeSqlExtension
     {
@@ -95,7 +96,7 @@ namespace Identity.Infrastructure
             }
 
             string connectionString = GetConnectionString(@this);
-            DataType dbType = (DataType) dataTypeFieldInfo.GetValue(@this);
+            DataType dbType = (DataType)dataTypeFieldInfo.GetValue(@this);
 
             switch (dbType)
             {
@@ -184,14 +185,14 @@ namespace Identity.Infrastructure
 
         public static ICodeFirst SeedData(this ICodeFirst @this)
         {
-            @this.Entity<RoleEntity>(e =>
-            {
-                e.HasData(new List<RoleEntity>
-                {
-                    new RoleEntity {SortNum = 1, ParentId = null, RoleName = "管理员", Description = ""},
-                    new RoleEntity {SortNum = 2, ParentId = null, RoleName = "城管", Description = ""}
-                });
-            });
+            //@this.Entity<RoleEntity>(e =>
+            //{
+            //    e.HasData(new List<RoleEntity>
+            //    {
+            //        new RoleEntity {SortNum = 1, ParentId = null, RoleName = "管理员", Description = ""},
+            //        new RoleEntity {SortNum = 2, ParentId = null, RoleName = "城管", Description = ""}
+            //    });
+            //});
 
             return @this;
         }
@@ -216,7 +217,7 @@ namespace Identity.Infrastructure
             ;
             return tableAssembies.ToArray();
         }
-     
+
         /// <summary>
         /// 反射获取
         /// </summary>
@@ -224,10 +225,10 @@ namespace Identity.Infrastructure
         public static Type[] GetTypesByNameSpace()
         {
             List<Type> tableAssembies = new List<Type>();
-            Assembly assembly = Assembly.Load("Identity.Infrastructure");
+            Assembly assembly = Assembly.Load("Workflow.Infrastructure");
             foreach (var type in assembly.GetTypes())
             {
-                if (type.IsAssignableTo(typeof(Entity))|| type.IsAssignableTo(typeof(PersistenceObjectBase)))
+                if (type.IsAssignableTo(typeof(Entity)) || type.IsAssignableTo(typeof(PersistenceObjectBase)))
                 {
                     foreach (Attribute attribute in type.GetCustomAttributes())
                     {

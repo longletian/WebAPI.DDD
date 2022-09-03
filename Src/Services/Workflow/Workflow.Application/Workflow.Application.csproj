@@ -9,4 +9,9 @@
     <ProjectReference Include="..\Workflow.Infrastructure\Workflow.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\" />
+    <Folder Include="Services\IServices\" />
+  </ItemGroup>
+
 </Project>

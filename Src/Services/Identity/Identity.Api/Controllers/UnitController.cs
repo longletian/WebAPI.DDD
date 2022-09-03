@@ -86,5 +86,16 @@ namespace Identity.Api.Controllers
             return this.unitService.EditUnitDataAsync(UnitEditInput);
         }
 
+        /// <summary>
+        /// 获取部门用户列表
+        /// </summary>
+        /// <param name="unitUserQo"></param>
+        /// <returns></returns>
+        [HttpGet,Route("ry")]
+        public Task<ResponseData> GetPagingUnitUserListDataAsync([FromQuery] UnitUserQo unitUserQo)
+        {
+            return this.unitService.GetPagingUnitUserListDataAsync(unitUserQo);
+        }
+
     }
 }

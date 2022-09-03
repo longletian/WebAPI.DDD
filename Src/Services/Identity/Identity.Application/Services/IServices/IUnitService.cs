@@ -51,5 +51,12 @@ namespace Identity.Application
         /// <returns></returns>
         Task<ResponseData> EditUnitDataAsync(UnitEditInput UnitEditInput);
 
+        /// <summary>
+        /// 获取部门用户列表
+        /// </summary>
+        /// <param name="unitUserQo"></param>
+        /// <returns></returns>
+        Task<ResponseData> GetPagingUnitUserListDataAsync(UnitUserQo unitUserQo);
+
     }
 }
