@@ -4,7 +4,10 @@ using System.Reflection;
 
 namespace InfrastructureBase.Data
 {
-    public static class Extention
+    /// <summary>
+    /// 属性扩展
+    /// </summary>
+    public static class AttributeExtention
     {
         /// <summary>
         /// 获取枚举名称

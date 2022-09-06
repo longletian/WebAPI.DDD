@@ -1,7 +1,4 @@
-﻿using InfrastructureBase;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DomainBase;
 
 namespace Identity.Application
 {
@@ -11,8 +8,11 @@ namespace Identity.Application
     /// VO代表展示层需要显示的数据。
     /// PO
     /// </summary>
-    public class UserQo: PageQueryQo
+    public class UserQo : PageQueryQo
     {
+        public int? UserGroupId { get; set; }
+
+        public int? UnitId { get; set; }
 
     }
 }

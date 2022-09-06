@@ -1,4 +1,5 @@
-﻿using Identity.Application.Dtos;
+﻿using DomainBase;
+using Identity.Application.Dtos;
 using Identity.Infrastructure.PersistenceObject;
 using InfrastructureBase;
 using Mapster;
@@ -134,7 +135,7 @@ namespace Identity.Application
             {
                 MsgCode = 0,
                 Message = "请求成功",
-                Data = new PageQueryOutput<User>(list, total)
+                Data = new PageQueryDto<User>(list, total)
             };
         }
 

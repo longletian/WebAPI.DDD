@@ -1,10 +1,13 @@
 ﻿using Dapper;
 using DomainBase;
+using FreeRedis;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Threading.Tasks;
+using static Dapper.SqlMapper;
 
 namespace InfrastructureBase
 {
@@ -12,7 +15,7 @@ namespace InfrastructureBase
     /// 目前只支持mysql数据库
     /// </summary>
     /// <typeparam name="DomainModel"></typeparam>
-    public class QueryRepository<DomainModel> : IQueryRepository<DomainModel> where DomainModel : Entity
+    public class QueryRepository : IQueryRepository
     {
         private bool _disposed = false;
         private readonly string _connectionString;
@@ -40,33 +43,43 @@ namespace InfrastructureBase
             return connection;
         }
 
-        public DomainModel FindEntity(string sql, object KeyValue)
+
+        /// <summary>
+        /// 查找一个实体（根据sql）
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="strSql">sql语句</param>
+        /// <param name="dbParameter">参数</param>
+        /// <returns></returns>
+        public Task<TEntity> FindEntityAsync<TEntity>(string strSql, DynamicParameters dynamicParameters)
         {
-            return dbConnection.QueryFirstOrDefault<DomainModel>(sql, KeyValue);
+            return dbConnection.QueryFirstAsync<TEntity>(strSql, dynamicParameters);
         }
 
-        public DomainModel FindEntity(string strSql, Dictionary<string, string> dbParameter = null)
+        /// <summary>
+        /// 列表查询
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="strSql"></param>
+        /// <param name="dbParameter"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<TEntity>> FindListAsync<TEntity>(string strSql, DynamicParameters dbParameter)
         {
-            return dbConnection.QueryFirstOrDefault<DomainModel>(strSql, dbParameter);
+            return await dbConnection.QueryAsync<TEntity>(strSql, dbParameter);
         }
 
-        public IEnumerable<DomainModel> FindList(string  sql)
-        {
-            return dbConnection.Query<DomainModel>(sql);
-        }
-        
-        public IEnumerable<DomainModel> FindList(string strSql, object dbParameter)
-        {
-            return dbConnection.Query<DomainModel>(strSql, dbParameter);
-        }
-
-        public IEnumerable<DomainModel> FindList(IEnumerable<DomainModel> entities,string orderField, int pageSize, int pageIndex)
-        {
-            IEnumerable<DomainModel> domainModels = new List<DomainModel>();
-            return domainModels;
-        }
-
-        public IEnumerable<DomainModel> FindList(string strSql, string orderField, int pageSize, int pageIndex, out long total)
+        /// <summary>
+        /// 查询列表(分页)根据sql语句
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="strSql">sql语句</param>
+        /// <param name="dbParameter">参数</param>
+        /// <param name="orderField">排序字段</param>
+        /// <param name="pageSize">每页数据条数</param>
+        /// <param name="pageIndex">页码</param>
+        /// <param name="total">总共数据条数</param>
+        /// <returns></returns>
+        public async Task<PageQueryDto<TEntity>> FindListAsync<TEntity>(string strSql, string orderField, int pageSize, int pageIndex, DynamicParameters dynamicParameters = null) where TEntity : class
         {
             StringBuilder stringBuilder = new StringBuilder();
             if (pageIndex == 0)
@@ -81,27 +94,7 @@ namespace InfrastructureBase
             }
             stringBuilder.Append(strSql + OrderBy);
             stringBuilder.Append(" limit " + num + "," + pageSize + "");
-            total = Convert.ToInt32(dbConnection.ExecuteScalar(strSql));
-            return this.dbConnection.Query<DomainModel>(strSql);
-        }
-
-        public IEnumerable<DomainModel> FindList(string strSql, string orderField, int pageSize, int pageIndex, out int total, Dictionary<string, string> dict = null)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            if (pageIndex == 0)
-            {
-                pageIndex = 1;
-            }
-            int num = (pageIndex - 1) * pageSize;
-            string OrderBy = "";
-            if (!string.IsNullOrEmpty(orderField))
-            {
-                OrderBy = " Order By " + orderField;
-            }
-            stringBuilder.Append(strSql + OrderBy);
-            stringBuilder.Append(" limit " + num + "," + pageSize + "");
-            total = Convert.ToInt32(dbConnection.ExecuteScalar(strSql,dict));
-            return this.dbConnection.Query<DomainModel>(strSql,dict);
+            return new PageQueryDto<TEntity>(await this.dbConnection.QueryAsync<TEntity>(strSql, dynamicParameters), dynamicParameters.Get<long>("@Total"));
         }
 
         protected virtual void Dispose(bool disposing)
@@ -114,22 +107,6 @@ namespace InfrastructureBase
                 }
             }
             _disposed = true;
-        }
-
-        /// <summary>
-        /// 查询集合
-        /// </summary>
-        /// <param name="strSql"></param>
-        /// <param name="dbParameter"></param>
-        /// <returns></returns>
-        public IEnumerable<DomainModel> FindList(string strSql, params string[] dbParameter)
-        {
-            return dbConnection.Query<DomainModel>(strSql, dbParameter);
-        }
-
-        public IEnumerable<DomainModel> FindList(string strSql, DynamicParameters dbParameter)
-        {
-            return dbConnection.Query<DomainModel>(strSql, dbParameter);
         }
 
         public void Dispose()

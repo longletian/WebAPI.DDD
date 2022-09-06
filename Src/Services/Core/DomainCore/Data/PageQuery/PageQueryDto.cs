@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace InfrastructureBase
+namespace DomainBase
 {
-    public class PageQueryOutput<T> where T:class
+    public class PageQueryDto<T> where T:class
     {
-        public PageQueryOutput(List<T> data, long total)
+        public PageQueryDto(IEnumerable<T> data, long total)
         {
             this.Data = data;
             this.PageTotal = total;
@@ -13,7 +13,7 @@ namespace InfrastructureBase
         /// <summary>
         /// 数据
         /// </summary>
-        public List<T> Data { get; set; }
+        public IEnumerable<T> Data { get; set; }
 
         /// <summary>
         /// 总数据条数

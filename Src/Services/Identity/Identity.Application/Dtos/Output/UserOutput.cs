@@ -1,4 +1,5 @@
 ﻿using Identity.Domain.Enums;
+using Identity.Infrastructure.PersistenceObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace Identity.Application.Dtos
 {
     public class UserOutput
     {
-
         public Guid AccountId { get; set; }
+
         public Guid Id { get; set; }
 
         /// <summary>
@@ -41,6 +42,12 @@ namespace Identity.Application.Dtos
         /// 用户头像
         /// </summary>
         public string ImagePath { get; set; }
+
+        public string RoleIds { get; set; }
+
+        public string RoleNames { get; set; }
+
+        public List<Permission> Permissions { get; set; }
 
     }
 }

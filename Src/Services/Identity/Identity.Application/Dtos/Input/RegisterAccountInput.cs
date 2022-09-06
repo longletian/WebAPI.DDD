@@ -42,5 +42,10 @@ namespace Identity.Application.Dtos
         /// 户籍地址
         /// </summary>
         public AddressEntity Address { get; set; }
+
+        /// <summary>
+        /// 用户角色ID
+        /// </summary>
+        public Guid? UserRoleId { get; set; }
     }
 }

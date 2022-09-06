@@ -1,4 +1,4 @@
-﻿namespace InfrastructureBase
+﻿namespace DomainBase
 {
 
    /// <summary>

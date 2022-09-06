@@ -27,5 +27,11 @@ namespace Identity.Application
         /// </summary>
         /// <returns></returns>
         Task<ResponseData> GetUserInfoDataAsync(Guid userId);
+
+        /// <summary>
+        /// 获取人员用户列表
+        /// </summary>
+        /// <returns></returns>
+        Task<ResponseData> GetPaingUserListDataAsync(UserQo userQo);
     }
 }

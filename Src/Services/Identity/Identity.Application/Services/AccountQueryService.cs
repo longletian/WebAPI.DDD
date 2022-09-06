@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Dapr.Client;
 using Identity.Domain;
 using Identity.Infrastructure.PersistenceObject;
+using DomainBase;
 
 namespace Identity.Application
 {

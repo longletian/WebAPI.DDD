@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DomainBase.Attributes;
 using System.Net.Http;
+using DomainBase;
 
 namespace Identity.Application
 {

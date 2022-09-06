@@ -27,6 +27,9 @@ using Microsoft.Extensions.Options;
 using DomainBase;
 using InfrastructureBase.Base.AuthBase.CustomAuth;
 using System.Threading;
+using WorkflowCore.Interface;
+using CSScriptLib;
+using WorkflowCore.Models;
 
 namespace Workflow.Api
 {
@@ -431,6 +434,15 @@ namespace Workflow.Api
         {
             string connectStr = AppSettingConfig.GetConnStrings("MysqlCon").ToString();
             services.AddWorkflow(x => x.UseMySQL(connectStr, true, true));
+
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+            var host = serviceProvider.GetServices<IWorkflowHost>();
+            host.ForEach((c) =>
+            {
+                c.RegisterWorkflow<IWorkflow>();
+            });
+
+            services.AddTransient<StepBody>();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Identity.Application.Dtos;
+﻿using Dapper;
+using DomainBase;
+using Identity.Application.Dtos;
 using Identity.Infrastructure.PersistenceObject;
 using InfrastructureBase;
 using Mapster;
@@ -10,12 +12,14 @@ using System.Threading.Tasks;
 
 namespace Identity.Application
 {
-    public class UserService:IUserService
+    public class UserService : IUserService
     {
         private readonly IFreeSql freeSql;
-        public UserService(IFreeSql _freeSql) 
+        private readonly IQueryRepository queryRepository;
+        public UserService(IFreeSql _freeSql, IQueryRepository _queryRepository)
         {
             freeSql = _freeSql;
+            queryRepository = _queryRepository;
         }
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace Identity.Application
             account.GmtCreate = dateTime;
 
             User user = registerAccountInput.Adapt<User>();
-          
+
             using (var uow = this.freeSql.CreateUnitOfWork())
             {
                 try
@@ -66,11 +70,11 @@ namespace Identity.Application
                      State = c.State,
                      AccountId = d.AccountId,
                      AccountName = c.AccountName,
-                     ImagePath=d.ImagePath,
-                     Id=d.Id,
-                     IsEnable=c.IsEnable,
-                     Name=d.Name,
-                     NickName=d.NickName
+                     ImagePath = d.ImagePath,
+                     Id = d.Id,
+                     IsEnable = c.IsEnable,
+                     Name = d.Name,
+                     NickName = d.NickName
                  });
             if (userOutput == null)
                 return new ResponseData { MsgCode = 1, Message = "账号密码不对" };
@@ -84,6 +88,18 @@ namespace Identity.Application
         public Task<ResponseData> GetUserInfoDataAsync(Guid userId)
         {
             throw new ArgumentException();
+        }
+
+        /// <summary>
+        /// 获取人员用户列表
+        /// </summary>
+        /// <returns></returns>
+        public Task<ResponseData> GetPaingUserListDataAsync(UserQo userQo)
+        {
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            string sql = @"";
+            queryRepository.FindListAsync<UserListOutput>(sql, dynamicParameters);
+            return Task.FromResult(new ResponseData { });
         }
     }
 }

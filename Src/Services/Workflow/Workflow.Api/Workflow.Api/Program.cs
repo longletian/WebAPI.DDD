@@ -46,6 +46,7 @@ namespace Workflow.Api
                    services.AddLogging();
                    services.AddSingleton(new AppSettingConfig(Configuration, hostContext.HostingEnvironment));
                    services.AddWorkFlowService();
+                   services.AddFreeSqlService();
                })
                 .ConfigureWebHostDefaults((webBuilder) =>
                 {

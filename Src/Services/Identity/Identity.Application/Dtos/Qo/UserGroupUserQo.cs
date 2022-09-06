@@ -1,4 +1,5 @@
-﻿using InfrastructureBase;
+﻿using DomainBase;
+using InfrastructureBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
