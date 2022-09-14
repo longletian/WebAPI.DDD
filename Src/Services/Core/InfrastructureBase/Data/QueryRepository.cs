@@ -94,7 +94,7 @@ namespace InfrastructureBase
             }
             stringBuilder.Append(strSql + OrderBy);
             stringBuilder.Append(" limit " + num + "," + pageSize + "");
-            return new PageQueryDto<TEntity>(await this.dbConnection.QueryAsync<TEntity>(strSql, dynamicParameters), dynamicParameters.Get<long>("@Total"));
+            return new PageQueryDto<TEntity>(await this.dbConnection.QueryAsync<TEntity>(strSql, dynamicParameters), dynamicParameters.Get<int>("@Total"),pageIndex, pageSize);
         }
 
         protected virtual void Dispose(bool disposing)

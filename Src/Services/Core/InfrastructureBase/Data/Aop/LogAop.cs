@@ -1,4 +1,6 @@
 ﻿using Castle.DynamicProxy;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,16 @@ namespace InfrastructureBase
     /// </summary>
     public class LogAop : IInterceptor
     {
+        private readonly IHttpContextAccessor accessor;
+        private readonly IWebHostEnvironment environment;
+        public LogAop(
+            IHttpContextAccessor _accessor,
+            IWebHostEnvironment _environment)
+        {
+            this.environment = _environment;
+            this.accessor = _accessor;
+        }
+
         public void Intercept(IInvocation invocation)
         {
             throw new NotImplementedException();

@@ -9,5 +9,6 @@ namespace DomainBase
     /// </summary>
     public interface IAggregateRoot
     {
+
     }
 }

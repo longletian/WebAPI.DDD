@@ -1,23 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DomainBase
 {
     public class PageQueryDto<T> where T:class
     {
-        public PageQueryDto(IEnumerable<T> data, long total)
+        /// <summary>
+        /// 集合
+        /// </summary>
+        public List<T> Items { get; }
+        
+        /// <summary>
+        /// 页码
+        /// </summary>
+        public int PageNumber { get; }
+
+        /// <summary>
+        /// 总码数
+        /// </summary>
+        public int TotalPages { get; }
+
+        /// <summary>
+        /// 码数
+        /// </summary>
+        public long TotalCount { get; }
+
+
+        public PageQueryDto(IEnumerable<T> items, long count, int pageNumber, int pageSize)
         {
-            this.Data = data;
-            this.PageTotal = total;
+            PageNumber = pageNumber;
+            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            TotalCount = count;
+            Items = items.ToList();
         }
 
-        /// <summary>
-        /// 数据
-        /// </summary>
-        public IEnumerable<T> Data { get; set; }
+        public bool HasPreviousPage => PageNumber > 1;
 
-        /// <summary>
-        /// 总数据条数
-        /// </summary>
-        public long PageTotal { get; set; }
+        public bool HasNextPage => PageNumber < TotalPages;
     }
 }

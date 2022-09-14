@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using Newtonsoft.Json;
+using System;
+using System.Data;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace InfrastructureBase.Data.Utils
@@ -33,6 +36,56 @@ namespace InfrastructureBase.Data.Utils
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
             using StringReader stringReader = new StringReader(xml);
             return (T)xmlSerializer.Deserialize(stringReader);
+        }
+
+        /// <summary>
+        /// 对象转string
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string SerializeJSON<T>(T data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("参数不能为空");
+            return JsonConvert.SerializeObject(data);
+        }
+
+        /// <summary>
+        /// string转对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static T DeserializeJSON<T>(string json)
+        {
+            if (!string.IsNullOrWhiteSpace(json))
+                throw new ArgumentNullException("参数不能为空");
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
+        /// <summary>
+        /// datatable转json互转
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static string SerializeDataTableToJSON(DataTable dt)
+        {
+            if (dt == null)
+                throw new ArgumentNullException("参数不能为空");
+            return JsonConvert.SerializeObject(dt);
+        }
+
+        /// <summary>
+        /// json转datatable
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static DataTable SerializeJSONToDataTable(string json)
+        {
+            if (!string.IsNullOrWhiteSpace(json))
+                throw new ArgumentNullException("参数不能为空");
+            return JsonConvert.DeserializeObject<DataTable>(json);
         }
     }
 }
