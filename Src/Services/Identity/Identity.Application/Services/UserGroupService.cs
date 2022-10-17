@@ -122,7 +122,7 @@ namespace Identity.Application
             {
                 MsgCode = 0,
                 Message = "请求成功",
-                Data = new PageQueryDto<User>(list, total)
+                Data = new PageQueryDto<User>(list, total, userGroupUserQo.Page, userGroupUserQo.PageSize)
             };
         }
 

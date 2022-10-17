@@ -215,6 +215,7 @@ namespace Identity.Api
         public static void AddCommonService(this IServiceCollection services)
         {
             services.Configure<JwtConfig>(AppSettingConfig.GetSection("JwtConfig"));
+            services.Configure<ZDingTalkOption>(AppSettingConfig.GetSection("ZDingTalk"));
             services.AddSingleton<IEventBus, DaprEventBus>();
         }
 
