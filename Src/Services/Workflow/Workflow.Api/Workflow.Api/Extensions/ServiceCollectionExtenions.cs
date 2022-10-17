@@ -24,12 +24,16 @@ using System.Text.Json;
 using InfrastructureBase.EventBus;
 using RabbitMQ.Client;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using DomainBase;
 using InfrastructureBase.Base.AuthBase.CustomAuth;
 using System.Threading;
+using Elsa;
 using WorkflowCore.Interface;
-using CSScriptLib;
-using WorkflowCore.Models;
+using Elsa.Persistence.EntityFramework.Core.Extensions;
+using Elsa.Persistence.EntityFramework.MySql;
+using YesSql;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace Workflow.Api
 {
@@ -430,19 +434,37 @@ namespace Workflow.Api
         /// 添加工作流服务
         /// </summary>
         /// <param name="services"></param>
-        public static void AddWorkFlowService(this IServiceCollection services)
+        public static void AddWorkflowCoreService(this IServiceCollection services)
         {
             string connectStr = AppSettingConfig.GetConnStrings("MysqlCon").ToString();
             services.AddWorkflow(x => x.UseMySQL(connectStr, true, true));
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
             var host = serviceProvider.GetServices<IWorkflowHost>();
-            host.ForEach((c) =>
-            {
-                c.RegisterWorkflow<IWorkflow>();
-            });
+            //host.ForEach((c) =>
+            //{
+            //    c.RegisterWorkflow<IWorkflow>();
+            //});
+            //services.AddTransient<StepBody>();
+        }
+        
+        public static void AddWorkflowCoreElsaService(this IServiceCollection services)
+        {
+            var elsaSection = services.BuildServiceProvider().GetService<IConfiguration>()?.GetSection("Elsa");
+            // Elsa services.
+            services
+                .AddElsa(option => option
+                    //自定义连接
+                    .UseEntityFrameworkPersistence(ef => ef.UseMySql(AppSettingConfig.GetConnStrings("MysqlCon")), true)
+                    .AddHttpActivities(elsaSection.GetSection("Server").Bind)
+                    .AddQuartzTemporalActivities()
+                    .AddWorkflowsFrom<Program>()
+                );
 
-            services.AddTransient<StepBody>();
+            // Elsa API endpoints.
+            services.AddElsaApiEndpoints();
+            
+            services.AddRazorPages();
         }
     }
 }

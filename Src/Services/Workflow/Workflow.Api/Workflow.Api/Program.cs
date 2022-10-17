@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using Microsoft.Extensions.Hosting;
@@ -10,6 +9,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Serilog;
 using InfrastructureBase;
+using Microsoft.AspNetCore.Http;
 
 namespace Workflow.Api
 {
@@ -41,36 +41,46 @@ namespace Workflow.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-               .ConfigureServices((hostContext, services) =>
+                // 注意点 ConfigureServices在这里是无效的 
+               .ConfigureWebHostDefaults((webBuilder) =>
                {
-                   services.AddLogging();
-                   services.AddSingleton(new AppSettingConfig(Configuration, hostContext.HostingEnvironment));
-                   services.AddWorkFlowService();
-                   services.AddFreeSqlService();
-               })
-                .ConfigureWebHostDefaults((webBuilder) =>
-                {
-                    webBuilder
-                    .Configure((app) =>
-                    {
-                        app.UseWorkflowConfigure();
-                    })
-                    .UseSerilog()
-                    .UseConfiguration(Configuration)
-                    .UseUrls("http://*:7878")
-                    .ConfigureKestrel((context, options) =>
-                    {
-                        options.Limits.MaxRequestBodySize = 52428800;
-                    });
-
-                }).ConfigureContainer<ContainerBuilder>(builder =>
+                   webBuilder
+                       .ConfigureServices((hostContext, services) =>
+                       {
+                           services.AddSingleton(new AppSettingConfig(Configuration, hostContext.HostingEnvironment));
+                           services.AddWorkflowCoreElsaService();
+                           services.AddFreeSqlService();
+                       })
+                       .Configure((app) =>
+                       {
+                           // app.UseCommonConfigure();
+                           app.UseStaticFiles();
+                           app.UseHttpActivities();
+                           app.UseSerilogRequestLogging();
+                           app.UseRouting();
+                           app.UseEndpoints(endpoints =>
+                           {
+                               endpoints.MapControllers();
+                               endpoints.MapRazorPages();
+                               // 在.net 5中FallbackToPage必须是razor page而不是razor视图
+                               endpoints.MapFallbackToPage("/Index");
+                           });
+                       })
+                       .UseSerilog()
+                       .UseConfiguration(Configuration)
+                       // .UseUrls("http://*:10001")
+                       .ConfigureKestrel((context, options) =>
+                       {
+                           options.Limits.MaxRequestBodySize = 52428800;
+                       });
+               }).ConfigureContainer<ContainerBuilder>(builder =>
                 {
                     builder.RegisterModule(new AutoFacModule());
                     builder.RegisterModule(new DependencyModule());
                 }).UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
         #region 配置读取
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+        private static IConfiguration Configuration { get; } = new ConfigurationBuilder()
          .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "JsonConfig"))
          .AddJsonFile("appsettings_log.json", optional: true, reloadOnChange: true)
          .AddJsonFile("dbsettings.json", optional: true, reloadOnChange: true)

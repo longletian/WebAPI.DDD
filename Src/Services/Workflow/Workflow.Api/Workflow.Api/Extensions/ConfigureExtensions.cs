@@ -3,6 +3,7 @@ using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.Extensions.DependencyInjection;
 using WorkflowCore.Interface;
 using Microsoft.AspNetCore.Hosting;
+using Workflow.Application;
 
 namespace Workflow.Api
 {
@@ -22,11 +23,20 @@ namespace Workflow.Api
             });
         }
 
+        /// <summary>
+        /// 公用中间件
+        /// </summary>
+        /// <param name="app"></param>
+        public static void UseCommonConfigure(this IApplicationBuilder app)
+        {
+      
+        }
+
+
         public static IApplicationBuilder UseWorkflowConfigure(this IApplicationBuilder app)
         {
             var host = app.ApplicationServices.GetService<IWorkflowHost>();
-            //host.RegisterWorkflow<EdcWorkflow>();
-            //host.RegisterWorkflow<EdcDataWorkflow, EdcData>();
+            host.RegisterWorkflow<HelloWorldWorkflow>();
             host.Start();
 
             var appLifetime = app.ApplicationServices.GetService<IApplicationLifetime>();

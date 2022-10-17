@@ -8,7 +8,6 @@ using WorkflowCore.Models;
 
 namespace Workflow.Application
 {
-
     /// <summary>
     /// 具体操作
     /// </summary>
@@ -16,7 +15,8 @@ namespace Workflow.Application
     {
         public override ExecutionResult Run(IStepExecutionContext context)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("你好");
+            return ExecutionResult.Next();
         }
     }
 }

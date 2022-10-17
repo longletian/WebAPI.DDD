@@ -12,7 +12,7 @@ namespace Workflow.Api
         protected override void Load(ContainerBuilder builder)
         {
             //获取当前项目的程序集
-            Assembly[] currentAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(r => r.FullName.Contains("WebApi.")).ToArray();
+            Assembly[] currentAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(r => r.FullName.Contains("Workflow.")).ToArray();
 
             //每次调用，都会重新实例化对象，每次请求都创建一个对象
             Type transientDependency = typeof(ITransientDependency);
