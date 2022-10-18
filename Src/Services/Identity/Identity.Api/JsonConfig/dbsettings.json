@@ -7,7 +7,7 @@
       "OcebaseSQL": 3
     },
     "BoolOpenSalve": false,
-    "MysqlCon": "Data Source=localhost;Port=33060;User ID=root;Password=root;Initial Catalog=postgisystem;Charset=utf8mb4;SslMode=none;Max pool size=10;Connection LifeTime=20;AllowPublicKeyRetrieval=True;",
+    "MysqlCon": "Data Source=localhost;Port=33060;User ID=root;Password=root;Initial Catalog=dev_mysql;Charset=utf8mb4;SslMode=none;Max pool size=10;Connection LifeTime=20;AllowPublicKeyRetrieval=True;",
     "OcebaseCon": "Data Source=localhost;Port=22881;User ID=root@obmysql;Password=root;Initial Catalog=dev_mysql;Charset=utf8mb4;SslMode=none;Max pool size=10;Connection LifeTime=20;AllowPublicKeyRetrieval=True"
   },
   "RabbitMQConfig": {

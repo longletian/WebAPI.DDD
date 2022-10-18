@@ -32,6 +32,7 @@ using Elsa;
 using WorkflowCore.Interface;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.MySql;
+using Workflow.Infrastructure.Data.Activities;
 using YesSql;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
@@ -99,7 +100,7 @@ namespace Workflow.Api
         /// <param name="services"></param>
         public static void AddCorsService(this IServiceCollection services)
         {
-            services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+            services.AddCors(o => o.AddDefaultPolicy( builder =>
             {
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
@@ -448,6 +449,10 @@ namespace Workflow.Api
             //services.AddTransient<StepBody>();
         }
         
+        /// <summary>
+        /// 新增Elsa工作流服务
+        /// </summary>
+        /// <param name="services"></param>
         public static void AddWorkflowCoreElsaService(this IServiceCollection services)
         {
             var elsaSection = services.BuildServiceProvider().GetService<IConfiguration>()?.GetSection("Elsa");
@@ -455,16 +460,30 @@ namespace Workflow.Api
             services
                 .AddElsa(option => option
                     //自定义连接
-                    .UseEntityFrameworkPersistence(ef => ef.UseMySql(AppSettingConfig.GetConnStrings("MysqlCon")), true)
+                    .UseEntityFrameworkPersistence(ef => ef.UseMySql(AppSettingConfig.GetConnStrings("MysqlWorkCon")),false)
                     .AddHttpActivities(elsaSection.GetSection("Server").Bind)
+                    .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
+                    .AddWorkflow<HeartbeatWorkflow>()
+                    .AddJavaScriptActivities()
                     .AddQuartzTemporalActivities()
+                    .AddActivitiesFrom<Program>()
                     .AddWorkflowsFrom<Program>()
                 );
 
+            services.AddBookmarkProvidersFrom<Program>();
             // Elsa API endpoints.
             services.AddElsaApiEndpoints();
             
             services.AddRazorPages();
+        }
+
+        /// <summary>
+        /// 新增自定义工作流程
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddCustomWorkflowActivitiesService(this IServiceCollection services)
+        {
+            // return services.AddActivity();
         }
     }
 }

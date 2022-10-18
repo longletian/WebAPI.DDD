@@ -31,12 +31,11 @@ namespace Workflow.Api
         {
       
         }
-
-
+        
         public static IApplicationBuilder UseWorkflowConfigure(this IApplicationBuilder app)
         {
             var host = app.ApplicationServices.GetService<IWorkflowHost>();
-            host.RegisterWorkflow<HelloWorldWorkflow>();
+            // host.RegisterWorkflow<HelloWorldWorkflow>();
             host.Start();
 
             var appLifetime = app.ApplicationServices.GetService<IApplicationLifetime>();

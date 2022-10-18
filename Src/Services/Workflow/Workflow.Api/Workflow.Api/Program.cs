@@ -48,20 +48,23 @@ namespace Workflow.Api
                        .ConfigureServices((hostContext, services) =>
                        {
                            services.AddSingleton(new AppSettingConfig(Configuration, hostContext.HostingEnvironment));
+                           services.AddCorsService();
                            services.AddWorkflowCoreElsaService();
                            services.AddFreeSqlService();
+                           services.AddCustomWorkflowActivitiesService();
                        })
                        .Configure((app) =>
                        {
                            // app.UseCommonConfigure();
                            app.UseStaticFiles();
+                           app.UseCors();
                            app.UseHttpActivities();
                            app.UseSerilogRequestLogging();
                            app.UseRouting();
                            app.UseEndpoints(endpoints =>
                            {
                                endpoints.MapControllers();
-                               endpoints.MapRazorPages();
+                               // endpoints.MapRazorPages();
                                // 在.net 5中FallbackToPage必须是razor page而不是razor视图
                                endpoints.MapFallbackToPage("/Index");
                            });

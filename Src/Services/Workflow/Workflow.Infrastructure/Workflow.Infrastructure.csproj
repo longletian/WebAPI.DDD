@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Elsa" Version="2.9.0" />
+    <PackageReference Include="Elsa.Activities.Email" Version="2.9.0" />
+    <PackageReference Include="Elsa.Core" Version="2.9.0" />
     <PackageReference Include="Elsa.Persistence.EntityFramework.Core" Version="2.9.0" />
     <PackageReference Include="Elsa.Persistence.EntityFramework.MySql" Version="2.9.0" />
 	<PackageReference Include="Elsa" Version="2.9.0" />
