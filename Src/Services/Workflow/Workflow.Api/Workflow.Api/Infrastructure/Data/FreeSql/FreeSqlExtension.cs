@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Workflow.Infrastructure
+namespace Workflow.Api.Infrastructure
 {
     public static class FreeSqlExtension
     {
@@ -225,7 +225,8 @@ namespace Workflow.Infrastructure
         public static Type[] GetTypesByNameSpace()
         {
             List<Type> tableAssembies = new List<Type>();
-            Assembly assembly = Assembly.Load("Workflow.Infrastructure");
+            // Assembly assembly = Assembly.Load("Workflow.Infrastructure");
+            Assembly assembly = Assembly.Load("Workflow.Api.Model");
             foreach (var type in assembly.GetTypes())
             {
                 if (type.IsAssignableTo(typeof(Entity)) || type.IsAssignableTo(typeof(PersistenceObjectBase)))

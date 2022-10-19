@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Elsa.Scripting.Liquid.Messages;
 using MediatR;
 
-namespace Workflow.Infrastructure.Data.Handlers
+namespace WWorkflow.Api.Infrastructure.Workflow.Handlers
 {
     public class LiquidConfigurationHandler : INotificationHandler<EvaluatingLiquidExpression>
     {

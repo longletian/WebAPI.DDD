@@ -9,7 +9,6 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Workflow.Infrastructure;
 using InfrastructureBase;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,11 +28,13 @@ using DomainBase;
 using InfrastructureBase.Base.AuthBase.CustomAuth;
 using System.Threading;
 using Elsa;
-using WorkflowCore.Interface;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.MySql;
-using Workflow.Infrastructure.Data.Activities;
-using YesSql;
+using Elsa.Providers.Workflows;
+using Storage.Net;
+using Workflow.Api.Infrastructure;
+using Workflow.Api.Infrastructure.Workflow.Activities;
+
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace Workflow.Api
@@ -56,7 +57,7 @@ namespace Workflow.Api
                    Log.Information(cmd.CommandText + ";");
                })
                //自动同步实体结构到数据库
-               .UseAutoSyncStructure(true)
+               .UseAutoSyncStructure(false)
                .Build(); //请务必定义成 Singleton 单例模式
 
             services.AddSingleton(freeSql);
@@ -82,16 +83,16 @@ namespace Workflow.Api
             }
 
             //在运行时直接生成表结构
-            try
-            {
-                freeSql.CodeFirst
-                    .SeedData()
-                    .SyncStructure(FreeSqlExtension.GetTypesByNameSpace());
-            }
-            catch (Exception e)
-            {
-                Log.Logger.Error(e + e.StackTrace + e.Message + e.InnerException);
-            }
+            // try
+            // {
+            //     freeSql.CodeFirst
+            //         .SeedData()
+            //         .SyncStructure(FreeSqlExtension.GetTypesByNameSpace());
+            // }
+            // catch (Exception e)
+            // {
+            //     Log.Logger.Error(e + e.StackTrace + e.Message + e.InnerException);
+            // }
         }
 
         /// <summary>
@@ -438,10 +439,10 @@ namespace Workflow.Api
         public static void AddWorkflowCoreService(this IServiceCollection services)
         {
             string connectStr = AppSettingConfig.GetConnStrings("MysqlCon").ToString();
-            services.AddWorkflow(x => x.UseMySQL(connectStr, true, true));
+            //services.AddWorkflow(x => x.UseMySQL(connectStr, true, true));
 
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
-            var host = serviceProvider.GetServices<IWorkflowHost>();
+            //IServiceProvider serviceProvider = services.BuildServiceProvider();
+            //var host = serviceProvider.GetServices<IWorkflowHost>();
             //host.ForEach((c) =>
             //{
             //    c.RegisterWorkflow<IWorkflow>();
@@ -453,14 +454,20 @@ namespace Workflow.Api
         /// 新增Elsa工作流服务
         /// </summary>
         /// <param name="services"></param>
-        public static void AddWorkflowCoreElsaService(this IServiceCollection services)
+        public static IServiceCollection AddWorkflowCoreElsaService(this IServiceCollection services)
         {
-            var elsaSection = services.BuildServiceProvider().GetService<IConfiguration>()?.GetSection("Elsa");
-            // Elsa services.
+            var elsaSection = AppSettingConfig.GetSection("Elsa");
+
+            //通过 Storage.NET 提供的抽象从 JSON 文件中读取工作流
+            var currentAssemblyPath = Path.Combine(Environment.CurrentDirectory, "JsonConfig");
+            string jsonPaths = Path.Combine(currentAssemblyPath, "Workflows");
+            
+            services.Configure<BlobStorageWorkflowProviderOptions>(options => options.BlobStorageFactory = () => StorageFactory.Blobs.DirectoryFiles(jsonPaths));
             services
                 .AddElsa(option => option
-                    //自定义连接
-                    .UseEntityFrameworkPersistence(ef => ef.UseMySql(AppSettingConfig.GetConnStrings("MysqlWorkCon")),false)
+                    // 从数据库中读取数据流 (自定义连接)
+                    // .UseEntityFrameworkPersistence(ef => ef.UseMySql(AppSettingConfig.GetConnStrings("MysqlWorkCon")),true)
+                    .AddConsoleActivities()
                     .AddHttpActivities(elsaSection.GetSection("Server").Bind)
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
                     .AddWorkflow<HeartbeatWorkflow>()
@@ -475,6 +482,8 @@ namespace Workflow.Api
             services.AddElsaApiEndpoints();
             
             services.AddRazorPages();
+
+            return services;
         }
 
         /// <summary>

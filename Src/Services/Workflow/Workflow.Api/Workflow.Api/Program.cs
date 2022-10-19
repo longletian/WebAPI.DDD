@@ -49,8 +49,8 @@ namespace Workflow.Api
                        {
                            services.AddSingleton(new AppSettingConfig(Configuration, hostContext.HostingEnvironment));
                            services.AddCorsService();
-                           services.AddWorkflowCoreElsaService();
                            services.AddFreeSqlService();
+                           services.AddWorkflowCoreElsaService();
                            services.AddCustomWorkflowActivitiesService();
                        })
                        .Configure((app) =>
@@ -78,7 +78,7 @@ namespace Workflow.Api
                        });
                }).ConfigureContainer<ContainerBuilder>(builder =>
                 {
-                    builder.RegisterModule(new AutoFacModule());
+                    // builder.RegisterModule(new AutoFacModule());
                     builder.RegisterModule(new DependencyModule());
                 }).UseServiceProviderFactory(new AutofacServiceProviderFactory());
 

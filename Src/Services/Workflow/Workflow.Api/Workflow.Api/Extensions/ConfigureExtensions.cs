@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using IGeekFan.AspNetCore.Knife4jUI;
 using Microsoft.Extensions.DependencyInjection;
-using WorkflowCore.Interface;
 using Microsoft.AspNetCore.Hosting;
-using Workflow.Application;
 
 namespace Workflow.Api
 {
@@ -32,19 +30,19 @@ namespace Workflow.Api
       
         }
         
-        public static IApplicationBuilder UseWorkflowConfigure(this IApplicationBuilder app)
+        public static void UseWorkflowConfigure(this IApplicationBuilder app)
         {
-            var host = app.ApplicationServices.GetService<IWorkflowHost>();
-            // host.RegisterWorkflow<HelloWorldWorkflow>();
-            host.Start();
+            //var host = app.ApplicationServices.GetService<IWorkflowHost>();
+            //// host.RegisterWorkflow<HelloWorldWorkflow>();
+            //host.Start();
 
-            var appLifetime = app.ApplicationServices.GetService<IApplicationLifetime>();
-            appLifetime.ApplicationStopping.Register(() =>
-            {
-                host.Stop();
-            });
+            //var appLifetime = app.ApplicationServices.GetService<IApplicationLifetime>();
+            //appLifetime.ApplicationStopping.Register(() =>
+            //{
+            //    host.Stop();
+            //});
 
-            return app;
+            //return app;
         }
     }
 }

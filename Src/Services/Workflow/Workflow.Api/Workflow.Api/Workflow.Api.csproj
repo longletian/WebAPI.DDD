@@ -9,9 +9,14 @@
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.0.2" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.Core" Version="2.9.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
 	<PackageReference Include="AspNetCore.HealthChecks.MySql" Version="5.0.1" />
@@ -23,10 +28,17 @@
 	<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.3.0" />
 	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.0" />
 	<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Workflow.Application\Workflow.Application.csproj" />
+    <PackageReference Include="Elsa" Version="2.9.0" />
+    <PackageReference Include="Elsa.Activities.Email" Version="2.9.0" />
+    <PackageReference Include="Elsa.Core" Version="2.9.0" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.MySql" Version="2.9.0" />
+	<PackageReference Include="Elsa.Activities.Http" Version="2.9.0" />
+	<PackageReference Include="Elsa.Activities.Reflection" Version="1.5.5.1943" />
+	<PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.9.0" />
+	<PackageReference Include="Elsa.Designer.Components.Web" Version="2.9.0" />
+	<PackageReference Include="Elsa.Server.Api" Version="2.9.0" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.17" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +51,21 @@
     <Content Update="JsonConfig\dbsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="JsonConfig\Workflows\case-workflow.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\Repositorys" />
+    <Folder Include="Infrastructure\Services" />
+    <Folder Include="IntegrationEvents" />
+    <Folder Include="Models" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\DomainCore\DomainBase.csproj" />
+    <ProjectReference Include="..\..\..\Core\InfrastructureBase\InfrastructureBase.csproj" />
   </ItemGroup>
 
 </Project>
