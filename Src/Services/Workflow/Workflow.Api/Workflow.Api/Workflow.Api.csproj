@@ -10,6 +10,7 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.0.2" />
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
     <PackageReference Include="Elsa.Persistence.EntityFramework.Core" Version="2.9.0" />
+    <PackageReference Include="Elsa.Persistence.YesSql" Version="2.9.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
@@ -39,6 +40,7 @@
 	<PackageReference Include="Elsa.Server.Api" Version="2.9.0" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.17" />
+	<PackageReference Include="YesSql.Provider.MySql" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,7 +62,6 @@
     <Folder Include="Infrastructure\Repositorys" />
     <Folder Include="Infrastructure\Services" />
     <Folder Include="IntegrationEvents" />
-    <Folder Include="Models" />
   </ItemGroup>
 
   <ItemGroup>

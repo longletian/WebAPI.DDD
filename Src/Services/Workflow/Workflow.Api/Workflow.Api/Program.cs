@@ -50,7 +50,7 @@ namespace Workflow.Api
                            services.AddSingleton(new AppSettingConfig(Configuration, hostContext.HostingEnvironment));
                            services.AddCorsService();
                            services.AddFreeSqlService();
-                           services.AddWorkflowCoreElsaService();
+                           services.AddWorkflowCoreElsaService(hostContext.HostingEnvironment);
                            services.AddCustomWorkflowActivitiesService();
                        })
                        .Configure((app) =>

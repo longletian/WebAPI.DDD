@@ -11,7 +11,7 @@ namespace Workflow.Api.Infrastructure
     /// <summary>
     /// efcore自定义迁移
     /// </summary>
-    public class MySqlElsaContextFactory : IDesignTimeDbContextFactory<ElsaContext>
+    public class ElsaContextFactory : IDesignTimeDbContextFactory<ElsaContext>
     {
         public ElsaContext CreateDbContext(string[] args)
         {

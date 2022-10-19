@@ -28,14 +28,20 @@ using DomainBase;
 using InfrastructureBase.Base.AuthBase.CustomAuth;
 using System.Threading;
 using Elsa;
+using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.MySql;
+using Elsa.Persistence.YesSql;
 using Elsa.Providers.Workflows;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Storage.Net;
 using Workflow.Api.Infrastructure;
 using Workflow.Api.Infrastructure.Workflow.Activities;
-
+using YesSql.Provider.MySql;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
+using MySqlElsaContextFactory = Elsa.Persistence.EntityFramework.MySql.MySqlElsaContextFactory;
 
 namespace Workflow.Api
 {
@@ -48,17 +54,14 @@ namespace Workflow.Api
         public static void AddFreeSqlService(this IServiceCollection services)
         {
             IFreeSql freeSql = new FreeSqlBuilder()
-               .UseGenerateCommandParameterWithLambda(true)
-               .UseConnectionString(DataType.MySql, AppSettingConfig.GetConnStrings("MysqlCon"))
-               //定义名称格式
-               .UseNameConvert(NameConvertType.PascalCaseToUnderscoreWithLower)
-               .UseMonitorCommand(cmd =>
-               {
-                   Log.Information(cmd.CommandText + ";");
-               })
-               //自动同步实体结构到数据库
-               .UseAutoSyncStructure(false)
-               .Build(); //请务必定义成 Singleton 单例模式
+                .UseGenerateCommandParameterWithLambda(true)
+                .UseConnectionString(DataType.MySql, AppSettingConfig.GetConnStrings("MysqlCon"))
+                //定义名称格式
+                .UseNameConvert(NameConvertType.PascalCaseToUnderscoreWithLower)
+                .UseMonitorCommand(cmd => { Log.Information(cmd.CommandText + ";"); })
+                //自动同步实体结构到数据库
+                .UseAutoSyncStructure(false)
+                .Build(); //请务必定义成 Singleton 单例模式
 
             services.AddSingleton(freeSql);
             services.AddFreeRepository();
@@ -69,7 +72,7 @@ namespace Workflow.Api
                 freeSql.Aop.CurdAfter += (s, e) =>
                 {
                     Console.WriteLine($"ManagedThreadId:{Thread.CurrentThread.ManagedThreadId};" +
-                    $" FullName:{e.EntityType.FullName} ElapsedMilliseconds:{e.ElapsedMilliseconds}ms, {e.Sql}");
+                                      $" FullName:{e.EntityType.FullName} ElapsedMilliseconds:{e.ElapsedMilliseconds}ms, {e.Sql}");
                     if (e.ElapsedMilliseconds > 200)
                     {
                         Log.Warning(e.Sql + ";");
@@ -101,7 +104,7 @@ namespace Workflow.Api
         /// <param name="services"></param>
         public static void AddCorsService(this IServiceCollection services)
         {
-            services.AddCors(o => o.AddDefaultPolicy( builder =>
+            services.AddCors(o => o.AddDefaultPolicy(builder =>
             {
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
@@ -121,9 +124,10 @@ namespace Workflow.Api
             services
                 .AddHttpContextAccessor()
                 .AddCustomDaprClient()
-                .AddControllers((c) => {
+                .AddControllers((c) =>
+                {
                     //c.Filters.Add();
-                 })
+                })
                 .AddJsonOptions(option => option.JsonSerializerOptions.PropertyNamingPolicy = null)
                 .AddFluentValidation(fv =>
                 {
@@ -250,7 +254,6 @@ namespace Workflow.Api
 
                     policy.RequireClaim("scope", "api1");
                 });
-
             });
 
             // 3、自定义复杂的策略授权
@@ -265,90 +268,91 @@ namespace Workflow.Api
         public static void AddAuthenticationService(this IServiceCollection services)
         {
             services.AddAuthentication((s) =>
-            {
-                s.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                s.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                s.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer((x) =>
-            {
-                var parameters = new TokenValidationParameters
                 {
-                    SaveSigninToken = true,
-                    RequireExpirationTime = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.FromSeconds(30),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = AppSettingConfig.GetSection("JwtConfig:Issuer").Value.ToString(),//发行人
-                    ValidAudience = AppSettingConfig.GetSection("JwtConfig:Audience").Value.ToString(),//订阅人
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingConfig.GetSection("JwtConfig:IssuerSigningKey").Value.ToString())),
-                };
-
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = parameters;
-                x.Events = new JwtBearerEvents
+                    s.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    s.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    s.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer((x) =>
                 {
-                    OnMessageReceived = context =>
+                    var parameters = new TokenValidationParameters
                     {
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) &&
-                            (path.StartsWithSegments("/hubs/messagehub")))
-                        {
-                            context.Token = accessToken;
-                        }
-                        return Task.CompletedTask;
-                    },
+                        SaveSigninToken = true,
+                        RequireExpirationTime = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromSeconds(30),
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = AppSettingConfig.GetSection("JwtConfig:Issuer").Value.ToString(), //发行人
+                        ValidAudience = AppSettingConfig.GetSection("JwtConfig:Audience").Value.ToString(), //订阅人
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingConfig
+                            .GetSection("JwtConfig:IssuerSigningKey").Value.ToString())),
+                    };
 
-                    //在Token验证通过后调用
-                    OnAuthenticationFailed = context =>
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = parameters;
+                    x.Events = new JwtBearerEvents
                     {
-                        var jwtHandler = new JwtSecurityTokenHandler();
-                        var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                        if (!string.IsNullOrEmpty(token) && jwtHandler.CanReadToken(token))
+                        OnMessageReceived = context =>
                         {
-                            var jwtToken = jwtHandler.ReadJwtToken(token);
-
-                            if (jwtToken.Issuer != parameters.ValidIssuer)
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/hubs/messagehub")))
                             {
-                                context.Response.Headers.Add("Token-Error-Iss", "issuer is wrong!");
+                                context.Token = accessToken;
                             }
 
-                            if (jwtToken.Audiences.FirstOrDefault() != parameters.ValidAudience)
+                            return Task.CompletedTask;
+                        },
+
+                        //在Token验证通过后调用
+                        OnAuthenticationFailed = context =>
+                        {
+                            var jwtHandler = new JwtSecurityTokenHandler();
+                            var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                            if (!string.IsNullOrEmpty(token) && jwtHandler.CanReadToken(token))
                             {
-                                context.Response.Headers.Add("Token-Error-Aud", "Audience is wrong!");
+                                var jwtToken = jwtHandler.ReadJwtToken(token);
+
+                                if (jwtToken.Issuer != parameters.ValidIssuer)
+                                {
+                                    context.Response.Headers.Add("Token-Error-Iss", "issuer is wrong!");
+                                }
+
+                                if (jwtToken.Audiences.FirstOrDefault() != parameters.ValidAudience)
+                                {
+                                    context.Response.Headers.Add("Token-Error-Aud", "Audience is wrong!");
+                                }
                             }
-                        }
 
-                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+
+                            return Task.CompletedTask;
+                        },
+
+                        //未授权时调用失败
+                        OnChallenge = context =>
                         {
-                            context.Response.Headers.Add("Token-Expired", "true");
-                        }
-                        return Task.CompletedTask;
-                    },
+                            if (context.Error != null)
+                            {
+                                string message = context.ErrorDescription;
+                            }
 
-                    //未授权时调用失败
-                    OnChallenge = context =>
-                    {
-                        if (context.Error != null)
-                        {
-                            string message = context.ErrorDescription;
-                        }
-
-                        context.Response.Headers.Add("Token-Error-Iss", "请授权");
-                        return Task.CompletedTask;
-                    },
-                    //在Token验证通过后调用
-                    //OnTokenValidated = context => { 
-                    //}
-                };
-            })
-            .AddCustomAuthentication((option) => { 
-
-            });
+                            context.Response.Headers.Add("Token-Error-Iss", "请授权");
+                            return Task.CompletedTask;
+                        },
+                        //在Token验证通过后调用
+                        //OnTokenValidated = context => { 
+                        //}
+                    };
+                })
+                .AddCustomAuthentication((option) => { });
         }
 
         /// <summary>
@@ -358,7 +362,7 @@ namespace Workflow.Api
         public static void AddHealthCheckService(this IServiceCollection services)
         {
             services.AddHealthChecks()
-              .AddMySql(AppSettingConfig.GetConnStrings("MysqlCon").ToString(), "mysql-Check");
+                .AddMySql(AppSettingConfig.GetConnStrings("MysqlCon").ToString(), "mysql-Check");
         }
 
         /// <summary>
@@ -366,9 +370,7 @@ namespace Workflow.Api
         /// </summary>
         /// <param name="services"></param>
         public static void AddIdServeAuthenticationService(this IServiceCollection services)
-        { 
-        
-
+        {
         }
 
         /// <summary>
@@ -385,10 +387,7 @@ namespace Workflow.Api
 
             services.AddSingleton(options);
 
-            services.AddDaprClient(client =>
-            {
-                client.UseJsonSerializationOptions(options);
-            });
+            services.AddDaprClient(client => { client.UseJsonSerializationOptions(options); });
 
             return services;
         }
@@ -400,8 +399,10 @@ namespace Workflow.Api
         public static void AddRabbitmqService(this IServiceCollection services)
         {
             services.Configure<RabbitmqOptions>(AppSettingConfig.GetSection("RabbitMQConfig"));
-            RabbitmqOptions option = services.BuildServiceProvider().GetService<IOptionsMonitor<RabbitmqOptions>>().CurrentValue;
-            services.AddSingleton<IRabbitmqConnection>((c) => {
+            RabbitmqOptions option = services.BuildServiceProvider().GetService<IOptionsMonitor<RabbitmqOptions>>()
+                .CurrentValue;
+            services.AddSingleton<IRabbitmqConnection>((c) =>
+            {
                 // 创建连接工厂
                 var factory = new ConnectionFactory()
                 {
@@ -415,12 +416,14 @@ namespace Workflow.Api
             });
             services.AddSingleton<IEventBus, RabbitmqEventBus>();
             //services.AddTransient<IEventHandle<UserEvent>, UserEventHandle>();
+
             #region 一个接口多个实现
+
             services.AddSingleton(serviceProvider =>
             {
                 Func<Type, IEventBus> func = key =>
                 {
-                    if (key!=null)
+                    if (key != null)
                     {
                         return serviceProvider.GetServices<IEventBus>().FirstOrDefault((c) => c.GetType() == key);
                     }
@@ -429,6 +432,7 @@ namespace Workflow.Api
                 };
                 return func;
             });
+
             #endregion
         }
 
@@ -449,26 +453,28 @@ namespace Workflow.Api
             //});
             //services.AddTransient<StepBody>();
         }
-        
+
         /// <summary>
         /// 新增Elsa工作流服务
         /// </summary>
         /// <param name="services"></param>
-        public static IServiceCollection AddWorkflowCoreElsaService(this IServiceCollection services)
+        public static IServiceCollection AddWorkflowCoreElsaService(this IServiceCollection services,
+            IHostEnvironment env)
         {
             var elsaSection = AppSettingConfig.GetSection("Elsa");
-
-            //通过 Storage.NET 提供的抽象从 JSON 文件中读取工作流
-            var currentAssemblyPath = Path.Combine(Environment.CurrentDirectory, "JsonConfig");
-            string jsonPaths = Path.Combine(currentAssemblyPath, "Workflows");
-            
-            services.Configure<BlobStorageWorkflowProviderOptions>(options => options.BlobStorageFactory = () => StorageFactory.Blobs.DirectoryFiles(jsonPaths));
+            var connectionString = AppSettingConfig.GetConnStrings("MysqlWorkCon");
             services
                 .AddElsa(option => option
                     // 从数据库中读取数据流 (自定义连接)
-                    // .UseEntityFrameworkPersistence(ef => ef.UseMySql(AppSettingConfig.GetConnStrings("MysqlWorkCon")),true)
+                    // 最好按照官方文档,不然mysql会有迁移失败的问题
+                    // https://github.com/elsa-workflows/elsa-core/blob/master/src/persistence/Elsa.Persistence.EntityFramework/Elsa.Persistence.EntityFramework.MySql/DbContextOptionsBuilderExtensions.cs
+                    .UseEntityFrameworkPersistence(
+                        contextOptions  => contextOptions.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), db => db
+                                .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
+                                .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
+                                .SchemaBehavior(MySqlSchemaBehavior.Ignore)),true)
                     .AddConsoleActivities()
-                    .AddHttpActivities(elsaSection.GetSection("Server").Bind)
+                    .AddHttpActivities((option) => elsaSection.GetSection("Server").Bind(option))
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
                     .AddWorkflow<HeartbeatWorkflow>()
                     .AddJavaScriptActivities()
@@ -477,10 +483,15 @@ namespace Workflow.Api
                     .AddWorkflowsFrom<Program>()
                 );
 
+            //通过 Storage.NET 提供的抽象从 JSON 文件中读取工作流（注意顺序（需要先注入elsa服务））
+            var currentAssemblyPath = Path.Combine(env.ContentRootPath, "JsonConfig");
+            services.Configure<BlobStorageWorkflowProviderOptions>(options =>
+                options.BlobStorageFactory = () => StorageFactory.Blobs.DirectoryFiles(Path.Combine(currentAssemblyPath, "Workflows")));
+
             services.AddBookmarkProvidersFrom<Program>();
             // Elsa API endpoints.
             services.AddElsaApiEndpoints();
-            
+
             services.AddRazorPages();
 
             return services;
