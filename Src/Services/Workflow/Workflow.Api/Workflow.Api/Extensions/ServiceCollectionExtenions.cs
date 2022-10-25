@@ -472,7 +472,7 @@ namespace Workflow.Api
                         contextOptions  => contextOptions.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), db => db
                                 .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
                                 .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
-                                .SchemaBehavior(MySqlSchemaBehavior.Ignore)),true)
+                                .SchemaBehavior(MySqlSchemaBehavior.Ignore)),false)
                     .AddConsoleActivities()
                     .AddHttpActivities((option) => elsaSection.GetSection("Server").Bind(option))
                     .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)

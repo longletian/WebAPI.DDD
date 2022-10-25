@@ -59,9 +59,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Repositorys" />
+    <Folder Include="Infrastructure\Repositories" />
     <Folder Include="Infrastructure\Services" />
     <Folder Include="IntegrationEvents" />
+    <Folder Include="Models\Entities" />
   </ItemGroup>
 
   <ItemGroup>

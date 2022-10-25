@@ -226,7 +226,7 @@ namespace Workflow.Api.Infrastructure
         {
             List<Type> tableAssembies = new List<Type>();
             // Assembly assembly = Assembly.Load("Workflow.Infrastructure");
-            Assembly assembly = Assembly.Load("Workflow.Api.Model");
+            Assembly assembly = Assembly.Load("Workflow.Api.Models");
             foreach (var type in assembly.GetTypes())
             {
                 if (type.IsAssignableTo(typeof(Entity)) || type.IsAssignableTo(typeof(PersistenceObjectBase)))

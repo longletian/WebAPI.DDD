@@ -6,7 +6,7 @@
       "PostGreSQL": 2
     },
     "BoolOpenSalve": false,
-    "MysqlCon": "Data Source=localhost;Port=33060;User ID=root;Password=root;Initial Catalog=postgisystem;Charset=utf8mb4;SslMode=none;Max pool size=10;Connection LifeTime=20;AllowPublicKeyRetrieval=True"
+    "MysqlCon": "Data Source=localhost;Port=33060;User ID=root;Password=root;Initial Catalog=dev_order;Charset=utf8mb4;SslMode=none;Max pool size=10;Connection LifeTime=20;AllowPublicKeyRetrieval=True"
 
   },
   "RabbitMQConfig": {

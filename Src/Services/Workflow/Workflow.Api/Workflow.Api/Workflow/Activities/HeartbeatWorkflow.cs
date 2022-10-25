@@ -10,7 +10,6 @@ namespace Workflow.Api.Infrastructure.Workflow.Activities
         private readonly IClock _clock;
         public HeartbeatWorkflow(IClock clock) => _clock = clock;
 
-        
         /// <summary>
         /// 心跳
         /// </summary>
