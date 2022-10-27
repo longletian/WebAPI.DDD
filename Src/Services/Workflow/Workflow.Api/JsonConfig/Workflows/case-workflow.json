@@ -1,0 +1,114 @@
+{
+  "$id": "1",
+  "definitionId": "f5cd0c7618234492a1f9601241e346dc",
+  "versionId": "055a88b886e241f4a5f3194e0d62b30d",
+  "version": 1,
+  "variables": {
+    "$id": "2",
+    "data": {}
+  },
+  "customAttributes": {
+    "$id": "3",
+    "data": {}
+  },
+  "isSingleton": false,
+  "persistenceBehavior": "WorkflowBurst",
+  "deleteCompletedInstances": false,
+  "isPublished": false,
+  "isLatest": true,
+  "createdAt": "2022-10-19T03:45:25.7194Z",
+  "activities": [
+    {
+      "$id": "4",
+      "activityId": "70b9ad10-3789-40c2-8580-220f89f0241e",
+      "type": "HttpEndpoint",
+      "name": "事件上报",
+      "displayName": "HTTP Endpoint",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [
+        {
+          "$id": "5",
+          "name": "Path",
+          "expressions": {
+            "$id": "6",
+            "Literal": "/case"
+          }
+        },
+        {
+          "$id": "7",
+          "name": "Methods",
+          "expressions": {
+            "$id": "8",
+            "Json": "[\"GET\",\"POST\"]"
+          }
+        },
+        {
+          "$id": "9",
+          "name": "ReadContent",
+          "expressions": {
+            "$id": "10"
+          }
+        },
+        {
+          "$id": "11",
+          "name": "TargetType",
+          "expressions": {
+            "$id": "12"
+          }
+        },
+        {
+          "$id": "13",
+          "name": "Schema",
+          "syntax": "Literal",
+          "expressions": {
+            "$id": "14",
+            "Literal": ""
+          }
+        },
+        {
+          "$id": "15",
+          "name": "Authorize",
+          "expressions": {
+            "$id": "16",
+            "Literal": "true"
+          }
+        },
+        {
+          "$id": "17",
+          "name": "Policy",
+          "expressions": {
+            "$id": "18"
+          }
+        }
+      ],
+      "propertyStorageProviders": {
+        "$id": "19"
+      }
+    },
+    {
+      "$id": "20",
+      "activityId": "75a1dcbe-9246-4a43-a470-7159eb852a5a",
+      "type": "Workflow",
+      "name": "子工作流",
+      "displayName": "Workflow",
+      "persistWorkflow": false,
+      "loadWorkflowContext": false,
+      "saveWorkflowContext": false,
+      "properties": [],
+      "propertyStorageProviders": {
+        "$id": "21"
+      }
+    }
+  ],
+  "connections": [
+    {
+      "$id": "22",
+      "sourceActivityId": "70b9ad10-3789-40c2-8580-220f89f0241e",
+      "targetActivityId": "75a1dcbe-9246-4a43-a470-7159eb852a5a",
+      "outcome": "Done"
+    }
+  ],
+  "id": "055a88b886e241f4a5f3194e0d62b30d"
+}

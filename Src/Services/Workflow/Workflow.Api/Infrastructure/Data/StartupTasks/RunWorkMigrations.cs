@@ -2,9 +2,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Elsa.Services;
 using Microsoft.EntityFrameworkCore;
-using Workflow.Api.Infrastructure;
+using Workflow.Api.Infrastructure.Data;
 
-namespace Workflow.Api.Infrastructure.StartupTasks
+namespace Workflow.Api.Infrastructure.Data.StartupTasks
 {
     /// <summary>
     /// 自动化迁移
