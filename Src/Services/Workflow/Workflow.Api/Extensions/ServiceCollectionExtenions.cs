@@ -31,7 +31,6 @@ using Elsa;
 using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.MySql;
-using Elsa.Persistence.YesSql;
 using Elsa.Providers.Workflows;
 using Elsa.Runtime;
 using Microsoft.EntityFrameworkCore;
@@ -41,9 +40,9 @@ using Storage.Net;
 using Workflow.Api.Infrastructure.Data.StartupTasks;
 using Workflow.Api.Infrastructure.Workflow.Activities;
 using Workflow.Api.Workflow.Providers;
-using YesSql.Provider.MySql;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using MySqlElsaContextFactory = Elsa.Persistence.EntityFramework.MySql.MySqlElsaContextFactory;
+using Microsoft.AspNetCore.Builder;
 
 namespace Workflow.Api
 {
@@ -468,15 +467,17 @@ namespace Workflow.Api
 
 
             services.AddElsa(option => option
-                // 从数据库中读取数据流 (自定义连接)
-                // 最好按照官方文档,不然mysql会有迁移失败的问题
-                // https://github.com/elsa-workflows/elsa-core/blob/master/src/persistence/Elsa.Persistence.EntityFramework/Elsa.Persistence.EntityFramework.MySql/DbContextOptionsBuilderExtensions.cs
-                .UseEntityFrameworkPersistence(
-                    contextOptions => contextOptions.UseMySql(connectionString,
-                        ServerVersion.AutoDetect(connectionString), db => db
-                            .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
-                            .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
-                            .SchemaBehavior(MySqlSchemaBehavior.Ignore)), true)
+            // 从数据库中读取数据流 (自定义连接)
+            // 最好按照官方文档,不然mysql会有迁移失败的问题
+            // https://github.com/elsa-workflows/elsa-core/blob/master/src/persistence/Elsa.Persistence.EntityFramework/Elsa.Persistence.EntityFramework.MySql/DbContextOptionsBuilderExtensions.cs
+              .UseEntityFrameworkPersistence(ef => ef.UseMySql(connectionString), true)
+
+                //.UseEntityFrameworkPersistence(
+                //        contextOptions => contextOptions.UseMySql(connectionString,
+                //            ServerVersion.AutoDetect(connectionString), db => db
+                //                .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
+                //                .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
+                //                .SchemaBehavior(MySqlSchemaBehavior.Ignore)),true)
                 .AddConsoleActivities()
                 .AddHttpActivities((option) => elsaSection.GetSection("Server").Bind(option))
                 .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)

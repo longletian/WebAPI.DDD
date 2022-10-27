@@ -34,6 +34,7 @@ namespace Workflow.Api
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Host builder error");
+                throw new Exception($"{ex.Message}");
             }
             finally
             {
@@ -51,12 +52,16 @@ namespace Workflow.Api
                        {
                            services.AddSingleton(new AppSettingConfig(Configuration, hostContext.HostingEnvironment));
                            var connectionString = AppSettingConfig.GetConnStrings("MysqlWorkCon");
+
+                           // 多租户时候
                            services
                                .AddDbContextFactory<WorkContext>(options =>
                                    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
                            services.AddCorsService();
+
                            services.AddFreeSqlService();
+
                            services.AddWorkflowCoreElsaService(hostContext.HostingEnvironment)
                                .AddCustomWorkflowActivitiesService();
                        })
