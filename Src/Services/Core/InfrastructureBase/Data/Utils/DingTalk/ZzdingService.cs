@@ -1,18 +1,18 @@
-﻿using Microsoft.Extensions.Options;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using RestSharp;
 
-namespace InfrastructureBase.Data
+namespace InfrastructureBase.Data.Utils.DingTalk
 {
-    public class ZDingTalkHelper
+    public class ZzdingService : IZzdingService
     {
         private readonly ZDingTalkOption zDingTalkOption;
-        public ZDingTalkHelper(IOptionsMonitor<ZDingTalkOption> _zDingTalkOption)
+
+        public ZzdingService(IOptionsMonitor<ZDingTalkOption> _zDingTalkOption)
         {
             zDingTalkOption = _zDingTalkOption.CurrentValue;
         }
@@ -25,7 +25,7 @@ namespace InfrastructureBase.Data
         /// <param name="requestParas"></param>
         /// <returns></returns>
         public async Task<string> DingGovRequestAsync(Method method, string canonicalURI,
-            Dictionary<string, string> requestParas = null)
+            Dictionary<string, string> requestParas = null,string appkey="",string appSecret="")
         {
             var timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz");
             var nonce = ConvertDateTimeToInt(DateTime.Now) + "1234";
@@ -46,14 +46,15 @@ namespace InfrastructureBase.Data
 
                 Dictionary<string, string> dict = new Dictionary<string, string>()
                 {
-                    {"X-Hmac-Auth-Timestamp",timestamp},
-                    {"X-Hmac-Auth-Version","1.0"},
-                    {"X-Hmac-Auth-Nonce",nonce},
-                    {"apiKey",zDingTalkOption.AppKey},
-                    {"Content-Type","application/json"},
-                    {"X-Hmac-Auth-Signature",GetSignature(bytesToSign,  zDingTalkOption.AppSecret)},
+                    { "X-Hmac-Auth-Timestamp", timestamp },
+                    { "X-Hmac-Auth-Version", "1.0" },
+                    { "X-Hmac-Auth-Nonce", nonce },
+                    { "apiKey", appkey??zDingTalkOption.AppKey },
+                    { "Content-Type", "application/json" },
+                    { "X-Hmac-Auth-Signature", GetSignature(bytesToSign, appSecret??zDingTalkOption.AppSecret) },
                 };
                 client.AddDefaultHeaders(dict);
+
                 #endregion
 
                 if (method == Method.Post)
@@ -71,8 +72,9 @@ namespace InfrastructureBase.Data
                 {
                     requestUrl += $"?{DicionartyToUrlParameters(requestParas)}";
                 }
-                var response =await client.ExecuteAsync(request);
-                if (response.IsSuccessful&&!string.IsNullOrEmpty(response.Content))
+
+                var response = await client.ExecuteAsync(request);
+                if (response.IsSuccessful && !string.IsNullOrEmpty(response.Content))
                     return response.Content;
                 return "";
             }
@@ -88,7 +90,7 @@ namespace InfrastructureBase.Data
         /// </summary>
         /// <param name="dicParameter"></param>
         /// <returns></returns>
-        private static string DicionartyToUrlParameters(Dictionary<string, string> dicParameter)
+        private string DicionartyToUrlParameters(Dictionary<string, string> dicParameter)
         {
             var HttpRequestParams = string.Empty;
             if (dicParameter != null)
@@ -108,10 +110,11 @@ namespace InfrastructureBase.Data
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        private static long ConvertDateTimeToInt(DateTime time)
+        private long ConvertDateTimeToInt(DateTime time)
         {
-            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1, 0, 0, 0, 0));
-            long t = (time.Ticks - startTime.Ticks) / 10000;   //除10000调整为13位      
+            System.DateTime startTime =
+                TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1, 0, 0, 0, 0));
+            long t = (time.Ticks - startTime.Ticks) / 10000; //除10000调整为13位      
             return t;
         }
 
@@ -121,7 +124,7 @@ namespace InfrastructureBase.Data
         /// <param name="message">将bytesToSign作为消息</param>
         /// <param name="secret">将SecretKey作为秘钥</param>
         /// <returns></returns>
-        private static string GetSignature(string message, string secret)
+        private string GetSignature(string message, string secret)
         {
             secret = secret ?? "";
             var encoding = new System.Text.UTF8Encoding();

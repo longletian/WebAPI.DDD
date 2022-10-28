@@ -20,7 +20,7 @@
     }
 
 
-    public class ResponseData<T>
+    public class ResponseData<T> where  T:class
     {
         public int MsgCode { get; set; }
 

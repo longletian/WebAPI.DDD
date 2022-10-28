@@ -4,7 +4,7 @@ namespace DomainBase
     public record  Event 
     {
         public Guid Id { get; private set; }
-        public DateTime CreateDateTime { get; }
+        private DateTime CreateDateTime { get; }
 
         public Event()
         {

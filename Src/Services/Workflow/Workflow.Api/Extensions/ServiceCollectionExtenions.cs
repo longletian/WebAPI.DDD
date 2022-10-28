@@ -33,6 +33,7 @@ using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.MySql;
 using Elsa.Providers.Workflows;
 using Elsa.Runtime;
+using InfrastructureBase.Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
@@ -43,6 +44,7 @@ using Workflow.Api.Workflow.Providers;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using MySqlElsaContextFactory = Elsa.Persistence.EntityFramework.MySql.MySqlElsaContextFactory;
 using Microsoft.AspNetCore.Builder;
+using Workflow.Api.Workflow.Activities;
 
 namespace Workflow.Api
 {
@@ -459,6 +461,7 @@ namespace Workflow.Api
         /// 新增Elsa工作流服务
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="env"></param>
         public static IServiceCollection AddWorkflowCoreElsaService(this IServiceCollection services,
             IHostEnvironment env)
         {
@@ -482,19 +485,21 @@ namespace Workflow.Api
                 .AddHttpActivities((option) => elsaSection.GetSection("Server").Bind(option))
                 .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
                 // 新增自定义工作流
-                .AddWorkflow<HeartbeatWorkflow>()
+                // .AddWorkflow<HeartbeatWorkflow>()
                 .AddJavaScriptActivities()
                 .AddQuartzTemporalActivities()
-                // Add custom activities.
-                .AddActivitiesFrom<Program>()
+                // 新增自定义操作,比如说钉钉消息发送
+                .AddActivity<SendDingActivtity>()
                 .AddWorkflowsFrom<Program>()
             );
 
             // Register all Mediatr event handlers from this assembly.
             services.AddNotificationHandlersFrom<Startup>();
 
-            services.AddWorkflowContextProvider<CaseWorkflowContextProvider>()
-                .AddStartupTask<RunWorkMigrations>();
+            services.AddTransient<IHttpService, HttpService>();
+            
+            // services.AddWorkflowContextProvider<CaseWorkflowContextProvider>()
+            services.AddStartupTask<RunWorkMigrations>();
 
             // Register custom type definition provider for JS intellisense.
             // services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
@@ -520,7 +525,7 @@ namespace Workflow.Api
         /// <param name="services"></param>
         public static void AddCustomWorkflowActivitiesService(this IServiceCollection services)
         {
-            // return services.AddActivity();
+    
         }
     }
 }

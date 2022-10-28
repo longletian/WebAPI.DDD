@@ -9,7 +9,7 @@ namespace DomainBase
     /// <summary>
     /// 写仓储
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TEntity"></typeparam>
     public interface IRepository<TEntity> where TEntity : Entity
     {
         /// <summary>
@@ -39,7 +39,6 @@ namespace DomainBase
         /// <summary>
         /// 根据主键获取对象
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
         Task<List<TEntity>> GetManyAsync(Guid[] key);
@@ -47,7 +46,7 @@ namespace DomainBase
         /// <summary>
         /// 根据条件获取对象
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="condition"></param>
         /// <returns></returns>
         Task<List<TEntity>> GetManyAsync(Expression<Func<TEntity, bool>> condition);
     }

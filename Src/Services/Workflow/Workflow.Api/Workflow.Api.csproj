@@ -9,6 +9,7 @@
         <PackageReference Include="Autofac" Version="6.2.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.0.2" />
         <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.0" />
+        <PackageReference Include="Elsa.Activities.UserTask" Version="2.6.0" />
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.17" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
@@ -62,7 +63,6 @@
 
     <ItemGroup>
         <Folder Include="Infrastructure\Services" />
-        <Folder Include="IntegrationEvents" />
         <Folder Include="Models\Dtos\" />
         <Folder Include="Workflow\Scripting\JavaScript" />
         <Folder Include="Workflow\Scripting\Liquid" />

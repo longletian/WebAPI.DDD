@@ -29,9 +29,9 @@ namespace DomainBase
         /// <summary>
         /// 查找一个实体（根据sql）
         /// </summary>
-        /// <typeparam name="T">类型</typeparam>
+        /// <typeparam name="TEntity">类型</typeparam>
         /// <param name="strSql">sql语句</param>
-        /// <param name="dbParameter">参数</param>
+        /// <param name="dynamicParameters">参数</param>
         /// <returns></returns>
         Task<TEntity> FindEntityAsync<TEntity>(string strSql, DynamicParameters dynamicParameters);
 
@@ -47,13 +47,12 @@ namespace DomainBase
         /// <summary>
         /// 查询列表(分页)根据sql语句
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="strSql">sql语句</param>
         /// <param name="dynamicParameters">参数</param>
         /// <param name="orderField">排序字段</param>
         /// <param name="pageSize">每页数据条数</param>
         /// <param name="pageIndex">页码</param>
-        /// <param name="total">总共数据条数</param>
         /// <returns></returns>
         Task<PageQueryDto<TEntity>> FindListAsync<TEntity>(string strSql, string orderField, int pageSize, int pageIndex, DynamicParameters dynamicParameters = null) where TEntity : class;
     }

@@ -6,7 +6,7 @@ namespace Workflow.Api.Infrastructure.Data
     public class WorkContext : DbContext
     {
         /// <summary>
-        /// Ç¨ÒÆ ĞèÒªÒıÈëefcore tools
+        /// Ç¨ï¿½ï¿½ ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½efcore tools
         /// Add-Migration init-migration -c WorkContext -o .\Src\Services\Workflow\Workflow.Api\Infrastructure\Data
         /// </summary>
         /// <param name="options"></param>
@@ -16,10 +16,29 @@ namespace Workflow.Api.Infrastructure.Data
 
         public DbSet<WorkflowCaseInstance> WorkflowCaseInstances { get; set; } = default!;
 
+        public DbSet<WorkflowActivityInstanceUser> WorkflowActivityInstanceUsers { get; set; } = default!;
 
+
+        /// <summary>
+        /// é…ç½®æ•°æ®
+        /// </summary>
+        /// <param name="optionsBuilder"></param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlServer(_connectionString);
+        }
+
+        /// <summary>
+        /// å®ä½“é…ç½®
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<WorkflowActivityInstanceUser>().HasKey(c =>
+                new
+                {
+                    c.WorkflowActivityInstanceId, c.UserId
+                });
         }
     }
 }
