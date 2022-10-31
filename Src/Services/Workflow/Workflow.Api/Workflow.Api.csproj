@@ -76,6 +76,7 @@
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Workflow.Api\obj\project.assets.json" />
       <_ContentIncludedByDefault Remove="Workflow.Api\obj\Workflow.Api.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="Workflow.Api\obj\project.packagespec.json" />
     </ItemGroup>
 
 </Project>

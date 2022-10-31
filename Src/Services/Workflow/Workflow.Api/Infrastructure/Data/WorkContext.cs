@@ -18,7 +18,6 @@ namespace Workflow.Api.Infrastructure.Data
 
         public DbSet<WorkflowActivityInstanceUser> WorkflowActivityInstanceUsers { get; set; } = default!;
 
-
         /// <summary>
         /// 配置数据
         /// </summary>

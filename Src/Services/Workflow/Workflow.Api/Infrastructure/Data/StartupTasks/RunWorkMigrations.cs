@@ -49,7 +49,17 @@ namespace Workflow.Api.Infrastructure.Data.StartupTasks
             using (var scope =serviceProvider.CreateScope())
             {
                 var dbContext= scope.ServiceProvider.GetService<WorkContext>();
+                
+                // MigrateAsync 确保使用迁移创建数据库，并应用了所有迁移。
+                // EnsureCreatedAsync 确保数据库在每次执行测试/原型之前处于干净状态，但数据库中的数据不会保留
                 await dbContext.Database.MigrateAsync();
+                // 初始化值
+                // await dbContext.Database.EnsureCreatedAsync();
+                // if (await dbContext.WorkflowActivityInstanceUsers.AnyAsync())
+                //     return;
+                // else
+                // {
+                // }
                 await dbContext.DisposeAsync();
             }
         }

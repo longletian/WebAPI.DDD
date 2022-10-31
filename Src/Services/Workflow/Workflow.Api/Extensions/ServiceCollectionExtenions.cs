@@ -28,6 +28,7 @@ using DomainBase;
 using InfrastructureBase.Base.AuthBase.CustomAuth;
 using System.Threading;
 using Elsa;
+using Elsa.Activities.UserTask.Extensions;
 using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.MySql;
@@ -487,6 +488,7 @@ namespace Workflow.Api
                 // 新增自定义工作流
                 // .AddWorkflow<HeartbeatWorkflow>()
                 .AddJavaScriptActivities()
+                .AddUserTaskActivities()
                 .AddQuartzTemporalActivities()
                 // 新增自定义操作,比如说钉钉消息发送
                 .AddActivity<SendDingActivtity>()
@@ -500,6 +502,8 @@ namespace Workflow.Api
             
             // services.AddWorkflowContextProvider<CaseWorkflowContextProvider>()
             services.AddStartupTask<RunWorkMigrations>();
+
+            // services.AddHostedService<RunWorkMigrationsV1>();
 
             // Register custom type definition provider for JS intellisense.
             // services.AddJavaScriptTypeDefinitionProvider<CustomTypeDefinitionProvider>();
@@ -523,9 +527,9 @@ namespace Workflow.Api
         /// 新增自定义工作流程
         /// </summary>
         /// <param name="services"></param>
-        public static void AddCustomWorkflowActivitiesService(this IServiceCollection services)
+        public static IServiceCollection AddCustomWorkflowActivitiesService(this IServiceCollection services)
         {
-    
+            return services;
         }
     }
 }

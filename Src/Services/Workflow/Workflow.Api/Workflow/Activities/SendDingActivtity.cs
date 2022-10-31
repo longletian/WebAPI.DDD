@@ -16,16 +16,11 @@ namespace Workflow.Api.Workflow.Activities
     /// <summary>
     /// 发送浙政钉消息
     /// </summary>
-    [Activity(Category = "Ding",Description = "发送浙政钉消息",DisplayName = "发送浙政钉消息")]
+    [Activity(Category = "Ding",Description = "浙政钉消息",DisplayName = "浙政钉消息")]
     public class SendDingActivtity : Activity
     {
         private readonly IHttpService httpService;
-
-        public SendDingActivtity(IHttpService _httpService)
-        {
-            httpService = _httpService;
-        }
-
+        
         // [ActivityProperty(Hint = "Enter an expression that evaluates to the name of the user to create.")]
         // public WorkflowExpression<string> UserName
         // {
@@ -33,15 +28,22 @@ namespace Workflow.Api.Workflow.Activities
         //     set => SetState(value);
         // }
         [ActivityInput(
-            Label = "钉钉请求实体",
-            Hint = "发送钉钉",
+            Hint = "钉钉请求实体参数",
             UIHint = ActivityInputUIHints.MultiText,
             DefaultSyntax = SyntaxNames.Json,
-            SupportedSyntaxes = new[] { SyntaxNames.Json })]
+            SupportedSyntaxes = new[] { SyntaxNames.Json,SyntaxNames.JavaScript, SyntaxNames.Liquid  },
+            ConsiderValuesAsOutcomes = true
+            )
+        ]
         public SendDingDto? sendDingDto { get; set; }
         
-        [ActivityOutput(Name = "响应返回")] public ResponseData responseData { get; set; }
+        [ActivityOutput] public ResponseData responseData { get; set; }
 
+        public SendDingActivtity(IHttpService _httpService)
+        {
+            httpService = _httpService;
+        }
+        
         /// <summary>
         /// 有返回值的执行
         /// </summary>
@@ -55,7 +57,6 @@ namespace Workflow.Api.Workflow.Activities
                 sendDingDto);
             if (responseData != null)
             {
-                
             }
             return Done();
         }
