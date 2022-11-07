@@ -492,6 +492,7 @@ namespace Workflow.Api
                 .AddQuartzTemporalActivities()
                 // 新增自定义操作,比如说钉钉消息发送
                 .AddActivity<SendDingActivtity>()
+                .AddActivity<FileUploadActivtity>()
                 .AddWorkflowsFrom<Program>()
             );
 
@@ -516,9 +517,12 @@ namespace Workflow.Api
 
             services.AddBookmarkProvidersFrom<Program>();
             // Elsa API endpoints.
-            services.AddElsaApiEndpoints();
+            services.AddElsaApiEndpoints()
+                .AddElsaSwagger();
 
             services.AddRazorPages();
+            
+            // services.AddServerSideBlazor(); // needed for notifications
 
             return services;
         }

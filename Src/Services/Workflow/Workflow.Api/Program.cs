@@ -73,12 +73,18 @@ namespace Workflow.Api
                            app.UseHttpActivities();
                            app.UseSerilogRequestLogging();
                            app.UseRouting();
+                           app.UseSwagger();
+                           app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elsa UI API V1"); });
                            app.UseEndpoints(endpoints =>
                            {
                                endpoints.MapControllers();
                                // endpoints.MapRazorPages();
                                // 在.net 5中FallbackToPage必须是razor page而不是razor视图
                                endpoints.MapFallbackToPage("/Index");
+                               
+                               // Notifications
+                               // endpoints.MapBlazorHub();
+                               // endpoints.MapHub<WorkflowInstanceInfoHub>("/usertask-info");
                            });
                        })
                        .UseSerilog()
