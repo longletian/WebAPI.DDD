@@ -19,7 +19,7 @@ namespace Workflow.Api.Models.Entities
         /// <summary>
         /// 事件标识
         /// </summary>
-        public Guid? CaseId { get; set; }
+        public int CaseId { get; set; }
 
         /// <summary>
         /// 工作流定义标识

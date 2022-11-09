@@ -11,7 +11,9 @@ using Serilog;
 using InfrastructureBase;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Workflow.Api.Infrastructure;
 using Workflow.Api.Infrastructure.Data;
+using Workflow.Api.Models;
 
 namespace Workflow.Api
 {
@@ -62,25 +64,24 @@ namespace Workflow.Api
 
                            services.AddFreeSqlService();
 
-                           services.AddWorkflowCoreElsaService(hostContext.HostingEnvironment)
-                               .AddCustomWorkflowActivitiesService();
+                           services.AddWorkflowCoreElsaService(hostContext.HostingEnvironment);
+
                        })
                        .Configure((app) =>
                        {
                            // app.UseCommonConfigure();
-                           app.UseStaticFiles();
                            app.UseCors();
-                           app.UseHttpActivities();
+                           app.UseStaticFiles();
                            app.UseSerilogRequestLogging();
+                           app.UseHttpActivities();
                            app.UseRouting();
-                           app.UseSwagger();
-                           app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elsa UI API V1"); });
+                           // app.UseSwaggUIConfigure();
                            app.UseEndpoints(endpoints =>
                            {
                                endpoints.MapControllers();
                                // endpoints.MapRazorPages();
                                // 在.net 5中FallbackToPage必须是razor page而不是razor视图
-                               endpoints.MapFallbackToPage("/Index");
+                               endpoints.MapFallbackToPage("/Login");
                                
                                // Notifications
                                // endpoints.MapBlazorHub();
@@ -89,7 +90,7 @@ namespace Workflow.Api
                        })
                        .UseSerilog()
                        .UseConfiguration(Configuration)
-                       .UseUrls("http://*:10001")
+                       // .UseUrls("http://*:10001")
                        .ConfigureKestrel((context, options) =>
                        {
                            options.Limits.MaxRequestBodySize = 52428800;

@@ -2,6 +2,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Elsa.Scripting.Liquid.Messages;
 using MediatR;
+using Fluid;
+using Workflow.Api.Models.Dtos;
+using Workflow.Api.Models.Entities;
 
 namespace WWorkflow.Api.Infrastructure.Workflow.Handlers
 {
@@ -9,9 +12,9 @@ namespace WWorkflow.Api.Infrastructure.Workflow.Handlers
     {
         public Task Handle(EvaluatingLiquidExpression notification, CancellationToken cancellationToken)
         {
-            var context = notification.TemplateContext;
-            // context.MemberAccessStrategy.Register<User>();
-            // context.MemberAccessStrategy.Register<RegistrationModel>();
+            var memberAccessStrategy = notification.TemplateContext.Options.MemberAccessStrategy; 
+            memberAccessStrategy.Register<CaseDto>();
+            memberAccessStrategy.Register<FileEntity>();
             
             return Task.CompletedTask;
         }

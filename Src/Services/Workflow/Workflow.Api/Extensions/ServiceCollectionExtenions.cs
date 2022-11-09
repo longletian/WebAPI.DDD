@@ -28,12 +28,15 @@ using DomainBase;
 using InfrastructureBase.Base.AuthBase.CustomAuth;
 using System.Threading;
 using Elsa;
+using Elsa.Activities.Http.Options;
 using Elsa.Activities.UserTask.Extensions;
+using Elsa.Options;
 using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.MySql;
 using Elsa.Providers.Workflows;
 using Elsa.Runtime;
+using Elsa.Scripting.Liquid.Messages;
 using InfrastructureBase.Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -41,11 +44,14 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Storage.Net;
 using Workflow.Api.Infrastructure.Data.StartupTasks;
 using Workflow.Api.Infrastructure.Workflow.Activities;
-using Workflow.Api.Workflow.Providers;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using MySqlElsaContextFactory = Elsa.Persistence.EntityFramework.MySql.MySqlElsaContextFactory;
 using Microsoft.AspNetCore.Builder;
+using Workflow.Api.Infrastructure;
+using Workflow.Api.Models;
 using Workflow.Api.Workflow.Activities;
+using Workflow.Api.Workflow.Providers;
+using WWorkflow.Api.Infrastructure.Workflow.Handlers;
 
 namespace Workflow.Api
 {
@@ -466,16 +472,13 @@ namespace Workflow.Api
         public static IServiceCollection AddWorkflowCoreElsaService(this IServiceCollection services,
             IHostEnvironment env)
         {
-            var elsaSection = AppSettingConfig.GetSection("Elsa");
             var connectionString = AppSettingConfig.GetConnStrings("MysqlWorkCon");
-
-
+            IConfigurationSection elsaSection = AppSettingConfig.GetSection("Elsa");
             services.AddElsa(option => option
-            // 从数据库中读取数据流 (自定义连接)
-            // 最好按照官方文档,不然mysql会有迁移失败的问题
-            // https://github.com/elsa-workflows/elsa-core/blob/master/src/persistence/Elsa.Persistence.EntityFramework/Elsa.Persistence.EntityFramework.MySql/DbContextOptionsBuilderExtensions.cs
-              .UseEntityFrameworkPersistence(ef => ef.UseMySql(connectionString), true)
-
+                // 从数据库中读取数据流 (自定义连接)
+                // 最好按照官方文档,不然mysql会有迁移失败的问题
+                // https://github.com/elsa-workflows/elsa-core/blob/master/src/persistence/Elsa.Persistence.EntityFramework/Elsa.Persistence.EntityFramework.MySql/DbContextOptionsBuilderExtensions.cs
+                .UseEntityFrameworkPersistence(ef => ef.UseMySql(connectionString), false)
                 //.UseEntityFrameworkPersistence(
                 //        contextOptions => contextOptions.UseMySql(connectionString,
                 //            ServerVersion.AutoDetect(connectionString), db => db
@@ -483,26 +486,45 @@ namespace Workflow.Api
                 //                .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
                 //                .SchemaBehavior(MySqlSchemaBehavior.Ignore)),true)
                 .AddConsoleActivities()
-                .AddHttpActivities((option) => elsaSection.GetSection("Server").Bind(option))
+                .AddHttpActivities((option) =>
+                {
+                    // string basePath1 = AppSettingConfig.GetConfiguration("Elsa1:BasePath");
+                    IEnumerable<IConfigurationSection> configurationSections =
+                        AppSettingConfig.GetSection("Elsa:Server").GetChildren();
+                    string basePath = configurationSections?.Where(c => c.Key == "BasePath")
+                        .FirstOrDefault()?.Value;
+                    string baseUrl = configurationSections?.Where(c => c.Key == "BaseUrl")
+                        .FirstOrDefault()?.Value;
+                    HttpActivityOptions httpActivityOptions = new()
+                    {
+                        BasePath =basePath ,
+                        BaseUrl = new Uri(baseUrl)
+                    };
+                })
                 .AddEmailActivities(elsaSection.GetSection("Smtp").Bind)
                 // 新增自定义工作流
                 // .AddWorkflow<HeartbeatWorkflow>()
                 .AddJavaScriptActivities()
                 .AddUserTaskActivities()
                 .AddQuartzTemporalActivities()
-                // 新增自定义操作,比如说钉钉消息发送
-                .AddActivity<SendDingActivtity>()
-                .AddActivity<FileUploadActivtity>()
-                .AddWorkflowsFrom<Program>()
+                .AddCustomWorkflowsService()
+                .AddCustomWorkflowActivitiesService()
             );
 
             // Register all Mediatr event handlers from this assembly.
-            services.AddNotificationHandlersFrom<Startup>();
+            // services.AddNotificationHandlersFrom<Startup>();
+
+            services.AddNotificationHandler<EvaluatingLiquidExpression, LiquidConfigurationHandler>();
 
             services.AddTransient<IHttpService, HttpService>();
-            
+ 
             // services.AddWorkflowContextProvider<CaseWorkflowContextProvider>()
+
             services.AddStartupTask<RunWorkMigrations>();
+            
+            services.AddTransient<ICaseRepository, CaseRepository>();
+            
+            services.AddWorkflowContextProvider<CreateCaseProvider>();
 
             // services.AddHostedService<RunWorkMigrationsV1>();
 
@@ -517,23 +539,38 @@ namespace Workflow.Api
 
             services.AddBookmarkProvidersFrom<Program>();
             // Elsa API endpoints.
-            services.AddElsaApiEndpoints()
-                .AddElsaSwagger();
+            services.AddElsaApiEndpoints();
+            // .AddElsaSwagger();
 
             services.AddRazorPages();
-            
+
             // services.AddServerSideBlazor(); // needed for notifications
 
             return services;
         }
 
         /// <summary>
-        /// 新增自定义工作流程
+        /// 新增自定义工作流操作
         /// </summary>
         /// <param name="services"></param>
-        public static IServiceCollection AddCustomWorkflowActivitiesService(this IServiceCollection services)
+        private static ElsaOptionsBuilder AddCustomWorkflowActivitiesService(this ElsaOptionsBuilder services)
         {
-            return services;
+            // 新增自定义操作,比如说钉钉消息发送
+            return services
+                .AddActivity<SendDingActivtity>()
+                .AddActivity<FileUploadActivtity>();
+        }
+
+
+        /// <summary>
+        /// 新增自定义工作流
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        private static ElsaOptionsBuilder AddCustomWorkflowsService(this ElsaOptionsBuilder services)
+        {
+            return services
+                .AddWorkflow<HeartbeatWorkflow>();
         }
     }
 }

@@ -36,18 +36,27 @@ namespace InfrastructureBase
         /// </summary>
         /// <param name="sectionConstr"></param>
         /// <returns></returns>
+        public static string GetConfiguration(string sectionConstr)
+        {
+            if (!string.IsNullOrEmpty(sectionConstr))
+                return Configuration[sectionConstr].ToString();
+            return "";
+        }
+
+        /// <summary>
+        /// 格式 "JsonConfig:JsonName" 每下一层用：
+        /// </summary>
+        /// <param name="sectionConstr"></param>
+        /// <returns></returns>
         public static IConfigurationSection GetSection(string sectionConstr)
         {
             if (!string.IsNullOrEmpty(sectionConstr))
             {
-                if (Configuration.GetSection(sectionConstr).Exists())
-                {
-                    return Configuration.GetSection(sectionConstr);
-                }
+                return Configuration.GetSection(sectionConstr);
             }
             return Configuration.GetSection("");
         }
-
+        
         /// <summary>
         /// 绑定实体类,使用需要注入使用
         /// </summary>

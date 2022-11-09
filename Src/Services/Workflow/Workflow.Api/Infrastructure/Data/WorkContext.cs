@@ -14,6 +14,8 @@ namespace Workflow.Api.Infrastructure.Data
         {
         }
 
+        public DbSet<Case> Cases { get; set; } = default!;
+
         public DbSet<WorkflowCaseInstance> WorkflowCaseInstances { get; set; } = default!;
 
         public DbSet<WorkflowActivityInstanceUser> WorkflowActivityInstanceUsers { get; set; } = default!;

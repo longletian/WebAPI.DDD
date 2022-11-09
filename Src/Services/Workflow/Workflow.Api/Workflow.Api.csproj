@@ -5,6 +5,10 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\Workflow.Api.xml</DocumentationFile>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Autofac" Version="6.2.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.0.2" />
@@ -64,19 +68,11 @@
     <ItemGroup>
         <Folder Include="Infrastructure\Services" />
         <Folder Include="Models\Dtos\" />
-        <Folder Include="Workflow\Scripting\JavaScript" />
-        <Folder Include="Workflow\Scripting\Liquid" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\Core\InfrastructureBase\InfrastructureBase.csproj" />
         <ProjectReference Include="..\..\Ordering\Ordering.Application\Ordering.Application.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="Workflow.Api\obj\project.assets.json" />
-      <_ContentIncludedByDefault Remove="Workflow.Api\obj\Workflow.Api.csproj.nuget.dgspec.json" />
-      <_ContentIncludedByDefault Remove="Workflow.Api\obj\project.packagespec.json" />
     </ItemGroup>
 
 </Project>

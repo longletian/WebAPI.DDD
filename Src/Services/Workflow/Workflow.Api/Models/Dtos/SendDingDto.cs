@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Workflow.Api.Models
 {
@@ -7,32 +9,38 @@ namespace Workflow.Api.Models
         /// <summary>
         /// 创建人
         /// </summary>
+        [JsonProperty("createrAccount")]
         public AccountInfo CreaterAccount { get; set; }
 
         /// <summary>
         /// DING通知方式，短信(sms)、APP内(app)
         /// </summary>
-        public string NotifyType { get; set; }
+        [JsonProperty("notifyType")]
+        public string NotifyType { get; set; } = string.Empty;
 
         /// <summary>
         /// 接收人列表
         /// </summary>
-        public List<AccountInfo> ReceiverAccounts { get; set; }
+        [JsonProperty("receiverAccounts")]
+        public List<AccountInfo> ReceiverAccounts { get; set; } = new List<AccountInfo>();
 
         /// <summary>
         /// DING消息体加密方式，明文(plaintext) or 密文(ciphertext)
         /// </summary>
-        public string TextType { get; set; }
+        [JsonProperty("textType")]
+        public string TextType { get; set; } = string.Empty;
 
         /// <summary>
         /// DING内容消息体，格式参考下示例，只支持文本
         /// </summary>
+        [JsonProperty("body")]
         public BodyContent Body { get; set; }
 
         /// <summary>
         /// DING消息体类型，文本--text
         /// </summary>
-        public string BodyType { get; set; }
+        [JsonProperty("bodyType")]
+        public string BodyType { get; set; }=string.Empty;
     }
     
     public class AccountInfo
@@ -40,7 +48,8 @@ namespace Workflow.Api.Models
         /// <summary>
         /// 账号标识
         /// </summary>
-        public string AccountId { get; set; }
+        [JsonProperty("accountId")]
+        public string AccountId { get; set; } = string.Empty;
     }
 
     public class BodyContent
@@ -48,6 +57,7 @@ namespace Workflow.Api.Models
         /// <summary>
         /// 内容
         /// </summary>
-        public string text { get; set; }
+        [JsonProperty("text")]
+        public string text { get; set; } = string.Empty;
     }
 }
