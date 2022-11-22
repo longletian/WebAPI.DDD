@@ -58,7 +58,9 @@ namespace Workflow.Api
                            // 多租户时候
                            services
                                .AddDbContextFactory<WorkContext>(options =>
-                                   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+                                  options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                                 //  options.UseSqlite(connectionString)
+                                   );
 
                            services.AddCorsService();
 

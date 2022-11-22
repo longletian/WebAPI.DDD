@@ -7,7 +7,7 @@ using Workflow.Api.Models.Entities;
 
 namespace WWorkflow.Api.Infrastructure.Workflow
 {
-    public class MyTypeDefinitionProvider:TypeDefinitionProvider
+    public class MyTypeDefinitionProvider:TypeDefinitionProvider 
     {
         public override ValueTask<IEnumerable<Type>> CollectTypesAsync(TypeDefinitionContext context, CancellationToken cancellationToken = default)
         {

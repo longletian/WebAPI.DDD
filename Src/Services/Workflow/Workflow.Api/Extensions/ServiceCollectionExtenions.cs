@@ -478,13 +478,11 @@ namespace Workflow.Api
                 // 从数据库中读取数据流 (自定义连接)
                 // 最好按照官方文档,不然mysql会有迁移失败的问题
                 // https://github.com/elsa-workflows/elsa-core/blob/master/src/persistence/Elsa.Persistence.EntityFramework/Elsa.Persistence.EntityFramework.MySql/DbContextOptionsBuilderExtensions.cs
-                .UseEntityFrameworkPersistence(ef => ef.UseMySql(connectionString), false)
-                //.UseEntityFrameworkPersistence(
-                //        contextOptions => contextOptions.UseMySql(connectionString,
-                //            ServerVersion.AutoDetect(connectionString), db => db
-                //                .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
-                //                .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
-                //                .SchemaBehavior(MySqlSchemaBehavior.Ignore)),true)
+                .UseEntityFrameworkPersistence(ef => ef.UseMySql(connectionString,
+                            ServerVersion.AutoDetect(connectionString), db => db
+                                .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
+                                .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
+                                .SchemaBehavior(MySqlSchemaBehavior.Ignore)), false)
                 .AddConsoleActivities()
                 .AddHttpActivities((option) =>
                 {
@@ -497,7 +495,7 @@ namespace Workflow.Api
                         .FirstOrDefault()?.Value;
                     HttpActivityOptions httpActivityOptions = new()
                     {
-                        BasePath =basePath ,
+                        BasePath = basePath,
                         BaseUrl = new Uri(baseUrl)
                     };
                 })
@@ -509,22 +507,22 @@ namespace Workflow.Api
                 .AddQuartzTemporalActivities()
                 .AddCustomWorkflowsService()
                 .AddCustomWorkflowActivitiesService()
-            );
+            ).AddWorkflowContextProvider<CreateCaseProvider>();
 
             // Register all Mediatr event handlers from this assembly.
             // services.AddNotificationHandlersFrom<Startup>();
 
             services.AddNotificationHandler<EvaluatingLiquidExpression, LiquidConfigurationHandler>();
+            
+            // services.AddNotificationHandlers(typeof(LiquidConfigurationHandler));
 
             services.AddTransient<IHttpService, HttpService>();
- 
-            // services.AddWorkflowContextProvider<CaseWorkflowContextProvider>()
 
             services.AddStartupTask<RunWorkMigrations>();
             
             services.AddTransient<ICaseRepository, CaseRepository>();
             
-            services.AddWorkflowContextProvider<CreateCaseProvider>();
+            //services.AddWorkflowContextProvider<CreateCaseProvider>();
 
             // services.AddHostedService<RunWorkMigrationsV1>();
 
@@ -536,8 +534,10 @@ namespace Workflow.Api
             services.Configure<BlobStorageWorkflowProviderOptions>(options =>
                 options.BlobStorageFactory = () =>
                     StorageFactory.Blobs.DirectoryFiles(Path.Combine(currentAssemblyPath, "Workflows")));
-
+            
+            // 自动添加书签
             services.AddBookmarkProvidersFrom<Program>();
+            
             // Elsa API endpoints.
             services.AddElsaApiEndpoints();
             // .AddElsaSwagger();

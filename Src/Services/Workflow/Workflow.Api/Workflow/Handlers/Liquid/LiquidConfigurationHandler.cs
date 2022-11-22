@@ -15,7 +15,6 @@ namespace WWorkflow.Api.Infrastructure.Workflow.Handlers
             var memberAccessStrategy = notification.TemplateContext.Options.MemberAccessStrategy; 
             memberAccessStrategy.Register<CaseDto>();
             memberAccessStrategy.Register<FileEntity>();
-            
             return Task.CompletedTask;
         }
     }
