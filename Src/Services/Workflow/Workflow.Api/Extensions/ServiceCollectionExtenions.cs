@@ -478,11 +478,11 @@ namespace Workflow.Api
                 // 从数据库中读取数据流 (自定义连接)
                 // 最好按照官方文档,不然mysql会有迁移失败的问题
                 // https://github.com/elsa-workflows/elsa-core/blob/master/src/persistence/Elsa.Persistence.EntityFramework/Elsa.Persistence.EntityFramework.MySql/DbContextOptionsBuilderExtensions.cs
-                .UseEntityFrameworkPersistence(ef => ef.UseMySql(connectionString,
-                            ServerVersion.AutoDetect(connectionString), db => db
-                                .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
-                                .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
-                                .SchemaBehavior(MySqlSchemaBehavior.Ignore)), false)
+                .UseEntityFrameworkPersistence(ef => ef.UseMySql(connectionString.ToString()), false)
+                 //ServerVersion.AutoDetect(connectionString), db => db
+                 //               .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
+                 //               .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
+                 //               .SchemaBehavior(MySqlSchemaBehavior.Ignore)),
                 .AddConsoleActivities()
                 .AddHttpActivities((option) =>
                 {
@@ -560,7 +560,6 @@ namespace Workflow.Api
                 .AddActivity<SendDingActivtity>()
                 .AddActivity<FileUploadActivtity>();
         }
-
 
         /// <summary>
         /// 新增自定义工作流

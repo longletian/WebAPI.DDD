@@ -22,12 +22,12 @@ namespace Workflow.Api
         public static void UseMiddleware1(this IApplicationBuilder app)
         {
             //1. 通过Use的方式注册中间件，可以控制是否将请求传递到下一个中间件；
-            app.Use(async (context, next) =>
-            {
-                await context.Response.WriteAsync("hello1");
-                // 管道短路
-                //await next.Invoke();
-            });
+            //app.Use(async (context, next) =>
+            //{
+            //    await context.Response.WriteAsync("hello1");
+            //    // 管道短路
+            //    //await next.Invoke();
+            //});
         }
 
         public static void UseMiddleware2(this IApplicationBuilder app)
