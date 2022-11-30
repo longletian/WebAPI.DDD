@@ -10,6 +10,7 @@ using Workflow.Api.Infrastructure;
 using Workflow.Api.Models;
 using Workflow.Api.Models.Dtos;
 using Workflow.Api.Models.Entities;
+using Case = DotLiquid.Tags.Case;
 
 namespace Workflow.Api.Workflow.Providers
 {
@@ -22,10 +23,10 @@ namespace Workflow.Api.Workflow.Providers
             caseRepository = _caseRepository;
         }
 
-        public override ValueTask<CaseDto> LoadAsync(LoadWorkflowContext context,
+        public override async ValueTask<CaseDto> LoadAsync(LoadWorkflowContext context,
             CancellationToken cancellationToken = new CancellationToken())
         {
-            return base.LoadAsync(context, cancellationToken);
+            return await caseRepository.GetCaseEntityById(context.ContextId);
         }
 
         public override async ValueTask<string> SaveAsync(SaveWorkflowContext<CaseDto> context,

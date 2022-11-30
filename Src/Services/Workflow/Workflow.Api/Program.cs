@@ -71,7 +71,6 @@ namespace Workflow.Api
                 // 在.net 5中FallbackToPage必须是razor page而不是razor视图
                 app.MapFallbackToPage("/Login");
 
-
                 app.Run();
 
                 Log.Information("system init end");

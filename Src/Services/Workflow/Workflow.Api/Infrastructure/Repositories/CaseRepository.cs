@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using InfrastructureBase;
@@ -50,5 +51,12 @@ namespace Workflow.Api.Infrastructure
                 throw;
             }
         }
+
+        public async Task<CaseDto> GetCaseEntityById(string caseId)
+        {
+            Case caseEntity= await this.workContext.Cases.Where((c) => c.Id.ToString() == caseId).FirstOrDefaultAsync();
+            return caseEntity?.MapTo<CaseDto>();
+        }
+
     }
 }

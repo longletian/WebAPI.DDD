@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using DotLiquid.Tags;
 using Workflow.Api.Models.Dtos;
 using Workflow.Api.Models.Entities;
+using Case = Workflow.Api.Models.Entities.Case;
 
 namespace Workflow.Api.Models
 {
@@ -16,7 +16,7 @@ namespace Workflow.Api.Models
         /// <param name="instance"></param>
         /// <returns></returns>
         Task ReportCase(CaseDto caseDto, WorkflowCaseInstance instance,CancellationToken cancellationToken = default);
-        
 
+        Task<CaseDto> GetCaseEntityById(string caseId);
     }
 }
