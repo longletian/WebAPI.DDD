@@ -568,8 +568,9 @@ namespace Workflow.Api
         /// <returns></returns>
         private static ElsaOptionsBuilder AddCustomWorkflowsService(this ElsaOptionsBuilder services)
         {
-            return services
-                .AddWorkflow<HeartbeatWorkflow>();
+//            return services
+//                .AddWorkflow<HeartbeatWorkflow>();
+            return services;
         }
     }
 }

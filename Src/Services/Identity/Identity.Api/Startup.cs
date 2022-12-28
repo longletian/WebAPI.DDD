@@ -35,7 +35,7 @@ namespace Identity.Api
         }
 
         /// <summary>
-        /// ×¢Èëautofac
+        /// ×¢ï¿½ï¿½autofac
         /// </summary>
         /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)

@@ -24,13 +24,15 @@ namespace InfrastructureBase.Data
         /// <returns>加密结果</returns>
         public static string EncryptToSHA1(string str)
         {
-            SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider();
-            byte[] str1 = Encoding.UTF8.GetBytes(str);
-            byte[] str2 = sha1.ComputeHash(str1);
-            string str3 = BitConverter.ToString(str2);
-            sha1.Clear();
-            sha1.Dispose();
-            return Convert.ToBase64String(str2);
+            using (HashAlgorithm hashAlgorithm = new SHA1CryptoServiceProvider())
+            {
+                byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
+                byte[] hashBytes = hashAlgorithm.ComputeHash(utf8Bytes);
+                StringBuilder builder = new StringBuilder();
+                foreach (byte hashByte in hashBytes)
+                    builder.AppendFormat("{0:x2}", hashByte);
+                return builder.ToString();
+            }
         }
 
         /// <summary>
@@ -93,6 +95,56 @@ namespace InfrastructureBase.Data
             foreach (var t in hash) { builder.Append(t.ToString("x2")); }
             return builder.ToString();
         }
+
+        /// <summary>
+        /// RSA公钥加密
+        /// </summary>
+        /// <param name="publickey">XML公钥</param>
+        /// <param name="content"></param>
+        /// <returns></returns
+        public static string RSAEncrypt(string publickey, string content)
+        {
+            try
+            {
+                string encryptedContent = string.Empty;
+                using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+                {
+                    rsa.FromXmlString(RSAPublicKeyJavaToDotNet(publickey));
+                    byte[] encryptedData = rsa.Encrypt(Encoding.Default.GetBytes(content), false);
+                    encryptedContent = Convert.ToBase64String(encryptedData);
+                }
+                return encryptedContent;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// RSA私钥解密
+        /// </summary>
+        /// <param name="privatekey">XML私钥</param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static string RSADecrypt(string privatekey, string content)
+        {
+            try
+            {
+                string Result;
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                rsa.FromXmlString(RSAPrivateKeyDotNetToJava(privatekey));
+                var PlainTextBArray = Encoding.UTF8.GetBytes(content);
+                PlainTextBArray = rsa.Decrypt(PlainTextBArray, false);
+                Result = Convert.ToBase64String(PlainTextBArray);
+                return Result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         /// <summary>
         /// RSA私钥格式转换，java->.net
