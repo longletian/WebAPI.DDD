@@ -79,7 +79,7 @@ namespace InfrastructureBase
         /// <param name="pageIndex">页码</param>
         /// <param name="total">总共数据条数</param>
         /// <returns></returns>
-        public async Task<PageQueryDto<TEntity>> FindListAsync<TEntity>(string strSql, string orderField, int pageSize, int pageIndex, DynamicParameters dynamicParameters = null) where TEntity : class
+        public async Task<PageReturnDto<TEntity>> FindListAsync<TEntity>(string strSql, string orderField, int pageSize, int pageIndex, DynamicParameters dynamicParameters = null) where TEntity : class
         {
             StringBuilder stringBuilder = new StringBuilder();
             if (pageIndex == 0)
@@ -94,7 +94,7 @@ namespace InfrastructureBase
             }
             stringBuilder.Append(strSql + OrderBy);
             stringBuilder.Append(" limit " + num + "," + pageSize + "");
-            return new PageQueryDto<TEntity>(await this.dbConnection.QueryAsync<TEntity>(strSql, dynamicParameters), dynamicParameters.Get<int>("@Total"),pageIndex, pageSize);
+            return new PageReturnDto<TEntity>(await this.dbConnection.QueryAsync<TEntity>(strSql, dynamicParameters), dynamicParameters.Get<int>("@Total"),pageIndex, pageSize);
         }
 
         protected virtual void Dispose(bool disposing)

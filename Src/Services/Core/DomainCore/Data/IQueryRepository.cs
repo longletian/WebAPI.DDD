@@ -54,6 +54,6 @@ namespace DomainBase
         /// <param name="pageSize">每页数据条数</param>
         /// <param name="pageIndex">页码</param>
         /// <returns></returns>
-        Task<PageQueryDto<TEntity>> FindListAsync<TEntity>(string strSql, string orderField, int pageSize, int pageIndex, DynamicParameters dynamicParameters = null) where TEntity : class;
+        Task<PageReturnDto<TEntity>> FindListAsync<TEntity>(string strSql, string orderField, int pageSize, int pageIndex, DynamicParameters dynamicParameters = null) where TEntity : class;
     }
 }
