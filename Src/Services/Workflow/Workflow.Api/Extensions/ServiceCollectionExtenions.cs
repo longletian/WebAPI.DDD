@@ -558,7 +558,8 @@ namespace Workflow.Api
             // 新增自定义操作,比如说钉钉消息发送
             return services
                 .AddActivity<SendDingActivtity>()
-                .AddActivity<FileUploadActivtity>();
+                .AddActivity<FileUploadActivtity>()
+                .AddActivity<ChoseUser>();
         }
 
         /// <summary>
@@ -568,9 +569,9 @@ namespace Workflow.Api
         /// <returns></returns>
         private static ElsaOptionsBuilder AddCustomWorkflowsService(this ElsaOptionsBuilder services)
         {
-//            return services
-//                .AddWorkflow<HeartbeatWorkflow>();
-            return services;
+            return services
+                .AddWorkflow<HeartbeatWorkflow>();
+//            return services;
         }
     }
 }

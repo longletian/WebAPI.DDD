@@ -9,6 +9,14 @@
       <DocumentationFile>bin\Debug\Workflow.Api.xml</DocumentationFile>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Autofac" Version="6.5.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
@@ -40,16 +48,16 @@
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
 		
-        <PackageReference Include="Elsa" Version="2.9.1" />
-        <PackageReference Include="Elsa.Activities.Email" Version="2.9.1" />
-		<PackageReference Include="Elsa.Persistence.EntityFramework.MySql" Version="2.9.1" />
-        <PackageReference Include="Elsa.Activities.Http" Version="2.9.1" />
+        <PackageReference Include="Elsa" Version="2.9.3" />
+        <PackageReference Include="Elsa.Activities.Email" Version="2.9.3" />
+		<PackageReference Include="Elsa.Persistence.EntityFramework.MySql" Version="2.9.3" />
+        <PackageReference Include="Elsa.Activities.Http" Version="2.9.3" />
         <PackageReference Include="Elsa.Activities.Reflection" Version="1.5.5.1943" />
-        <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.9.1" />
-        <PackageReference Include="Elsa.Designer.Components.Web" Version="2.9.1" />
-        <PackageReference Include="Elsa.Server.Api" Version="2.9.1" />
-		<PackageReference Include="Elsa.Persistence.EntityFramework.Core" Version="2.9.1" />
-		<PackageReference Include="Elsa.Activities.UserTask" Version="2.9.1" />
+        <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.9.3" />
+        <PackageReference Include="Elsa.Designer.Components.Web" Version="2.9.3" />
+        <PackageReference Include="Elsa.Server.Api" Version="2.9.3" />
+		<PackageReference Include="Elsa.Persistence.EntityFramework.Core" Version="2.9.3" />
+		<PackageReference Include="Elsa.Activities.UserTask" Version="2.9.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -70,6 +78,7 @@
     <ItemGroup>
         <Folder Include="Infrastructure\Services" />
         <Folder Include="Models\Dtos\" />
+        <Folder Include="Pages\Plugins" />
     </ItemGroup>
 
     <ItemGroup>

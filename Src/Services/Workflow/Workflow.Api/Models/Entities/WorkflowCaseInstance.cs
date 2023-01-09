@@ -15,20 +15,23 @@ namespace Workflow.Api.Models.Entities
         /// </summary>
         [Key]
         public Guid Id { get; set; }
-        
+
         /// <summary>
         /// 事件标识
         /// </summary>
+        [Column("case_id")]
         public int CaseId { get; set; }
 
         /// <summary>
         /// 工作流定义标识
         /// </summary>
-        public  string WorkflowDefinitionId { get; set; }
+        [Column("wf_definition_id")]
+        public string WorkflowDefinitionId { get; set; }
 
         /// <summary>
         /// 工作流实例标识
         /// </summary>
+        [Column("wf_instance_id")]
         public string WorkflowInstanceId { get; set; }
     }
 }

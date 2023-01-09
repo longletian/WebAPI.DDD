@@ -25,9 +25,11 @@ namespace Workflow.Api
 
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(Configuration)
+                    .Enrich.FromLogContext()
                     .CreateLogger();
 
                 var builder = WebApplication.CreateBuilder(args);
+
 
                 builder.Services.AddSingleton(new AppSettingConfig(Configuration, builder.Environment));
                 var connectionString = AppSettingConfig.GetConnStrings("MysqlWorkCon");
@@ -41,14 +43,13 @@ namespace Workflow.Api
 
                 builder.Services.AddCorsService();
 
-                builder.Services.AddFreeSqlService();
+                //builder.Services.AddFreeSqlService();
 
                 builder.Services.AddWorkflowCoreElsaService(builder.Environment);
 
-                builder.WebHost.
-                   UseSerilog()
+                builder.WebHost
                   .UseConfiguration(Configuration)
-                      //.UseUrls("http://*:10001")
+                     //.UseUrls("http://*:10001")
                      .ConfigureKestrel((context, options) =>
                      {
                          options.Limits.MaxRequestBodySize = 52428800;
@@ -58,12 +59,13 @@ namespace Workflow.Api
                 {
                     // builder.RegisterModule(new AutoFacModule());
                     builder.RegisterModule(new DependencyModule());
-                }).UseServiceProviderFactory(new AutofacServiceProviderFactory());
+                }).UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .UseSerilog();
 
                 var app = builder.Build();
                 app.UseCors();
                 app.UseStaticFiles();
-                app.UseSerilogRequestLogging();
+                //app.UseSerilogRequestLogging();
                 app.UseHttpActivities();
 
                 app.MapControllers();

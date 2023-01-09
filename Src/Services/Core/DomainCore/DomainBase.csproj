@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Castle.Core" Version="4.4.1" />
+    <PackageReference Include="Castle.Core" Version="5.1.1" />
     <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="FreeSql.Extensions.LazyLoading" Version="3.2.640" />
     <PackageReference Include="FreeSql.Extensions.Linq" Version="3.2.640" />
