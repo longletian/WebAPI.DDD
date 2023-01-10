@@ -52,6 +52,8 @@ using Workflow.Api.Models;
 using Workflow.Api.Workflow.Activities;
 using Workflow.Api.Workflow.Providers;
 using WWorkflow.Api.Infrastructure.Workflow.Handlers;
+using InfrastructureBase.Data.Common.Mongo;
+using MongoDB.Driver;
 
 namespace Workflow.Api
 {
@@ -447,7 +449,24 @@ namespace Workflow.Api
         }
 
         /// <summary>
-        /// 添加工作流服务
+        /// 新增mongodb服务
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddMongoDbService(this IServiceCollection services)
+        {
+            services.Configure<MongoOptions>(AppSettingConfig.GetSection("MongoConfig"));
+            MongoOptions option = services.BuildServiceProvider().GetService<IOptionsMonitor<MongoOptions>>()
+             .CurrentValue;
+            services.AddSingleton<IMongoConnection>((c) =>
+            {
+                var client = new MongoClient(option?.ConnectionString);
+                return new MongoConnection(client, option?.DatabaseName, option?.CollectionName);
+            });
+        }
+
+        #region 工作流相关服务
+        /// <summary>
+        /// 添加WorkflowCore工作流服务
         /// </summary>
         /// <param name="services"></param>
         public static void AddWorkflowCoreService(this IServiceCollection services)
@@ -479,10 +498,10 @@ namespace Workflow.Api
                 // 最好按照官方文档,不然mysql会有迁移失败的问题
                 // https://github.com/elsa-workflows/elsa-core/blob/master/src/persistence/Elsa.Persistence.EntityFramework/Elsa.Persistence.EntityFramework.MySql/DbContextOptionsBuilderExtensions.cs
                 .UseEntityFrameworkPersistence(ef => ef.UseMySql(connectionString.ToString()), false)
-                 //ServerVersion.AutoDetect(connectionString), db => db
-                 //               .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
-                 //               .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
-                 //               .SchemaBehavior(MySqlSchemaBehavior.Ignore)),
+                //ServerVersion.AutoDetect(connectionString), db => db
+                //               .MigrationsAssembly(typeof(MySqlElsaContextFactory).Assembly.GetName().Name)
+                //               .MigrationsHistoryTable(ElsaContext.MigrationsHistoryTable, ElsaContext.ElsaSchema)
+                //               .SchemaBehavior(MySqlSchemaBehavior.Ignore)),
                 .AddConsoleActivities()
                 .AddHttpActivities((option) =>
                 {
@@ -513,15 +532,15 @@ namespace Workflow.Api
             // services.AddNotificationHandlersFrom<Startup>();
 
             services.AddNotificationHandler<EvaluatingLiquidExpression, LiquidConfigurationHandler>();
-            
+
             // services.AddNotificationHandlers(typeof(LiquidConfigurationHandler));
 
             services.AddTransient<IHttpService, HttpService>();
 
             services.AddStartupTask<RunWorkMigrations>();
-            
+
             services.AddTransient<ICaseRepository, CaseRepository>();
-            
+
             //services.AddWorkflowContextProvider<CreateCaseProvider>();
 
             // services.AddHostedService<RunWorkMigrationsV1>();
@@ -534,10 +553,10 @@ namespace Workflow.Api
             services.Configure<BlobStorageWorkflowProviderOptions>(options =>
                 options.BlobStorageFactory = () =>
                     StorageFactory.Blobs.DirectoryFiles(Path.Combine(currentAssemblyPath, "Workflows")));
-            
+
             // 自动添加书签
             services.AddBookmarkProvidersFrom<Program>();
-            
+
             // Elsa API endpoints.
             services.AddElsaApiEndpoints();
             // .AddElsaSwagger();
@@ -571,7 +590,9 @@ namespace Workflow.Api
         {
             return services
                 .AddWorkflow<HeartbeatWorkflow>();
-//            return services;
+            //            return services;
         }
+        #endregion
+
     }
 }

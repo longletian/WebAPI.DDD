@@ -37,11 +37,11 @@ namespace Workflow.Api
                 // 多租户时候
                 builder.Services
                     .AddDbContextFactory<WorkContext>(options =>
-                       options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                        //  options.UseSqlite(connectionString) 
-                        );
+                       options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
                 builder.Services.AddCorsService();
+
+                builder.Services.AddMongoDbService();
 
                 //builder.Services.AddFreeSqlService();
 
@@ -57,7 +57,6 @@ namespace Workflow.Api
 
                 builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
                 {
-                    // builder.RegisterModule(new AutoFacModule());
                     builder.RegisterModule(new DependencyModule());
                 }).UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .UseSerilog();
@@ -65,7 +64,7 @@ namespace Workflow.Api
                 var app = builder.Build();
                 app.UseCors();
                 app.UseStaticFiles();
-                //app.UseSerilogRequestLogging();
+                app.UseSerilogRequestLogging();
                 app.UseHttpActivities();
 
                 app.MapControllers();

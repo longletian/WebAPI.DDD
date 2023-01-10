@@ -21,5 +21,10 @@
   },
   "RedisConfig": {
     "RedisCon": "localhost:63790,password=,defaultDatabase=0"
+  },
+  "MongoConfig": {
+    "ConnectionString": "mongodb://admin:123456@localhost:27017/admin?authSource=admin",
+    "DatabaseName": "admin",
+    "CollectionName": "work"
   }
 }
