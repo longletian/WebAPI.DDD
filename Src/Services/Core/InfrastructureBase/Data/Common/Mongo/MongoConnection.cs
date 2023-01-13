@@ -49,7 +49,7 @@ namespace InfrastructureBase.Data
         /// <summary>
         /// 新增文件到集合
         /// </summary>
-        public void AddEntityToCollection<T>(string collectionName, T item)
+        public void AddEntityToCollection<T>(T item, string collectionName = default)
         {
             if (item == null)
                 throw new ArgumentNullException("参数异常，不能为空");
@@ -59,7 +59,7 @@ namespace InfrastructureBase.Data
         /// <summary>
         /// 新增文件到集合
         /// </summary>
-        public async Task AddEntityToCollectionAsync<T>(string collectionName, T item)
+        public async Task AddEntityToCollectionAsync<T>(T item, string collectionName = default)
         {
             if (item == null)
                 throw new ArgumentNullException("参数异常，不能为空");
@@ -69,12 +69,26 @@ namespace InfrastructureBase.Data
         /// <summary>
         /// 新增文件到集合
         /// </summary>
-        public void AddEntitiesToCollection<T>(string collectionName, List<T> items)
+        public void AddEntitiesToCollection<T>(List<T> items, string collectionName = default)
         {
             if (items == null && items.Count == 0)
                 throw new ArgumentNullException("参数异常，不能为空");
             this.database.GetCollection<T>(collectionName ?? defaultCollectionName).InsertMany(items);
         }
+
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+        /// <param name="collectionName"></param>
+        public void DeleteEntityToCollection<T>(FilterDefinition<T> item, string collectionName = default)
+        {
+            if (item == null)
+                throw new ArgumentNullException("参数异常，不能为空");
+            this.database.GetCollection<T>(collectionName ?? defaultCollectionName).DeleteMany(item);
+        }
+
     }
 }
 

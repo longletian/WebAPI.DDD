@@ -2,6 +2,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Bson;
 using Serilog;
 using System;
 using System.IO;
@@ -35,11 +36,10 @@ namespace Identity.Api
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args) 
+            Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                    .UseSerilog()
                     .UseConfiguration(Configuration)
                     .UseUrls("http://*:6868")
                     .ConfigureKestrel((context, options) =>
@@ -47,8 +47,9 @@ namespace Identity.Api
                         options.Limits.MaxRequestBodySize = 52428800;
                     });
                 })
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory());
-        
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .UseSerilog();
+
         #region 配置读取
         /// <summary>
         /// 自定义配置文件读取
@@ -57,8 +58,8 @@ namespace Identity.Api
             .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "JsonConfig"))
             .AddJsonFile("appsettings_log.json", optional: true, reloadOnChange: true)
             .AddJsonFile("dbsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile("appsettings.json",optional:true,reloadOnChange:true)
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
         #endregion

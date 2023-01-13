@@ -24,14 +24,12 @@ using InfrastructureBase.EventBus;
 using RabbitMQ.Client;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
-using DomainBase;
 using InfrastructureBase.Base.AuthBase.CustomAuth;
 using System.Threading;
 using Elsa;
 using Elsa.Activities.Http.Options;
 using Elsa.Activities.UserTask.Extensions;
 using Elsa.Options;
-using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.EntityFramework.Core.Extensions;
 using Elsa.Persistence.EntityFramework.MySql;
 using Elsa.Providers.Workflows;
@@ -40,13 +38,9 @@ using Elsa.Scripting.Liquid.Messages;
 using InfrastructureBase.Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Storage.Net;
 using Workflow.Api.Infrastructure.Data.StartupTasks;
 using Workflow.Api.Infrastructure.Workflow.Activities;
-using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
-using MySqlElsaContextFactory = Elsa.Persistence.EntityFramework.MySql.MySqlElsaContextFactory;
-using Microsoft.AspNetCore.Builder;
 using Workflow.Api.Infrastructure;
 using Workflow.Api.Models;
 using Workflow.Api.Workflow.Activities;
@@ -180,7 +174,7 @@ namespace Workflow.Api
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API V1", Version = "v1" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "API V1", Version = "v2" });
                 c.AddServer(new OpenApiServer()
                 {
                     Description = "vvv"
@@ -557,9 +551,19 @@ namespace Workflow.Api
             // 自动添加书签
             services.AddBookmarkProvidersFrom<Program>();
 
-            // Elsa API endpoints.
-            services.AddElsaApiEndpoints();
-            // .AddElsaSwagger();
+            services.AddElsaApiEndpoints()
+             .AddElsaSwagger((c) =>
+             {
+                 c.CustomOperationIds(apiDesc =>
+                 {
+                     var controllerAction = apiDesc.ActionDescriptor as ControllerActionDescriptor;
+                     return controllerAction.ControllerName + "-" + controllerAction.ActionName;
+                 });
+
+                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                 var pathFile = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                 c.IncludeXmlComments(pathFile, true);
+             });
 
             services.AddRazorPages();
 

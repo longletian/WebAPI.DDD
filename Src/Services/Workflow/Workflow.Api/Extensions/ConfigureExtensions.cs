@@ -11,16 +11,15 @@ namespace Workflow.Api
         /// swagger-ui
         /// </summary>
         /// <param name="app"></param>
-        public static void UseSwaggUIConfigure(this IApplicationBuilder app)
+        public static IApplicationBuilder UseSwaggUIConfigure(this IApplicationBuilder app)
         {
-            app.UseSwagger()
-                .UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Elsa UI API V1"); });
-                
-            // app.UseKnife4UI(c =>
-            // {
-            //     c.RoutePrefix = "";
-            //     c.SwaggerEndpoint("/v1/api-docs", "V1 Docs");
-            // });
+            app.UseSwagger();
+            app.UseKnife4UI(c =>
+            {
+                c.RoutePrefix = "";
+                c.SwaggerEndpoint("/v1/api-docs", "V1 Docs");
+            });
+            return app;
         }
 
         /// <summary>

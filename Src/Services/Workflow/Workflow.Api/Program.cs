@@ -1,17 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.IO;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Hosting;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Serilog;
 using InfrastructureBase;
 using Microsoft.EntityFrameworkCore;
 using Workflow.Api.Infrastructure.Data;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Workflow.Api
 {
@@ -43,8 +35,6 @@ namespace Workflow.Api
 
                 builder.Services.AddMongoDbService();
 
-                //builder.Services.AddFreeSqlService();
-
                 builder.Services.AddWorkflowCoreElsaService(builder.Environment);
 
                 builder.WebHost
@@ -62,18 +52,23 @@ namespace Workflow.Api
                 .UseSerilog();
 
                 var app = builder.Build();
-                app.UseCors();
                 app.UseStaticFiles();
                 app.UseSerilogRequestLogging();
+                app.UseRouting();
+                app.UseCors();
                 app.UseHttpActivities();
+                app.UseSwaggUIConfigure();
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapSwagger("{documentName}/api-docs");
+                });
 
-                app.MapControllers();
                 // endpoints.MapRazorPages();
                 // 在.net 5中FallbackToPage必须是razor page而不是razor视图
-                app.MapFallbackToPage("/Login");
+                app.MapFallbackToPage("/ProcessDesign");
 
                 app.Run();
-
                 Log.Information("system init end");
             }
             catch (Exception ex)

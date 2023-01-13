@@ -27,16 +27,29 @@ namespace InfrastructureBase.Data
         /// <summary>
         /// 新增文件到集合
         /// </summary>
-        void AddEntityToCollection<T>(string collectionName, T item);
+        void AddEntityToCollection<T>(T item, string collectionName = default);
 
         /// <summary>
         /// 新增文件到集合
         /// </summary>
-        Task AddEntityToCollectionAsync<T>(string collectionName, T item);
+        Task AddEntityToCollectionAsync<T>(T item,string collectionName= default);
 
         /// <summary>
         /// 新增文件到集合
         /// </summary>
-        void AddEntitiesToCollection<T>(string collectionName, List<T> items);
+        void AddEntitiesToCollection<T>(List<T> items,string collectionName= default);
+
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+        /// <param name="collectionName"></param>
+        void DeleteEntityToCollection<T>(FilterDefinition<T> item, string collectionName = default);
+
+        /// <summary>
+        /// 清除集合下面所有文档
+        /// </summary>
+        void DeleteCollection<T>(string collectionName = default);
     } 
 }
